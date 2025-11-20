@@ -22,7 +22,7 @@ export default function SignupSidebar() {
             <div className="w-8 h-8 bg-white/90 rounded-lg flex items-center justify-center">
               <span className="font-bold text-teal-700">✦</span>
             </div>
-            <span className="text-sm font-medium text-white">MarketHub</span>
+            <span className="text-sm font-medium text-white">Moirge AI</span>
           </div>
         </div>
 
@@ -33,8 +33,8 @@ export default function SignupSidebar() {
 
         {/* Subheading */}
         <p className="text-lg text-white/90 mb-8 leading-relaxed">
-          Connect with millions of buyers and sellers. Build your business with
-          us.
+          Connect with hundreds of buyers and sellers. Build your business or
+          find the perfect product with us.
         </p>
 
         {/* Features List */}
@@ -43,6 +43,11 @@ export default function SignupSidebar() {
             { icon: "⚡", title: "Fast Setup", desc: "Get started in minutes" },
             { icon: "🔒", title: "Secure", desc: "Enterprise-grade security" },
             { icon: "📈", title: "Grow", desc: "Scale your business" },
+            {
+              icon: "👕",
+              title: "Cloth Up",
+              desc: "Find clothes that were created exactly for you",
+            },
           ].map((feature, i) => (
             <div key={i} className="flex gap-4 items-start">
               <div className="text-2xl mt-1">{feature.icon}</div>
@@ -58,7 +63,7 @@ export default function SignupSidebar() {
         <div className="mt-12 pt-8 border-t border-white/20">
           <p className="text-sm text-white/80">
             <span className="font-semibold text-white">50,000+</span> sellers
-            already growing with us
+            already growing with us and suggesting products to you
           </p>
         </div>
       </div>

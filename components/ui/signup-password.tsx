@@ -133,15 +133,15 @@ const PasswordInput = ({ value, onChange, error }: PasswordInputProps) => {
             placeholder="Password"
             aria-invalid={!!error}
             aria-describedby="password-strength"
-            className={`w-full p-2 border-2 rounded-md dark:bg-neutral-950 bg-neutral-50 outline-hidden focus-within:ring-2 focus-within:ring-teal-500 transition ${
-              error ? "border-destructive" : ""
-            }`}
+            className={`w-full h-12 rounded-2xl border ${
+              error ? "border-destructive" : "border-emerald-100"
+            } bg-white/80 px-4 text-base shadow-inner shadow-emerald-50 outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-200 transition`}
           />
           <button
             type="button"
             onClick={() => setIsVisible((prev) => !prev)}
             aria-label={isVisible ? "Hide password" : "Show password"}
-            className="absolute inset-y-0 right-0 outline-hidden flex items-center justify-center w-9 text-muted-foreground/80 hover:text-foreground"
+            className="absolute inset-y-0 right-3 flex items-center justify-center text-slate-400 transition hover:text-slate-600"
           >
             {isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>

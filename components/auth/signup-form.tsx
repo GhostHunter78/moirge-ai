@@ -66,6 +66,11 @@ export default function SignupForm({
   const [errors, setErrors] = useState<SignupErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const getFieldStyles = (hasError?: string) =>
+    `h-12 rounded-2xl border ${
+      hasError ? "border-destructive" : "border-emerald-100"
+    } bg-white/80 px-4 shadow-inner shadow-emerald-50 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200`;
+
   const clearFieldError = (field: keyof SignupFormValues) => {
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -120,16 +125,23 @@ export default function SignupForm({
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-3xl">Create Account</CardTitle>
-        <CardDescription>
+    <Card className="relative w-full overflow-hidden rounded-3xl border border-emerald-100 bg-linear-to-b from-white via-white to-emerald-50/80 shadow-2xl shadow-emerald-200/60 backdrop-blur">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-6 top-2 h-40 rounded-full bg-linear-to-r from-emerald-300/60 via-teal-300/50 to-cyan-200/60 blur-3xl"
+      />
+
+      <CardHeader className="relative z-10 space-y-3 text-center">
+        <CardTitle className="text-3xl font-bold text-slate-900">
+          Create Account
+        </CardTitle>
+        <CardDescription className="text-sm text-slate-500">
           Join our marketplace and start selling or buying today
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-5">
+      <CardContent className="relative z-10 pt-1">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username Field */}
           <div className="space-y-2">
             <Label htmlFor="username" className="text-sm font-medium">
@@ -142,7 +154,7 @@ export default function SignupForm({
               placeholder="Username"
               value={formData.username}
               onChange={handleChange}
-              className={`h-11 ${errors.username ? "border-destructive" : ""}`}
+              className={getFieldStyles(errors.username)}
               aria-invalid={!!errors.username}
             />
             {errors.username && (
@@ -170,7 +182,7 @@ export default function SignupForm({
                 "aria-invalid": !!errors.phone,
               }}
               containerClass="w-full"
-              inputClass={`w-full h-11 rounded-md border ${
+              inputClass={`!w-full h-11 rounded-md border ${
                 errors.phone ? "border-destructive" : "border-input"
               }`}
             />
@@ -191,7 +203,7 @@ export default function SignupForm({
               placeholder="you@example.com"
               value={formData.email}
               onChange={handleChange}
-              className={`h-11 ${errors.email ? "border-destructive" : ""}`}
+              className={getFieldStyles(errors.email)}
               aria-invalid={!!errors.email}
             />
             {errors.email && (
@@ -222,9 +234,7 @@ export default function SignupForm({
               placeholder="Confirm your password"
               value={formData.repeatPassword}
               onChange={handleChange}
-              className={`h-11 ${
-                errors.repeatPassword ? "border-destructive" : ""
-              }`}
+              className={getFieldStyles(errors.repeatPassword)}
               aria-invalid={!!errors.repeatPassword}
             />
             {errors.repeatPassword && (
@@ -249,7 +259,10 @@ export default function SignupForm({
                 }
               }}
             >
-              <SelectTrigger id="role">
+              <SelectTrigger
+                id="role"
+                className="h-12 rounded-2xl border border-emerald-100 bg-white/80 px-4 text-base shadow-inner shadow-emerald-50 focus-visible:ring-2 focus-visible:ring-emerald-200"
+              >
                 <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
@@ -266,7 +279,7 @@ export default function SignupForm({
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full h-11 bg-teal-600 hover:bg-teal-700 text-white font-semibold"
+            className="w-full h-12 rounded-2xl bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/30 transition hover:brightness-105 focus-visible:ring-4 focus-visible:ring-emerald-200"
           >
             {isLoading ? "Creating Account..." : "Create Account"}
           </Button>
@@ -278,17 +291,17 @@ export default function SignupForm({
         </form>
       </CardContent>
 
-      <CardFooter className="flex flex-col gap-3 border-t pt-6">
-        <p className="text-xs text-muted-foreground text-center w-full">
+      <CardFooter className="relative z-10 flex flex-col gap-3 border-t border-emerald-100/70 bg-white/80 pt-6 text-center">
+        <p className="text-sm text-slate-500">
           Already have an account?{" "}
           <Link
-            href="/auth/login"
-            className="text-teal-600 hover:text-teal-700 font-semibold"
+            href="/auth/signin"
+            className="font-semibold text-emerald-600 transition hover:text-emerald-700"
           >
             Login here
           </Link>
         </p>
-        <p className="text-xs text-muted-foreground text-center w-full pt-2">
+        <p className="text-xs text-muted-foreground pt-2">
           By signing up, you agree to our{" "}
           <Link href="#" className="underline hover:no-underline">
             Terms of Service
@@ -298,7 +311,7 @@ export default function SignupForm({
             Privacy Policy
           </Link>
         </p>
-        <p className="text-xs text-muted-foreground text-center w-full">
+        <p className="text-xs text-muted-foreground">
           Moirge © 2025 All rights reserved.
         </p>
       </CardFooter>
