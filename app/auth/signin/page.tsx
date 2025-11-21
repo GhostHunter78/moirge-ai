@@ -14,6 +14,17 @@ export default function LoginPageMain() {
     undefined
   );
 
+  const signInWithGoogle = async () => {
+    console.log("REDIRECT:", window.location.origin + "/auth/callback");
+
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  };
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
@@ -37,7 +48,6 @@ export default function LoginPageMain() {
       return;
     }
 
-    // Clear field-level errors on valid input
     setEmailError(undefined);
     setPasswordError(undefined);
 
@@ -60,6 +70,7 @@ export default function LoginPageMain() {
       error={error}
       emailError={emailError}
       passwordError={passwordError}
+      signInWithGoogle={signInWithGoogle}
     />
   );
 }

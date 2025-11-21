@@ -8,11 +8,13 @@ export default function LoginPage({
   error,
   emailError,
   passwordError,
+  signInWithGoogle,
 }: {
   handleLogin: (e: React.FormEvent) => void;
   error: string;
   emailError?: string;
   passwordError?: string;
+  signInWithGoogle: () => Promise<void>;
 }) {
   return (
     <div className="flex min-h-screen bg-background">
@@ -27,6 +29,7 @@ export default function LoginPage({
           error={error}
           emailError={emailError}
           passwordError={passwordError}
+          signInWithGoogle={signInWithGoogle}
         />
       </div>
     </div>
