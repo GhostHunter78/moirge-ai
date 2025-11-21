@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import LoginPage from "@/components/auth/login-page";
 import { loginSchema } from "@/lib/validation/auth";
@@ -15,7 +15,7 @@ export default function LoginPageMain() {
   );
 
   const signInWithGoogle = async () => {
-    console.log("REDIRECT:", window.location.origin + "/auth/callback");
+    const supabase = createClient();
 
     await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -51,7 +51,7 @@ export default function LoginPageMain() {
     setEmailError(undefined);
     setPasswordError(undefined);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await createClient().auth.signInWithPassword({
       email,
       password,
     });
