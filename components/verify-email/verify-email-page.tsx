@@ -3,23 +3,47 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, Loader2, Mail } from "lucide-react";
+import type { Session } from "@supabase/supabase-js";
 
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 
 export default function VerifyEmailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [checking, setChecking] = useState(true);
   const [verified, setVerified] = useState(false);
+  const [storedEmail, setStoredEmail] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem("pendingVerificationEmail");
+  });
+  const supabase = useMemo(() => createClient(), []);
 
   const email = useMemo(() => searchParams.get("email"), [searchParams]);
+  const normalizedEmail = useMemo(() => {
+    const queryEmail = email?.trim().toLowerCase();
+    const pendingEmail = storedEmail?.trim().toLowerCase();
+    return queryEmail || pendingEmail || null;
+  }, [email, storedEmail]);
 
   useEffect(() => {
     let isMounted = true;
 
-    const handleVerified = () => {
+    const handleVerified = (session?: Session | null) => {
       if (!isMounted) return;
+      const sessionEmail = session?.user?.email?.toLowerCase() ?? null;
+
+      if (normalizedEmail && sessionEmail && sessionEmail !== normalizedEmail) {
+        setChecking(false);
+        setVerified(false);
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("pendingVerificationEmail");
+      }
+      setStoredEmail(null);
+
       setVerified(true);
       setChecking(false);
       router.replace("/");
@@ -39,7 +63,7 @@ export default function VerifyEmailPage() {
       }
 
       if (session?.user?.email_confirmed_at) {
-        handleVerified();
+        handleVerified(session);
       } else {
         setChecking(false);
         setVerified(false);
@@ -49,7 +73,7 @@ export default function VerifyEmailPage() {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (session?.user?.email_confirmed_at) {
-          handleVerified();
+          handleVerified(session);
         }
       }
     );
@@ -62,7 +86,7 @@ export default function VerifyEmailPage() {
       authListener.subscription.unsubscribe();
       window.clearInterval(intervalId);
     };
-  }, [router]);
+  }, [router, supabase, normalizedEmail]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-neutral-50 to-teal-50 dark:from-neutral-950 dark:to-neutral-900 px-4">

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import SignupPage from "@/components/auth/signup-page";
 import type { SignupFormValues } from "@/components/auth/signup-form";
@@ -9,18 +9,19 @@ import type { SignupFormValues } from "@/components/auth/signup-form";
 export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState("");
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event) => {
-      if (event === "SIGNED_IN") {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session?.user?.email_confirmed_at) {
         router.push("/");
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [router]);
+  }, [router, supabase]);
 
   useEffect(() => {
     if (window.location.hash.includes("access_token")) {
@@ -67,6 +68,10 @@ export default function RegisterPage() {
           : profileError.message;
       setError(message);
       return;
+    }
+
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("pendingVerificationEmail", email.toLowerCase());
     }
 
     router.push(`/verify-email?email=${encodeURIComponent(email)}`);
