@@ -105,16 +105,17 @@ function LoginForm({
             <p className="mt-2 text-sm text-red-500">{passwordError}</p>
           )}
         </label>
-        {/* Remove error message here as it's now at the top */}
 
         <div className="mt-2 text-right">
-          <button
-            type="button"
-            className="text-sm font-semibold text-emerald-600 transition hover:text-emerald-700"
-            disabled={loading}
-          >
-            Forgot password?
-          </button>
+          <Link href="/forgot-password">
+            <button
+              type="button"
+              className="text-sm font-semibold text-emerald-600 transition hover:text-emerald-700 hover:underline cursor-pointer"
+              disabled={loading}
+            >
+              Forgot password?
+            </button>
+          </Link>
         </div>
 
         <button
