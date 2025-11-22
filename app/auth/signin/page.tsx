@@ -25,6 +25,17 @@ export default function LoginPageMain() {
     });
   };
 
+  const signInWithFacebook = async () => {
+    const supabase = createClient();
+
+    await supabase.auth.signInWithOAuth({
+      provider: "facebook",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  };
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
@@ -71,6 +82,7 @@ export default function LoginPageMain() {
       emailError={emailError}
       passwordError={passwordError}
       signInWithGoogle={signInWithGoogle}
+      signInWithFacebook={signInWithFacebook}
     />
   );
 }

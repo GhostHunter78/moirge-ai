@@ -8,12 +8,14 @@ function LoginForm({
   emailError,
   passwordError,
   signInWithGoogle,
+  signInWithFacebook,
 }: {
   handleLogin: (e: React.FormEvent) => void;
   error: string;
   emailError?: string;
   passwordError?: string;
   signInWithGoogle: () => Promise<void>;
+  signInWithFacebook: () => Promise<void>;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -165,7 +167,13 @@ function LoginForm({
             type="button"
             className="group flex flex-1 items-center gap-3 rounded-2xl border border-emerald-100 bg-white/70 px-4 py-3 text-left transition hover:border-emerald-200 hover:bg-emerald-50/40 cursor-pointer"
             disabled={loading}
-            onClick={provider.name === "Google" ? signInWithGoogle : undefined}
+            onClick={
+              provider.name === "Google"
+                ? signInWithGoogle
+                : provider.name === "Facebook"
+                ? signInWithFacebook
+                : undefined
+            }
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-inner shadow-emerald-100">
               {provider.icon}
