@@ -4,9 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { createClient } from "@/lib/supabaseClient";
+import Navbar from "@/components/home-page/navbar";
 
 export default function Home() {
-  const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
 
@@ -37,23 +37,5 @@ export default function Home() {
     };
   }, [supabase]);
 
-  const handleSignIn = () => {
-    router.push("/auth/signin");
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.refresh();
-  };
-
-  return (
-    <div>
-      <h1>Moirge AI</h1>
-      {isSignedIn === null ? null : isSignedIn ? (
-        <button onClick={handleSignOut}>Sign out</button>
-      ) : (
-        <button onClick={handleSignIn}>Sign in</button>
-      )}
-    </div>
-  );
+  return <Navbar isSignedIn={isSignedIn} />;
 }
