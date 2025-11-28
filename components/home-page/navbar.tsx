@@ -3,8 +3,17 @@ import { Bell, LogOut, Menu, User, X } from "lucide-react";
 import { useState } from "react";
 import { SELLER_NAVBAR_PAGE_LINKS } from "@/constants/navbar-page-links";
 import Link from "next/link";
+import { signOut } from "@/actions/sign-out";
+import { Profile } from "@/types/user-profile";
+import { ProfileDropDown } from "@/components/home-page/profile-dropdown";
 
-function Navbar({ isSignedIn }: { isSignedIn: boolean | null }) {
+function Navbar({
+  isSignedIn,
+  userInfo,
+}: {
+  isSignedIn: boolean | null;
+  userInfo: Profile | null;
+}) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
@@ -108,21 +117,26 @@ function Navbar({ isSignedIn }: { isSignedIn: boolean | null }) {
                       />
                       <span className="text-gray-700 font-medium">EN</span>
                     </button>
-                    {isSignedIn ? (
+                    {!isSignedIn ? (
                       <div className="flex gap-2 w-full">
-                        <button className="flex-1 border border-gray-300 rounded-xl py-2 flex items-center justify-center gap-2 hover:bg-gray-100 transition cursor-pointer bg-white">
-                          <span className="text-gray-700 font-medium">
-                            Sign In
-                          </span>
-                        </button>
-                        <button className="flex-1 rounded-xl py-2 flex items-center justify-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500">
-                          <span className="text-white font-medium">
-                            Get Started
-                          </span>
-                        </button>
+                        <Link
+                          href="/auth/signin"
+                          className="flex-1 border border-gray-300 rounded-xl py-2 flex items-center justify-center gap-2 hover:bg-gray-100 transition cursor-pointer bg-white text-gray-700 font-medium text-center"
+                        >
+                          Sign In
+                        </Link>
+                        <Link
+                          href="/auth/signup"
+                          className="flex-1 rounded-xl py-2 flex items-center justify-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-medium text-center"
+                        >
+                          Get Started
+                        </Link>
                       </div>
                     ) : (
-                      <button className="rounded-xl w-full py-2 flex items-center justify-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500">
+                      <button
+                        onClick={async () => await signOut()}
+                        className="rounded-xl w-full py-2 flex items-center justify-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500"
+                      >
                         <LogOut className="text-white" size={16} />
                         <span className="text-white font-medium">Sign Out</span>
                       </button>
@@ -148,14 +162,20 @@ function Navbar({ isSignedIn }: { isSignedIn: boolean | null }) {
                 />
                 <span className="text-gray-700 font-medium">EN</span>
               </button>
-              {isSignedIn ? (
+              {!isSignedIn ? (
                 <div className="flex items-center gap-x-2">
-                  <button className="rounded-xl px-4 py-1 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer">
-                    <span className="text-gray-700 font-medium">Sign In</span>
-                  </button>
-                  <button className="rounded-xl px-4 py-1 flex items-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500 ">
-                    <span className="text-white font-medium">Get Started</span>
-                  </button>
+                  <Link
+                    href="/auth/signin"
+                    className="rounded-xl px-4 py-1 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer text-gray-700 font-medium"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    className="rounded-xl px-4 py-1 flex items-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-medium"
+                  >
+                    Get Started
+                  </Link>
                 </div>
               ) : (
                 <div className="flex items-center gap-x-4">
@@ -167,9 +187,13 @@ function Navbar({ isSignedIn }: { isSignedIn: boolean | null }) {
                       0
                     </span>
                   </button>
-                  <button className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-700 transition cursor-pointer hover:bg-blue-200">
-                    <User width={18} height={18} />
-                  </button>
+                  {userInfo ? (
+                    <ProfileDropDown user={userInfo} />
+                  ) : (
+                    <button className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-700 transition cursor-pointer hover:bg-blue-200">
+                      <User width={18} height={18} />
+                    </button>
+                  )}
                 </div>
               )}
             </div>
