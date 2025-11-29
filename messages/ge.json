@@ -1,0 +1,11 @@
+{
+  "navbar": {
+    "signIn": "შესვლა",
+    "getStarted": "რეგისტრაცია",
+    "signOut": "გასვლა",
+    "dashboard": "დაფა",
+    "aboutUs": "ჩვენს შესახებ",
+    "contact": "კონტაქტი",
+    "testimonials": "შეფასებები"
+  }
+}

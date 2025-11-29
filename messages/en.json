@@ -1,0 +1,11 @@
+{
+  "navbar": {
+    "signIn": "Sign In",
+    "getStarted": "Get Started",
+    "signOut": "Sign Out",
+    "dashboard": "Dashboard",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "testimonials": "Testimonials"
+  }
+}

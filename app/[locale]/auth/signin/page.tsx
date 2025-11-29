@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/routing";
 import LoginPage from "@/components/auth/login-page";
 import { loginSchema } from "@/lib/validation/auth";
 
@@ -20,7 +20,7 @@ export default function LoginPageMain() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     });
   };
@@ -31,7 +31,7 @@ export default function LoginPageMain() {
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     });
   };

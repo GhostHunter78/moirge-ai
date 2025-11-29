@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SOCIAL_PROVIDERS } from "@/constants/social-providers";
-import Link from "next/link";
+import { Link } from "@/lib/routing";
 
 function LoginForm({
   handleLogin,

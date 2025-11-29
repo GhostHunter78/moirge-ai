@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/lib/routing";
+import { useSearchParams } from "next/navigation";
 import { CheckCircle, Loader2, Mail } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 

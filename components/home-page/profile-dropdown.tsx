@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+import { Link } from "@/lib/routing";
 import { signOut } from "@/actions/sign-out";
 import { Profile } from "@/types/user-profile";
 

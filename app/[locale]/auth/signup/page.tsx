@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/routing";
 import SignupPage from "@/components/auth/signup-page";
 import type { SignupFormValues } from "@/components/auth/signup-form";
 

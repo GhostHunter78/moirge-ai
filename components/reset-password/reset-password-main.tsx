@@ -5,7 +5,7 @@ import { Lock, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/routing";
 
 function ResetPasswordMain() {
   const router = useRouter();

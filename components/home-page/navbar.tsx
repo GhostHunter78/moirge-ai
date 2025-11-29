@@ -2,10 +2,12 @@ import Image from "next/image";
 import { Bell, LogOut, Menu, User, X } from "lucide-react";
 import { useState } from "react";
 import { SELLER_NAVBAR_PAGE_LINKS } from "@/constants/navbar-page-links";
-import Link from "next/link";
+import { Link } from "@/lib/routing";
 import { signOut } from "@/actions/sign-out";
 import { Profile } from "@/types/user-profile";
 import { ProfileDropDown } from "@/components/home-page/profile-dropdown";
+import { LanguageSwitcher } from "../ui/language-switcher";
+import { useTranslations } from "next-intl";
 
 function Navbar({
   isSignedIn,
@@ -14,6 +16,7 @@ function Navbar({
   isSignedIn: boolean | null;
   userInfo: Profile | null;
 }) {
+  const t = useTranslations("navbar");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
@@ -34,7 +37,7 @@ function Navbar({
           <div className="flex-1" />
           <div className="flex items-center gap-x-10">
             <div className="hidden md:flex items-center gap-x-5">
-              {SELLER_NAVBAR_PAGE_LINKS.map((link) => (
+              {SELLER_NAVBAR_PAGE_LINKS().map((link) => (
                 <Link href={link.href} key={link.label}>
                   <button className="group relative text-gray-700 px-2 py-2 rounded-lg font-medium transition duration-300 ease-out hover:bg-teal-100 cursor-pointer">
                     <span className="relative z-10">{link.label}</span>
@@ -94,7 +97,7 @@ function Navbar({
                     </button>
                   </div>
                   <ul className="flex flex-col px-5 py-6 gap-4">
-                    {SELLER_NAVBAR_PAGE_LINKS.map((link) => (
+                    {SELLER_NAVBAR_PAGE_LINKS().map((link) => (
                       <li key={link.label}>
                         <Link
                           href={link.href}
@@ -108,28 +111,20 @@ function Navbar({
                   </ul>
                   <hr className="border-t border-gray-200 mb-4" />
                   <div className="flex flex-col gap-3 px-5">
-                    <button className="border border-gray-300 rounded-md w-full py-2 flex items-center justify-center gap-2 mb-1">
-                      <Image
-                        src="/images/GBflag.png"
-                        alt="GBflag"
-                        width={16}
-                        height={16}
-                      />
-                      <span className="text-gray-700 font-medium">EN</span>
-                    </button>
+                    <LanguageSwitcher />
                     {!isSignedIn ? (
                       <div className="flex gap-2 w-full">
                         <Link
                           href="/auth/signin"
                           className="flex-1 border border-gray-300 rounded-xl py-2 flex items-center justify-center gap-2 hover:bg-gray-100 transition cursor-pointer bg-white text-gray-700 font-medium text-center"
                         >
-                          Sign In
+                          {t("signIn")}
                         </Link>
                         <Link
                           href="/auth/signup"
                           className="flex-1 rounded-xl py-2 flex items-center justify-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-medium text-center"
                         >
-                          Get Started
+                          {t("getStarted")}
                         </Link>
                       </div>
                     ) : (
@@ -138,7 +133,9 @@ function Navbar({
                         className="rounded-xl w-full py-2 flex items-center justify-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500"
                       >
                         <LogOut className="text-white" size={16} />
-                        <span className="text-white font-medium">Sign Out</span>
+                        <span className="text-white font-medium">
+                          {t("signOut")}
+                        </span>
                       </button>
                     )}
                   </div>
@@ -153,28 +150,20 @@ function Navbar({
             </div>
             {/* Desktop menu */}
             <div className="hidden md:flex items-center gap-x-4">
-              <button className="border border-gray-300 rounded-md px-4 py-1 flex items-center gap-2 cursor-pointer">
-                <Image
-                  src="/images/GBflag.png"
-                  alt="GBflag"
-                  width={16}
-                  height={16}
-                />
-                <span className="text-gray-700 font-medium">EN</span>
-              </button>
+              <LanguageSwitcher />
               {!isSignedIn ? (
                 <div className="flex items-center gap-x-2">
                   <Link
                     href="/auth/signin"
                     className="rounded-xl px-4 py-1 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer text-gray-700 font-medium"
                   >
-                    Sign In
+                    {t("signIn")}
                   </Link>
                   <Link
                     href="/auth/signup"
                     className="rounded-xl px-4 py-1 flex items-center gap-2 transition cursor-pointer bg-linear-to-r from-teal-500 via-teal-400 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-medium"
                   >
-                    Get Started
+                    {t("getStarted")}
                   </Link>
                 </div>
               ) : (

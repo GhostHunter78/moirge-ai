@@ -1,18 +1,23 @@
-export const SELLER_NAVBAR_PAGE_LINKS = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-  },
-  {
-    label: "About Us",
-    href: "/about-us",
-  },
-  {
-    label: "Contact",
-    href: "/contact",
-  },
-  {
-    label: "Testimonials",
-    href: "#testimonials",
-  },
-];
+import { useTranslations } from "next-intl";
+
+export const SELLER_NAVBAR_PAGE_LINKS = () => {
+  const t = useTranslations("navbar");
+  return [
+    {
+      label: t("dashboard"),
+      href: "/dashboard",
+    },
+    {
+      label: t("aboutUs"),
+      href: "/about-us",
+    },
+    {
+      label: t("contact"),
+      href: "/contact",
+    },
+    {
+      label: t("testimonials"),
+      href: "#testimonials",
+    },
+  ];
+};
