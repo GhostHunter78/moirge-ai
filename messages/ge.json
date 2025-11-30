@@ -7,5 +7,48 @@
     "aboutUs": "ჩვენს შესახებ",
     "contact": "კონტაქტი",
     "testimonials": "შეფასებები"
+  },
+  "login": {
+    "welcomeBack": "კეთილი იყოს თქვენი მობრძანება",
+    "signInToAccount": "შედით თქვენს ანგარიშში",
+    "emailAddress": "ელ. ფოსტა",
+    "emailPlaceholder": "you@example.com",
+    "password": "პაროლი",
+    "passwordPlaceholder": "შეიყვანეთ თქვენი პაროლი",
+    "forgotPassword": "დაგავიწყდათ პაროლი?",
+    "login": "შესვლა",
+    "signingIn": "მიმდინარეობს შესვლა...",
+    "orContinueWith": "ან განაგრძეთ",
+    "dontHaveAccount": "არ გაქვთ ანგარიში?",
+    "signUp": "რეგისტრაცია",
+    "sidebar": {
+      "welcomeBack": "კეთილი იყოს თქვენი მობრძანება!",
+      "description": "შედით Moirge AI დეშბორდზე და გაეცანით ბაზრის უახლეს კოლექციებს.",
+      "secureLogin": {
+        "title": "უსაფრთხო შესვლა",
+        "description": "თქვენი მონაცემები დაცულია საწარმოო დონის უსაფრთხოებით."
+      },
+      "quickAccess": {
+        "title": "სწრაფი წვდომა",
+        "description": "გააგრძელეთ იქიდან, სადაც შეწყვიტეთ."
+      },
+      "stayUpdated": {
+        "title": "იყავით განახლებული",
+        "description": "მიიღეთ რეალურ დროში შეტყობინებები და განახლებები."
+      },
+      "marketplaceHub": {
+        "title": "ბაზრის ცენტრი",
+        "description": "დაუკავშირდით და იმუშავეთ საზოგადოებასთან."
+      },
+      "needAccount": "გჭირდებათ ანგარიში?",
+      "signUpNow": "დარეგისტრირდით ახლავე",
+      "joinCommunity": "ჩვენი საზოგადოების წევრობისთვის."
+    },
+    "errors": {
+      "emailRequired": "ელ. ფოსტა სავალდებულოა",
+      "emailInvalid": "გთხოვთ, შეიყტვანოთ ვალიდური ელ. ფოსტა",
+      "passwordRequired": "პაროლი სავალდებულოა",
+      "invalidCredentials": "შესასვლელად გამოყენებულია არასწორი მონაცემები"
+    }
   }
 }

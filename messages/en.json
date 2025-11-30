@@ -7,5 +7,48 @@
     "aboutUs": "About Us",
     "contact": "Contact",
     "testimonials": "Testimonials"
+  },
+  "login": {
+    "welcomeBack": "Welcome Back",
+    "signInToAccount": "Sign in to your account",
+    "emailAddress": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "login": "Login",
+    "signingIn": "Signing in...",
+    "orContinueWith": "Or continue with",
+    "dontHaveAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "sidebar": {
+      "welcomeBack": "Welcome Back!",
+      "description": "Log in to access your Moirge AI dashboard and explore the latest marketplace features.",
+      "secureLogin": {
+        "title": "Secure Login",
+        "description": "Your data is protected with enterprise-grade security."
+      },
+      "quickAccess": {
+        "title": "Quick Access",
+        "description": "Resume your work right where you left off."
+      },
+      "stayUpdated": {
+        "title": "Stay Updated",
+        "description": "Receive real-time notifications and updates."
+      },
+      "marketplaceHub": {
+        "title": "Marketplace Hub",
+        "description": "Connect and collaborate with the community."
+      },
+      "needAccount": "Need an account?",
+      "signUpNow": "Sign up now",
+      "joinCommunity": "to join our vibrant community."
+    },
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email",
+      "passwordRequired": "Password is required",
+      "invalidCredentials": "Invalid login credentials"
+    }
   }
 }

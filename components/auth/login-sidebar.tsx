@@ -1,4 +1,8 @@
+import { useTranslations } from "next-intl";
+
 export default function LoginSidebar() {
+  const t = useTranslations("login.sidebar");
+  
   return (
     <div
       className="w-full relative overflow-hidden flex flex-col justify-center items-start p-12 lg:p-16"
@@ -26,31 +30,31 @@ export default function LoginSidebar() {
 
         {/* Main Heading */}
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight text-balance">
-          Welcome Back!
+          {t("welcomeBack")}
         </h1>
 
         {/* Subheading */}
         <p className="text-lg text-white/90 mb-8 leading-relaxed">
-          Log in to access your Moirge AI dashboard and explore the latest marketplace features.
+          {t("description")}
         </p>
 
         {/* Features List */}
         <div className="space-y-4">
           {[
-            { icon: "🛡️", title: "Secure Login", desc: "Your data is protected with enterprise-grade security." },
-            { icon: "🚀", title: "Quick Access", desc: "Resume your work right where you left off." },
-            { icon: "🔔", title: "Stay Updated", desc: "Receive real-time notifications and updates." },
+            { icon: "🛡️", titleKey: "secureLogin.title", descKey: "secureLogin.description" },
+            { icon: "🚀", titleKey: "quickAccess.title", descKey: "quickAccess.description" },
+            { icon: "🔔", titleKey: "stayUpdated.title", descKey: "stayUpdated.description" },
             {
               icon: "🤝",
-              title: "Marketplace Hub",
-              desc: "Connect and collaborate with the community.",
+              titleKey: "marketplaceHub.title",
+              descKey: "marketplaceHub.description",
             },
           ].map((feature, i) => (
             <div key={i} className="flex gap-4 items-start">
               <div className="text-2xl mt-1">{feature.icon}</div>
               <div>
-                <p className="font-semibold text-white">{feature.title}</p>
-                <p className="text-sm text-white/75">{feature.desc}</p>
+                <p className="font-semibold text-white">{t(feature.titleKey)}</p>
+                <p className="text-sm text-white/75">{t(feature.descKey)}</p>
               </div>
             </div>
           ))}
@@ -59,8 +63,8 @@ export default function LoginSidebar() {
         {/* Bottom text */}
         <div className="mt-12 pt-8 border-t border-white/20">
           <p className="text-sm text-white/80">
-            Need an account?&nbsp;
-            <span className="font-semibold text-white">Sign up now</span> to join our vibrant community.
+            {t("needAccount")}&nbsp;
+            <span className="font-semibold text-white">{t("signUpNow")}</span> {t("joinCommunity")}
           </p>
         </div>
       </div>

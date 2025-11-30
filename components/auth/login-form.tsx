@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { SOCIAL_PROVIDERS } from "@/constants/social-providers";
 import { Link } from "@/lib/routing";
 
@@ -17,6 +18,7 @@ function LoginForm({
   signInWithGoogle: () => Promise<void>;
   signInWithFacebook: () => Promise<void>;
 }) {
+  const t = useTranslations("login");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -32,10 +34,10 @@ function LoginForm({
     <section className="w-full max-w-md rounded-3xl border border-emerald-100 bg-linear-to-b from-white via-white to-emerald-50 p-8 shadow-xl shadow-emerald-200/60">
       <div className="flex flex-col gap-2 text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.35em] text-emerald-500">
-          Welcome Back
+          {t("welcomeBack")}
         </p>
         <h1 className="text-3xl font-bold text-slate-900">
-          Sign in to your account
+          {t("signInToAccount")}
         </h1>
       </div>
 
@@ -45,7 +47,7 @@ function LoginForm({
 
       <form className="mt-8 grid" onSubmit={handleSubmit}>
         <label className="text-sm font-semibold text-slate-700">
-          Email address
+          {t("emailAddress")}
           <div className="mt-2 flex items-center rounded-2xl border border-emerald-100 bg-white/80 px-4 py-3 shadow-inner shadow-emerald-50 transition focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-100">
             <svg
               className="h-5 w-5 text-emerald-500"
@@ -63,7 +65,7 @@ function LoginForm({
             </svg>
             <input
               type="email"
-              placeholder="you@example.com"
+              placeholder={t("emailPlaceholder")}
               className="ml-3 w-full border-none bg-transparent text-base text-slate-900 placeholder:text-slate-400 focus:outline-none"
               name="email"
               disabled={loading}
@@ -76,7 +78,7 @@ function LoginForm({
         </label>
 
         <label className="text-sm font-semibold text-slate-700 mt-5">
-          Password
+          {t("password")}
           <div className="mt-2 flex items-center rounded-2xl border border-emerald-100 bg-white/80 px-4 py-3 shadow-inner shadow-emerald-50 transition focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-100">
             <svg
               className="h-5 w-5 text-emerald-500"
@@ -94,7 +96,7 @@ function LoginForm({
             </svg>
             <input
               type="password"
-              placeholder="Enter your password"
+              placeholder={t("passwordPlaceholder")}
               className="ml-3 w-full border-none bg-transparent text-base text-slate-900 placeholder:text-slate-400 focus:outline-none"
               name="password"
               disabled={loading}
@@ -113,7 +115,7 @@ function LoginForm({
               className="text-sm font-semibold text-emerald-600 transition hover:text-emerald-700 hover:underline cursor-pointer"
               disabled={loading}
             >
-              Forgot password?
+              {t("forgotPassword")}
             </button>
           </Link>
         </div>
@@ -145,10 +147,10 @@ function LoginForm({
                   d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                 ></path>
               </svg>
-              Signing in...
+              {t("signingIn")}
             </span>
           ) : (
-            "Login"
+            t("login")
           )}
         </button>
       </form>
@@ -156,7 +158,7 @@ function LoginForm({
       <div className="mt-8 flex items-center gap-4 text-xs font-medium uppercase tracking-[0.3em] text-slate-400">
         <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
         <span className="text-sm font-medium text-slate-400 whitespace-nowrap">
-          Or continue with
+          {t("orContinueWith")}
         </span>
         <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
       </div>
@@ -189,13 +191,13 @@ function LoginForm({
       </div>
 
       <p className="mt-6 text-center text-sm text-slate-500">
-        {"Don't"} have an account?{" "}
+        {t("dontHaveAccount")}{" "}
         <Link
           href="/auth/signup"
           type="button"
           className="font-semibold text-emerald-600 transition hover:text-emerald-700"
         >
-          Sign up
+          {t("signUp")}
         </Link>
       </p>
     </section>

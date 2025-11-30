@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabaseClient";
 import { useRouter } from "@/lib/routing";
 import LoginPage from "@/components/auth/login-page";
 import { loginSchema } from "@/lib/validation/auth";
 
 export default function LoginPageMain() {
+  const t = useTranslations();
+  const tLogin = useTranslations("login");
   const router = useRouter();
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
@@ -43,7 +46,7 @@ export default function LoginPageMain() {
     const email = (form.get("email") as string) ?? "";
     const password = (form.get("password") as string) ?? "";
 
-    const parsed = loginSchema.safeParse({ email, password });
+    const parsed = loginSchema(t).safeParse({ email, password });
     if (!parsed.success) {
       setError("");
       let emailIssue: string | undefined;
@@ -68,7 +71,7 @@ export default function LoginPageMain() {
     });
 
     if (error) {
-      setError(error.message || "Invalid login credentials");
+      setError(error.message || tLogin("errors.invalidCredentials"));
       return;
     }
 
