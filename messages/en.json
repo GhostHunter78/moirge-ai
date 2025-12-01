@@ -128,5 +128,38 @@
         "sellersText": "sellers already growing with us and suggesting products to you"
       }
     }
+  },
+  "completeProfile": {
+    "form": {
+      "title": "Complete Your Profile",
+      "description": "We need a few more details to get you started",
+      "fields": {
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "Choose a username",
+        "phoneLabel": "Phone Number"
+      },
+      "role": {
+        "label": "I want to",
+        "placeholder": "Select your role",
+        "buyer": "Buy products",
+        "seller": "Sell products"
+      },
+      "buttons": {
+        "submit": "Complete Profile",
+        "submitting": "Saving..."
+      },
+      "errors": {
+        "usernameRequired": "Username is required",
+        "phoneRequired": "Phone number is required",
+        "roleRequired": "Please choose a role"
+      }
+    },
+    "page": {
+      "errors": {
+        "mustBeLoggedIn": "You must be logged in to complete your profile.",
+        "usernameTaken": "This username is already taken. Please choose another.",
+        "failedToSave": "Failed to save profile. Please try again."
+      }
+    }
   }
 }

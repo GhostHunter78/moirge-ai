@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabaseClient";
 import { useRouter } from "@/lib/routing";
 import CompleteProfilePage from "@/components/complete-profile/complete-profile-page";
 import type { CompleteProfileFormValues } from "@/components/complete-profile/complete-profile-form";
 
 export default function CompleteProfilePageMain() {
+  const t = useTranslations("completeProfile.page");
   const router = useRouter();
   const [error, setError] = useState("");
   const supabase = useMemo(() => createClient(), []);
@@ -51,7 +53,7 @@ export default function CompleteProfilePageMain() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      setError("You must be logged in to complete your profile.");
+      setError(t("errors.mustBeLoggedIn"));
       router.push("/auth/signin");
       return;
     }
@@ -74,11 +76,9 @@ export default function CompleteProfilePageMain() {
     if (upsertError) {
       console.error("Profile upsert error:", upsertError);
       if (upsertError.code === "23505") {
-        setError("This username is already taken. Please choose another.");
+        setError(t("errors.usernameTaken"));
       } else {
-        setError(
-          upsertError.message || "Failed to save profile. Please try again."
-        );
+        setError(upsertError.message || t("errors.failedToSave"));
       }
       return;
     }

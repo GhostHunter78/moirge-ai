@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,15 +23,17 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { z } from "zod";
 
-const completeProfileSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  phone: z.string().min(1, "Phone number is required"),
+const baseCompleteProfileSchema = z.object({
+  username: z.string().min(1, "usernameRequired"),
+  phone: z.string().min(1, "phoneRequired"),
   role: z.enum(["buyer", "seller"], {
-    error: "Please choose a role",
+    error: "roleRequired",
   }),
 });
 
-export type CompleteProfileFormValues = z.infer<typeof completeProfileSchema>;
+export type CompleteProfileFormValues = z.infer<
+  typeof baseCompleteProfileSchema
+>;
 
 type CompleteProfileErrors = Partial<
   Record<keyof CompleteProfileFormValues, string>
@@ -45,6 +48,10 @@ export default function CompleteProfileForm({
     values: CompleteProfileFormValues
   ) => Promise<void> | void;
 }) {
+  const t = useTranslations("completeProfile.form");
+
+  const completeProfileSchema = baseCompleteProfileSchema;
+
   const [formData, setFormData] = useState<CompleteProfileFormValues>({
     username: "",
     role: "buyer",
@@ -112,7 +119,10 @@ export default function CompleteProfileForm({
         fieldErrors
       ).reduce<CompleteProfileErrors>((acc, [key, messages]) => {
         if (messages && messages.length > 0) {
-          acc[key as keyof CompleteProfileFormValues] = messages[0];
+          const code = messages[0];
+          acc[key as keyof CompleteProfileFormValues] = t(
+            `errors.${code as string}`
+          );
         }
         return acc;
       }, {});
@@ -138,10 +148,10 @@ export default function CompleteProfileForm({
 
       <CardHeader className="relative z-10 space-y-3 text-center">
         <CardTitle className="text-3xl font-bold text-slate-900">
-          Complete Your Profile
+          {t("title")}
         </CardTitle>
         <CardDescription className="text-sm text-slate-500">
-          We need a few more details to get you started
+          {t("description")}
         </CardDescription>
       </CardHeader>
 
@@ -156,13 +166,13 @@ export default function CompleteProfileForm({
           {/* Username Field */}
           <div className="space-y-2">
             <Label htmlFor="username" className="text-sm font-medium">
-              Username
+              {t("fields.usernameLabel")}
             </Label>
             <Input
               id="username"
               name="username"
               type="text"
-              placeholder="Choose a username"
+              placeholder={t("fields.usernamePlaceholder")}
               value={formData.username}
               onChange={handleChange}
               className={getFieldStyles(errors.username)}
@@ -176,7 +186,7 @@ export default function CompleteProfileForm({
           {/* Phone Field */}
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-sm font-medium">
-              Phone Number
+              {t("fields.phoneLabel")}
             </Label>
             <div className="phone-input-wrapper">
               <PhoneInput
@@ -201,7 +211,7 @@ export default function CompleteProfileForm({
           {/* Role Field */}
           <div className="space-y-2">
             <Label htmlFor="role" className="text-sm font-medium">
-              I want to
+              {t("role.label")}
             </Label>
             <Select
               value={formData.role}
@@ -209,11 +219,11 @@ export default function CompleteProfileForm({
               disabled={isLoading}
             >
               <SelectTrigger className={getFieldStyles(errors.role)}>
-                <SelectValue placeholder="Select your role" />
+                <SelectValue placeholder={t("role.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="buyer">Buy products</SelectItem>
-                <SelectItem value="seller">Sell products</SelectItem>
+                <SelectItem value="buyer">{t("role.buyer")}</SelectItem>
+                <SelectItem value="seller">{t("role.seller")}</SelectItem>
               </SelectContent>
             </Select>
             {errors.role && (
@@ -227,7 +237,7 @@ export default function CompleteProfileForm({
             className="w-full h-12 rounded-2xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "Complete Profile"}
+            {isLoading ? t("buttons.submitting") : t("buttons.submit")}
           </Button>
         </form>
       </CardContent>
