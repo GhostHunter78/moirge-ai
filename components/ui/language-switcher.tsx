@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "@/lib/routing";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { Locale } from "@/lib/i18n";
+import { setLocaleCookie } from "@/actions/locale";
 
 interface LanguageOption {
   code: Locale;
@@ -46,10 +48,13 @@ const languages: LanguageOption[] = [
 export function LanguageSwitcher() {
   const currentLocale = useLocale() as Locale;
   const router = useRouter();
-  const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
 
   const handleLanguageChange = (locale: Locale) => {
-    router.replace(pathname, { locale });
+    startTransition(async () => {
+      await setLocaleCookie(locale);
+      router.refresh();
+    });
   };
 
   const currentLanguage =
@@ -58,7 +63,12 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-full md:w-auto">
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          disabled={isPending}
+        >
           {currentLanguage.icon}
           <span className="hidden sm:inline">{currentLanguage.name}</span>
         </Button>
@@ -69,6 +79,7 @@ export function LanguageSwitcher() {
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className="cursor-pointer"
+            disabled={isPending}
           >
             <span className="mr-2">{language.icon}</span>
             {language.name}

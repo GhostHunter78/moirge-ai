@@ -51,6 +51,12 @@
       "invalidCredentials": "Invalid login credentials"
     }
   },
+  "profileDropdown": {
+    "myProfile": "My Profile",
+    "helpSupport": "Help & Support",
+    "reportBug": "Report a Bug",
+    "logout": "Logout"
+  },
   "signup": {
     "form": {
       "title": "Create Account",

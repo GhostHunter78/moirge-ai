@@ -51,6 +51,12 @@
       "invalidCredentials": "შესასვლელად გამოყენებულია არასწორი მონაცემები"
     }
   },
+  "profileDropdown": {
+    "myProfile": "ჩემი პროფილი",
+    "helpSupport": "დახმარება და მხარდაჭერა",
+    "reportBug": "პრობლემის შეტყობინება",
+    "logout": "გასვლა"
+  },
   "signup": {
     "form": {
       "title": "ანგარიშის შექმნა",

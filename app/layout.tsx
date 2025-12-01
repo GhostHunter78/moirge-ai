@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import "../../app/globals.css";
+import { getMessages } from "next-intl/server";
+import { cookies } from "next/headers";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Moirge AI",
@@ -13,13 +14,14 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }>) {
-  const { locale } = await params;
-  const messages = await getMessages();
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "en";
+
+  const messages = await getMessages({ locale });
+
   return (
     <html lang={locale}>
       <head>
@@ -29,7 +31,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
         </NextIntlClientProvider>
       </body>

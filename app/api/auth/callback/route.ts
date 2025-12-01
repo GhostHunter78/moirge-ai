@@ -73,7 +73,7 @@ export async function GET(request: Request) {
       if (isProfileIncomplete) {
         // Redirect to complete-profile page with default locale
         // The middleware will handle locale routing
-        return NextResponse.redirect(`${origin}/en/complete-profile`);
+        return NextResponse.redirect(`${origin}/complete-profile`);
       }
 
       // Profile is complete, redirect to intended destination

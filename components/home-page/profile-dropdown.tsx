@@ -11,8 +11,11 @@ import {
 import { Link } from "@/lib/routing";
 import { signOut } from "@/actions/sign-out";
 import { Profile } from "@/types/user-profile";
+import { useTranslations } from "next-intl";
 
 export function ProfileDropDown({ user }: { user: Profile }) {
+  const t = useTranslations("profileDropdown");
+
   const initials =
     user?.username?.trim()?.slice(0, 2)?.toUpperCase() ||
     user?.email?.trim()?.slice(0, 2)?.toUpperCase() ||
@@ -39,7 +42,7 @@ export function ProfileDropDown({ user }: { user: Profile }) {
               <User className="h-4 w-4 text-blue-600" />
             </div>
             <span className="font-medium text-sm text-gray-700 group-hover:text-blue-600 transition-colors">
-              My Profile
+              {t("myProfile")}
             </span>
           </div>
         </DropdownMenuItem>
@@ -52,7 +55,7 @@ export function ProfileDropDown({ user }: { user: Profile }) {
               <HandIcon className="h-4 w-4 text-purple-600" />
             </div>
             <span className="font-medium text-sm text-gray-700 group-hover:text-purple-600 transition-colors">
-              Help & Support
+              {t("helpSupport")}
             </span>
           </div>
         </DropdownMenuItem>
@@ -64,7 +67,7 @@ export function ProfileDropDown({ user }: { user: Profile }) {
               <Bug className="h-4 w-4 text-indigo-600" />
             </div>
             <span className="font-medium text-sm text-gray-700 group-hover:text-indigo-600 transition-colors">
-              Report a Bug
+              {t("reportBug")}
             </span>
           </div>
         </DropdownMenuItem>
@@ -79,7 +82,7 @@ export function ProfileDropDown({ user }: { user: Profile }) {
             <LogOut className="h-4 w-4 text-red-600" />
           </div>
           <span className="font-medium text-sm text-gray-700 group-hover:text-red-600 transition-colors">
-            Logout
+            {t("logout")}
           </span>
         </div>
       </DropdownMenuItem>
