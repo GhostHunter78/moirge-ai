@@ -30,10 +30,7 @@ const baseSignupSchema = z
   .object({
     username: z.string().min(1, "usernameRequired"),
     phone: z.string().min(1, "phoneRequired"),
-    email: z
-      .string()
-      .min(1, "emailRequired")
-      .email("emailInvalid"),
+    email: z.string().min(1, "emailRequired").email("emailInvalid"),
     password: z.string().min(8, "passwordMin"),
     repeatPassword: z.string().min(1, "repeatPasswordRequired"),
     role: z.enum(["buyer", "seller"], {
@@ -70,6 +67,13 @@ export default function SignupForm({
   });
   const [errors, setErrors] = useState<SignupErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const getApiErrorMessage = (apiError: string) => {
+    const key = `apiErrors.${apiError}` as Parameters<typeof t>[0];
+    const translated = t(key);
+    // If there is no dedicated translation, fall back to the raw error string
+    return translated === key ? apiError : translated;
+  };
 
   const getFieldStyles = (hasError?: string) =>
     `h-12 rounded-2xl border ${
@@ -111,9 +115,7 @@ export default function SignupForm({
         (acc, [key, messages]) => {
           if (messages && messages.length > 0) {
             const code = messages[0];
-            acc[key as keyof SignupFormValues] = t(
-              `errors.${code as string}`
-            );
+            acc[key as keyof SignupFormValues] = t(`errors.${code as string}`);
           }
           return acc;
         },
@@ -274,12 +276,8 @@ export default function SignupForm({
                 <SelectValue placeholder={t("role.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="buyer">
-                  {t("role.buyer")}
-                </SelectItem>
-                <SelectItem value="seller">
-                  {t("role.seller")}
-                </SelectItem>
+                <SelectItem value="buyer">{t("role.buyer")}</SelectItem>
+                <SelectItem value="seller">{t("role.seller")}</SelectItem>
               </SelectContent>
             </Select>
             {errors.role && (
@@ -297,10 +295,7 @@ export default function SignupForm({
           </Button>
           {error && (
             <p className="text-sm text-destructive text-center" role="alert">
-              {t
-                .optional(`apiErrors.${error}`)
-                ?.() ??
-                error}
+              {getApiErrorMessage(error)}
             </p>
           )}
         </form>
@@ -326,9 +321,7 @@ export default function SignupForm({
             {t("footer.privacy")}
           </Link>
         </p>
-        <p className="text-xs text-muted-foreground">
-          {t("footer.copyright")}
-        </p>
+        <p className="text-xs text-muted-foreground">{t("footer.copyright")}</p>
       </CardFooter>
     </Card>
   );
