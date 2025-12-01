@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,26 +26,26 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { z } from "zod";
 
-const signupSchema = z
+const baseSignupSchema = z
   .object({
-    username: z.string().min(1, "Username is required"),
-    phone: z.string().min(1, "Phone number is required"),
+    username: z.string().min(1, "usernameRequired"),
+    phone: z.string().min(1, "phoneRequired"),
     email: z
       .string()
-      .min(1, "Email is required")
-      .email("Please enter a valid email"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    repeatPassword: z.string().min(1, "Please confirm your password"),
+      .min(1, "emailRequired")
+      .email("emailInvalid"),
+    password: z.string().min(8, "passwordMin"),
+    repeatPassword: z.string().min(1, "repeatPasswordRequired"),
     role: z.enum(["buyer", "seller"], {
-      error: "Please choose a role",
+      error: "roleRequired",
     }),
   })
   .refine((data) => data.password === data.repeatPassword, {
-    message: "Passwords do not match",
+    message: "passwordsDoNotMatch",
     path: ["repeatPassword"],
   });
 
-export type SignupFormValues = z.infer<typeof signupSchema>;
+export type SignupFormValues = z.infer<typeof baseSignupSchema>;
 
 type SignupErrors = Partial<Record<keyof SignupFormValues, string>>;
 
@@ -55,6 +56,10 @@ export default function SignupForm({
   error: string;
   handleSignup: (values: SignupFormValues) => Promise<void> | void;
 }) {
+  const t = useTranslations("signup.form");
+
+  const signupSchema = baseSignupSchema;
+
   const [formData, setFormData] = useState<SignupFormValues>({
     username: "",
     email: "",
@@ -105,7 +110,10 @@ export default function SignupForm({
       const formattedErrors = Object.entries(fieldErrors).reduce<SignupErrors>(
         (acc, [key, messages]) => {
           if (messages && messages.length > 0) {
-            acc[key as keyof SignupFormValues] = messages[0];
+            const code = messages[0];
+            acc[key as keyof SignupFormValues] = t(
+              `errors.${code as string}`
+            );
           }
           return acc;
         },
@@ -133,10 +141,10 @@ export default function SignupForm({
 
       <CardHeader className="relative z-10 space-y-3 text-center">
         <CardTitle className="text-3xl font-bold text-slate-900">
-          Create Account
+          {t("title")}
         </CardTitle>
         <CardDescription className="text-sm text-slate-500">
-          Join our marketplace and start selling or buying today
+          {t("description")}
         </CardDescription>
       </CardHeader>
 
@@ -145,13 +153,13 @@ export default function SignupForm({
           {/* Username Field */}
           <div className="space-y-2">
             <Label htmlFor="username" className="text-sm font-medium">
-              Username
+              {t("fields.usernameLabel")}
             </Label>
             <Input
               id="username"
               name="username"
               type="text"
-              placeholder="Username"
+              placeholder={t("fields.usernamePlaceholder")}
               value={formData.username}
               onChange={handleChange}
               className={getFieldStyles(errors.username)}
@@ -164,7 +172,7 @@ export default function SignupForm({
           {/* Phone Number Field */}
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-sm font-medium">
-              Phone Number
+              {t("fields.phoneLabel")}
             </Label>
             <PhoneInput
               country={"ge"}
@@ -194,13 +202,13 @@ export default function SignupForm({
           {/* Email Field */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-medium">
-              Email Address
+              {t("fields.emailLabel")}
             </Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder={t("fields.emailPlaceholder")}
               value={formData.email}
               onChange={handleChange}
               className={getFieldStyles(errors.email)}
@@ -225,13 +233,13 @@ export default function SignupForm({
           {/* Repeat Password Field */}
           <div className="space-y-2">
             <Label htmlFor="repeatPassword" className="text-sm font-medium">
-              Confirm Password
+              {t("fields.confirmPasswordLabel")}
             </Label>
             <Input
               id="repeatPassword"
               name="repeatPassword"
               type="password"
-              placeholder="Confirm your password"
+              placeholder={t("fields.confirmPasswordPlaceholder")}
               value={formData.repeatPassword}
               onChange={handleChange}
               className={getFieldStyles(errors.repeatPassword)}
@@ -247,7 +255,7 @@ export default function SignupForm({
           {/* Role Select */}
           <div className="space-y-2">
             <Label htmlFor="role" className="text-sm font-medium">
-              I want to
+              {t("role.label")}
             </Label>
             <Select
               value={formData.role}
@@ -263,11 +271,15 @@ export default function SignupForm({
                 id="role"
                 className="h-12 rounded-2xl border border-emerald-100 bg-white/80 px-4 text-base shadow-inner shadow-emerald-50 focus-visible:ring-2 focus-visible:ring-emerald-200"
               >
-                <SelectValue placeholder="Select an option" />
+                <SelectValue placeholder={t("role.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="buyer">Buy products</SelectItem>
-                <SelectItem value="seller">Sell products</SelectItem>
+                <SelectItem value="buyer">
+                  {t("role.buyer")}
+                </SelectItem>
+                <SelectItem value="seller">
+                  {t("role.seller")}
+                </SelectItem>
               </SelectContent>
             </Select>
             {errors.role && (
@@ -281,11 +293,14 @@ export default function SignupForm({
             disabled={isLoading}
             className="w-full h-12 rounded-2xl bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-emerald-500/30 transition hover:brightness-105 focus-visible:ring-4 focus-visible:ring-emerald-200"
           >
-            {isLoading ? "Creating Account..." : "Create Account"}
+            {isLoading ? t("buttons.submitting") : t("buttons.submit")}
           </Button>
           {error && (
             <p className="text-sm text-destructive text-center" role="alert">
-              {error}
+              {t
+                .optional(`apiErrors.${error}`)
+                ?.() ??
+                error}
             </p>
           )}
         </form>
@@ -293,26 +308,26 @@ export default function SignupForm({
 
       <CardFooter className="relative z-10 flex flex-col gap-3 border-t border-emerald-100/70 bg-white/80 pt-6 text-center">
         <p className="text-sm text-slate-500">
-          Already have an account?{" "}
+          {t("footer.haveAccount")}{" "}
           <Link
             href="/auth/signin"
             className="font-semibold text-emerald-600 transition hover:text-emerald-700"
           >
-            Login here
+            {t("footer.loginHere")}
           </Link>
         </p>
         <p className="text-xs text-muted-foreground pt-2">
-          By signing up, you agree to our{" "}
+          {t("footer.tosPrefix")}{" "}
           <Link href="#" className="underline hover:no-underline">
-            Terms of Service
+            {t("footer.tos")}
           </Link>{" "}
-          and{" "}
+          {t("footer.and")}{" "}
           <Link href="#" className="underline hover:no-underline">
-            Privacy Policy
+            {t("footer.privacy")}
           </Link>
         </p>
         <p className="text-xs text-muted-foreground">
-          Moirge © 2025 All rights reserved.
+          {t("footer.copyright")}
         </p>
       </CardFooter>
     </Card>

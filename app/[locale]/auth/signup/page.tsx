@@ -39,18 +39,18 @@ export default function RegisterPage() {
     });
 
     if (authError) {
-      const message =
+      const errorKey =
         authError.message === "User already registered"
-          ? "An account with this email already exists."
-          : authError.message;
-      setError(message);
+          ? "userAlreadyRegistered"
+          : "unableToComplete";
+      setError(errorKey);
       return;
     }
 
     const userId = data.user?.id;
 
     if (!userId) {
-      setError("Unable to complete signup. Please try again.");
+      setError("unableToComplete");
       return;
     }
 
@@ -62,11 +62,11 @@ export default function RegisterPage() {
     });
 
     if (profileError) {
-      const message =
+      const errorKey =
         profileError.code === "23505"
-          ? "This account already exists. Please log in instead."
-          : profileError.message;
-      setError(message);
+          ? "profileAlreadyExists"
+          : "unableToComplete";
+      setError(errorKey);
       return;
     }
 

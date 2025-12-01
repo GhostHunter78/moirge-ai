@@ -50,5 +50,83 @@
       "passwordRequired": "პაროლი სავალდებულოა",
       "invalidCredentials": "შესასვლელად გამოყენებულია არასწორი მონაცემები"
     }
+  },
+  "signup": {
+    "form": {
+      "title": "ანგარიშის შექმნა",
+      "description": "შემოუერთდით ჩვენს პლატფორმას და დაიწყეთ ყიდვა ან გაყიდვა დღესვე",
+      "fields": {
+        "usernameLabel": "მომხმარებლის სახელი",
+        "usernamePlaceholder": "მომხმარებლის სახელი",
+        "phoneLabel": "ტელეფონის ნომერი",
+        "emailLabel": "ელ. ფოსტა",
+        "emailPlaceholder": "you@example.com",
+        "passwordLabel": "პაროლი",
+        "passwordPlaceholder": "შეიყვანეთ პაროლი",
+        "confirmPasswordLabel": "პაროლის დადასტურება",
+        "confirmPasswordPlaceholder": "დაადასტურეთ პაროლი"
+      },
+      "role": {
+        "label": "მე მსურს",
+        "placeholder": "აირჩიეთ ვარიანტი",
+        "buyer": "პროდუქტების ყიდვა",
+        "seller": "პროდუქტების გაყიდვა"
+      },
+      "buttons": {
+        "submit": "ანგარიშის შექმნა",
+        "submitting": "ანგარიშის შექმნა..."
+      },
+      "footer": {
+        "haveAccount": "უკვე გაქვთ ანგარიში?",
+        "loginHere": "შედით აქ",
+        "tosPrefix": "რეგისტრაციით თქვენ ეთანხმებით ჩვენს",
+        "tos": "სერვისის პირობებს",
+        "and": "და",
+        "privacy": "კონფიდენციალურობის პოლიტიკას",
+        "copyright": "Moirge © 2025 ყველა უფლება დაცულია."
+      },
+      "errors": {
+        "usernameRequired": "მომხმარებლის სახელი სავალდებულოა",
+        "phoneRequired": "ტელეფონის ნომერი სავალდებულოა",
+        "emailRequired": "ელ. ფოსტა სავალდებულოა",
+        "emailInvalid": "გთხოვთ, შეიყვანოთ ვალიდური ელ. ფოსტა",
+        "passwordRequired": "პაროლი სავალდებულოა",
+        "passwordMin": "პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს",
+        "repeatPasswordRequired": "გთხოვთ, დაადასტუროთ პაროლი",
+        "passwordsDoNotMatch": "პაროლები არ ემთხვევა",
+        "roleRequired": "გთხოვთ, აირჩიოთ როლი"
+      },
+      "apiErrors": {
+        "userAlreadyRegistered": "ამ ელ. ფოსტით ანგარიში უკვე არსებობს.",
+        "unableToComplete": "რეგისტრაციის დასრულება ვერ მოხერხდა. სცადეთ ხელახლა.",
+        "profileAlreadyExists": "ეს ანგარიში უკვე არსებობს. გთხოვთ, შედით სისტემაში."
+      },
+      "passwordRequirements": {
+        "passwordMin": "მინიმუმ 8 სიმბოლო",
+        "passwordNumber": "მინიმუმ 1 ციფრი",
+        "passwordLowercase": "მინიმუმ 1 პატარა ასო",
+        "passwordUppercase": "მინიმუმ 1 დიდი ასო",
+        "passwordSpecial": "მინიმუმ 1 სპეციალური სიმბოლო"
+      }
+    },
+    "sidebar": {
+      "brand": "Moirge AI",
+      "heading": "შემოუერთდით მზარდ სავაჭრო პლატფორმას",
+      "subheading": "დაუკავშირდით ასეულობით მყიდველსა და გამყიდველს. ააგეთ თქვენი ბიზნესი ან იპოვეთ იდეალური პროდუქტი ჩვენთან.",
+      "features": {
+        "fastSetupTitle": "სწრაფი დაწყება",
+        "fastSetupDesc": "დაიწყეთ რამდენიმე წუთში",
+        "secureTitle": "უსაფრთხო",
+        "secureDesc": "საწარმოო დონის დაცვა",
+        "growTitle": "ზრდა",
+        "growDesc": "გაზარდეთ თქვენი ბიზნესი",
+        "clothUpTitle": "მოირგე",
+        "clothUpDesc": "იპოვეთ ტანსაცმელი, რომელიც ზუსტად თქვენთვისაა შექმნილი"
+      },
+      "bottom": {
+        "sellersPrefix": "50,000+",
+        "sellersText": "გამყიდველი უკვე იზრდება ჩვენთან და გთავაზობთ თქვენთვის მორგებულ პროდუქტებს"
+      }
+    }
   }
 }

@@ -50,5 +50,83 @@
       "passwordRequired": "Password is required",
       "invalidCredentials": "Invalid login credentials"
     }
+  },
+  "signup": {
+    "form": {
+      "title": "Create Account",
+      "description": "Join our marketplace and start selling or buying today",
+      "fields": {
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "Username",
+        "phoneLabel": "Phone Number",
+        "emailLabel": "Email Address",
+        "emailPlaceholder": "you@example.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "confirmPasswordLabel": "Confirm Password",
+        "confirmPasswordPlaceholder": "Confirm your password"
+      },
+      "role": {
+        "label": "I want to",
+        "placeholder": "Select an option",
+        "buyer": "Buy products",
+        "seller": "Sell products"
+      },
+      "buttons": {
+        "submit": "Create Account",
+        "submitting": "Creating Account..."
+      },
+      "footer": {
+        "haveAccount": "Already have an account?",
+        "loginHere": "Login here",
+        "tosPrefix": "By signing up, you agree to our",
+        "tos": "Terms of Service",
+        "and": "and",
+        "privacy": "Privacy Policy",
+        "copyright": "Moirge © 2025 All rights reserved."
+      },
+      "errors": {
+        "usernameRequired": "Username is required",
+        "phoneRequired": "Phone number is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 8 characters",
+        "repeatPasswordRequired": "Please confirm your password",
+        "passwordsDoNotMatch": "Passwords do not match",
+        "roleRequired": "Please choose a role"
+      },
+      "apiErrors": {
+        "userAlreadyRegistered": "An account with this email already exists.",
+        "unableToComplete": "Unable to complete signup. Please try again.",
+        "profileAlreadyExists": "This account already exists. Please log in instead."
+      },
+      "passwordRequirements": {
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordNumber": "Password must contain at least 1 number",
+        "passwordLowercase": "Password must contain at least 1 lowercase letter",
+        "passwordUppercase": "Password must contain at least 1 uppercase letter",
+        "passwordSpecial": "Password must contain at least 1 special character"
+      }
+    },
+    "sidebar": {
+      "brand": "Moirge AI",
+      "heading": "Join Our Growing Marketplace",
+      "subheading": "Connect with hundreds of buyers and sellers. Build your business or find the perfect product with us.",
+      "features": {
+        "fastSetupTitle": "Fast Setup",
+        "fastSetupDesc": "Get started in minutes",
+        "secureTitle": "Secure",
+        "secureDesc": "Enterprise-grade security",
+        "growTitle": "Grow",
+        "growDesc": "Scale your business",
+        "clothUpTitle": "Cloth Up",
+        "clothUpDesc": "Find clothes that were created exactly for you"
+      },
+      "bottom": {
+        "sellersPrefix": "50,000+",
+        "sellersText": "sellers already growing with us and suggesting products to you"
+      }
+    }
   }
 }

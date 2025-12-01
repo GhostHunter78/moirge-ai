@@ -6,15 +6,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-
-// Constants
-const PASSWORD_REQUIREMENTS = [
-  { regex: /.{8,}/, text: "At least 8 characters" },
-  { regex: /[0-9]/, text: "At least 1 number" },
-  { regex: /[a-z]/, text: "At least 1 lowercase letter" },
-  { regex: /[A-Z]/, text: "At least 1 uppercase letter" },
-  { regex: /[!-\/:-@[-`{-~]/, text: "At least 1 special characters" },
-] as const;
+import { useTranslations } from "next-intl";
 
 type StrengthScore = 0 | 1 | 2 | 3 | 4 | 5;
 
@@ -54,6 +46,16 @@ type PasswordInputProps = {
 };
 
 const PasswordInput = ({ value, onChange, error }: PasswordInputProps) => {
+  const t = useTranslations("signup.form.passwordRequirements");
+  // Constants
+  const PASSWORD_REQUIREMENTS = [
+    { regex: /.{8,}/, text: t("passwordMin") },
+    { regex: /[0-9]/, text: t("passwordNumber") },
+    { regex: /[a-z]/, text: t("passwordLowercase") },
+    { regex: /[A-Z]/, text: t("passwordUppercase") },
+    { regex: /[!-\/:-@[-`{-~]/, text: t("passwordSpecial") },
+  ] as const;
+
   const [isVisible, setIsVisible] = useState(false);
   const [isRequirementsOpen, setIsRequirementsOpen] = useState(false);
 
