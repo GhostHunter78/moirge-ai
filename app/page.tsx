@@ -4,6 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabaseClient";
 import Navbar from "@/components/home-page/navbar";
 import { Profile } from "@/types/user-profile";
+import HeroSection from "@/components/home-page/hero-section";
+import FeaturesSection from "@/components/home-page/features-section";
+import HowItWorksSection from "@/components/home-page/how-it-works-section";
+import FaqSection from "@/components/home-page/faq-section";
+import TestimonialsSection from "@/components/home-page/testimonioals-section";
+import Footer from "@/components/home-page/footer";
 
 export default function Home() {
   const supabase = useMemo(() => createClient(), []);
@@ -62,5 +68,15 @@ export default function Home() {
     };
   }, [supabase]);
 
-  return <Navbar isSignedIn={isSignedIn} userInfo={userInfo} />;
+  return (
+    <div className="w-full mx-auto pt-[65px] ">
+      <Navbar isSignedIn={isSignedIn} userInfo={userInfo} />
+      <HeroSection isSignedIn={isSignedIn} userInfo={userInfo} />
+      <FeaturesSection userInfo={userInfo} />
+      <HowItWorksSection userInfo={userInfo} />
+      <TestimonialsSection userInfo={userInfo} />
+      <FaqSection />
+      <Footer />
+    </div>
+  );
 }
