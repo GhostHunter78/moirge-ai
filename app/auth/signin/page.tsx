@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabaseClient";
 import { useRouter } from "@/lib/routing";
@@ -16,25 +16,47 @@ export default function LoginPageMain() {
   const [passwordError, setPasswordError] = useState<string | undefined>(
     undefined
   );
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Get redirect parameter from URL
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect");
+    if (redirect) {
+      setTimeout(() => {
+        setRedirectPath(redirect);
+      }, 0);
+    }
+  }, []);
 
   const signInWithGoogle = async () => {
     const supabase = createClient();
+    const callbackUrl = redirectPath
+      ? `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(
+          redirectPath
+        )}`
+      : `${window.location.origin}/api/auth/callback`;
 
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: callbackUrl,
       },
     });
   };
 
   const signInWithFacebook = async () => {
     const supabase = createClient();
+    const callbackUrl = redirectPath
+      ? `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(
+          redirectPath
+        )}`
+      : `${window.location.origin}/api/auth/callback`;
 
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
       options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: callbackUrl,
       },
     });
   };
@@ -75,7 +97,8 @@ export default function LoginPageMain() {
       return;
     }
 
-    router.push("/");
+    // Redirect to the intended path or home
+    router.push(redirectPath || "/");
   }
 
   return (
