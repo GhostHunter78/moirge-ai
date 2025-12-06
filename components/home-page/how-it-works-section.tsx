@@ -85,7 +85,7 @@ function HowItWorksSection({ userInfo }: { userInfo: Profile | null }) {
         <img
           src="/images/ferrari-jacket-asset.png"
           alt="Features Section Title"
-          className="absolute top-[-100px] right-0 w-[300px] h-[300px] object-contain"
+          className="absolute hidden xl:block top-[-100px] right-0 w-[300px] h-[300px] object-contain"
         />
         <div className="max-w-[1400px] mx-auto relative">
           <div className="text-center mb-16">
@@ -104,7 +104,7 @@ function HowItWorksSection({ userInfo }: { userInfo: Profile | null }) {
             </p>
           </div>
           {/* Add gap between cards for both mobile and desktop */}
-          <ol className="relative grid gap-8 md:gap-8 md:grid-cols-4">
+          <ol className="relative grid gap-8 md:gap-6 md:gap-y-8 md:grid-cols-2 lg:grid-cols-4 md:px-4">
             {steps.map((step, idx) => {
               return (
                 <li
@@ -117,7 +117,7 @@ function HowItWorksSection({ userInfo }: { userInfo: Profile | null }) {
                   {/* Step connector - animated line */}
                   {idx < steps.length - 1 && (
                     <span
-                      className="hidden md:block absolute right-0 top-1/2 w-16 h-1 bg-linear-to-r from-primary via-primary/40 to-transparent rounded-l-xl animate-grow-line"
+                      className="hidden lg:block absolute right-0 top-1/2 w-16 h-1 bg-linear-to-r from-primary via-primary/40 to-transparent rounded-l-xl animate-grow-line"
                       style={{
                         left: "100%",
                         marginTop: "-0.5rem",

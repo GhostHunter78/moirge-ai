@@ -60,7 +60,7 @@ function FeaturesSection({ userInfo }: { userInfo: Profile | null }) {
         <img
           src="/images/hoodie-asset.png"
           alt="Features Section Title"
-          className="absolute top-[-200px] left-0 w-[300px] h-[300px] object-contain"
+          className="absolute top-[-250px] left-[90px] sm:top-[-250px] sm:right-[0] sm:left-[auto] lg:top-[-200px] lg:left-0 w-[300px] h-[300px] object-contain"
         />
         <div className="max-w-[1400px] mx-auto relative">
           <div className="text-center mb-12">
@@ -77,7 +77,16 @@ function FeaturesSection({ userInfo }: { userInfo: Profile | null }) {
               connected.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            className="
+              grid gap-8
+              grid-cols-1
+              sm:grid-cols-2
+              sm:[&>*:nth-child(3)]:col-span-2
+              lg:grid-cols-3
+              lg:[&>*:nth-child(3)]:col-span-1
+            "
+          >
             {relevantFeatures.map((feature, idx) => (
               <div
                 key={idx}

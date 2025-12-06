@@ -69,7 +69,7 @@ export default function Home() {
   }, [supabase]);
 
   return (
-    <div className="w-full mx-auto pt-[65px] ">
+    <div className="w-full mx-auto pt-[65px] overflow-x-hidden">
       <Navbar isSignedIn={isSignedIn} userInfo={userInfo} />
       <HeroSection isSignedIn={isSignedIn} userInfo={userInfo} />
       <FeaturesSection userInfo={userInfo} />

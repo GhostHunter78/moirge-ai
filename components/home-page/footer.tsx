@@ -8,7 +8,6 @@ function Footer() {
 
   return (
     <footer className="relative w-full overflow-hidden">
-      {/* Background with same gradient as hero section */}
       <div
         className="pointer-events-none absolute inset-0 -z-10"
         aria-hidden="true"

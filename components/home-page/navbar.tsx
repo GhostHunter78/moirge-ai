@@ -36,7 +36,7 @@ function Navbar({
           </div>
           <div className="flex-1" />
           <div className="flex items-center gap-x-10">
-            <div className="hidden md:flex items-center gap-x-5">
+            <div className="hidden lg:flex items-center gap-x-5">
               {SELLER_NAVBAR_PAGE_LINKS().map((link) => (
                 <Link href={link.href} key={link.label}>
                   <button className="group relative text-gray-700 px-2 py-2 rounded-lg font-medium transition duration-300 ease-out hover:bg-teal-100 cursor-pointer">
@@ -47,9 +47,9 @@ function Navbar({
               ))}
             </div>
             {/* Divider */}
-            <div className="hidden md:block h-8 w-px bg-gray-300" />
+            <div className="hidden lg:block h-8 w-px bg-gray-300" />
             {/* Mobile menu */}
-            <div className="md:hidden flex items-center">
+            <div className="lg:hidden flex items-center">
               <button
                 onClick={() => setMobileNavOpen((v) => !v)}
                 aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
@@ -149,7 +149,7 @@ function Navbar({
               )}
             </div>
             {/* Desktop menu */}
-            <div className="hidden md:flex items-center gap-x-4">
+            <div className="hidden lg:flex items-center gap-x-4">
               <LanguageSwitcher />
               {!isSignedIn ? (
                 <div className="flex items-center gap-x-2">

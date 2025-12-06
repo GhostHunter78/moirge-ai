@@ -121,7 +121,7 @@ function TestimonialsSection({ userInfo }: { userInfo: Profile | null }) {
         <img
           src="/images/hat-asset.png"
           alt="Testimonials Section Asset"
-          className="absolute top-[-100px] left-[0px] w-[300px] object-contain"
+          className="absolute top-[-160px] left-[50px] sm:left-[100px] md:top-[-150px] md:left-[150px] lg:top-[-100px] lg:left-[0] w-[300px] object-contain"
         />
 
         <div className="max-w-[1400px] mx-auto relative">
