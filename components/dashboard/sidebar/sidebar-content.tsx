@@ -65,13 +65,9 @@ export default function SidebarContent({
           </div>
         </Link>
 
-        <div
-          className={`w-full flex items-center gap-x-5 mt-6 ${
-            isCollapsed ? "justify-start" : "justify-center"
-          }`}
-        >
+        <div className="w-full flex items-center justify-start gap-x-5 mt-6">
           {!isCollapsed && (
-            <>
+            <div className="max-w-50 flex items-center justify-start gap-x-5">
               <button
                 className="relative rounded-xl px-2 py-1 flex items-center transition cursor-pointer hover:bg-gray-100"
                 aria-label="Notifications"
@@ -84,11 +80,11 @@ export default function SidebarContent({
                 </span>
               </button>
               <LanguageSwitcher />
-            </>
+            </div>
           )}
           <button
             onClick={onToggleCollapse}
-            className="relative rounded-xl px-2 py-1 flex items-center transition cursor-pointer hover:bg-gray-100"
+            className="hidden relative rounded-xl px-2 py-1 md:flex items-center transition cursor-pointer hover:bg-gray-100"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {!isCollapsed ? (
