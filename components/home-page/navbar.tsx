@@ -37,7 +37,7 @@ function Navbar({
           <div className="flex-1" />
           <div className="flex items-center gap-x-10">
             <div className="hidden lg:flex items-center gap-x-5">
-              {SELLER_NAVBAR_PAGE_LINKS().map((link) => (
+              {SELLER_NAVBAR_PAGE_LINKS(userInfo?.role).map((link) => (
                 <Link href={link.href} key={link.label}>
                   <button className="group relative text-gray-700 px-2 py-2 rounded-lg font-medium transition duration-300 ease-out hover:bg-teal-100 cursor-pointer">
                     <span className="relative z-10">{link.label}</span>
@@ -97,7 +97,7 @@ function Navbar({
                     </button>
                   </div>
                   <ul className="flex flex-col px-5 py-6 gap-4">
-                    {SELLER_NAVBAR_PAGE_LINKS().map((link) => (
+                    {SELLER_NAVBAR_PAGE_LINKS(userInfo?.role).map((link) => (
                       <li key={link.label}>
                         <Link
                           href={link.href}

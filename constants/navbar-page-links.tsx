@@ -1,11 +1,13 @@
 import { useTranslations } from "next-intl";
 
-export const SELLER_NAVBAR_PAGE_LINKS = () => {
+export const SELLER_NAVBAR_PAGE_LINKS = (
+  role: "seller" | "buyer" | undefined
+) => {
   const t = useTranslations("navbar");
   return [
     {
       label: t("dashboard"),
-      href: "/dashboard",
+      href: role === "seller" ? "/dashboard/seller" : "/dashboard/buyer",
     },
     {
       label: t("aboutUs"),

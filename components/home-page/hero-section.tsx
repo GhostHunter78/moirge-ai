@@ -29,15 +29,16 @@ function HeroSection({
   };
 
   return (
-    <section className="relative flex w-full items-center justify-between overflow-hidden px-6 pt-12 md:px-16 lg:px-32">
+    <section className="w-full bg-[#fefcff] relative flex items-center justify-between overflow-hidden px-6 pt-12 md:px-16 lg:px-32">
       <div
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="absolute inset-0 z-0 pointer-events-none"
         aria-hidden="true"
-      >
-        <div className="w-full h-full bg-linear-to-br from-[#f0f4ff] via-[#f9edfa] to-[#dde0fd]" />
-        <div className="absolute left-0 top-0 w-[400px] h-[400px] bg-linear-to-br from-[#b5d2fa]/50 to-[#e9e7fc]/0 rounded-full blur-3xl opacity-60 animate-pulse" />
-        <div className="absolute right-0 bottom-0 w-[350px] h-[350px] bg-linear-to-br from-[#d6a8ff]/40 to-transparent rounded-full blur-3xl opacity-60" />
-      </div>
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 30% 70%, rgba(173, 216, 230, 0.35), transparent 60%),
+            radial-gradient(circle at 70% 30%, rgba(255, 182, 193, 0.4), transparent 60%)`,
+        }}
+      />
       <div className="max-w-[1400px] mx-auto flex w-full items-center justify-between">
         <div className="flex flex-col justify-end z-10 pb-12 lg:pb-24 max-w-xl">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground leading-tight">
