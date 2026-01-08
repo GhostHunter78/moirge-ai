@@ -167,5 +167,28 @@
         "failedToSave": "Failed to save profile. Please try again."
       }
     }
+  },
+  "dashboard": {
+    "sidebar": {
+      "sections": {
+        "general": "General",
+        "shopping": "Shopping",
+        "communication": "Communication",
+        "settings": "Settings",
+        "commerce": "Commerce",
+        "insights": "Insights"
+      },
+      "labels": {
+        "overview": "Overview",
+        "myProfile": "My Profile",
+        "orders": "Orders",
+        "saved": "Saved",
+        "messages": "Messages",
+        "settings": "Settings",
+        "storeProfile": "Store Profile",
+        "products": "Products",
+        "analytics": "Analytics"
+      }
+    }
   }
 }

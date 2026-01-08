@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function SidebarSections({
   sections,
@@ -14,6 +15,37 @@ export default function SidebarSections({
   collapsed?: boolean;
 }) {
   const pathname = usePathname();
+  const tSections = useTranslations("dashboard.sidebar.sections");
+  const tLabels = useTranslations("dashboard.sidebar.labels");
+
+  const getSectionTranslation = (section: string): string => {
+    const sectionMap: Record<string, string> = {
+      General: "general",
+      Shopping: "shopping",
+      Communication: "communication",
+      Commerce: "commerce",
+      Insights: "insights",
+      Settings: "settings",
+    };
+    const key = sectionMap[section] || section.toLowerCase();
+    return tSections(key);
+  };
+
+  const getLabelTranslation = (label: string): string => {
+    const labelMap: Record<string, string> = {
+      Overview: "overview",
+      "My Profile": "myProfile",
+      Orders: "orders",
+      Saved: "saved",
+      Messages: "messages",
+      Settings: "settings",
+      "Store Profile": "storeProfile",
+      Products: "products",
+      Analytics: "analytics",
+    };
+    const key = labelMap[label] || label.toLowerCase();
+    return tLabels(key);
+  };
 
   return (
     <nav
@@ -22,13 +54,13 @@ export default function SidebarSections({
       }`}
     >
       {sections.map((group) => (
-        <div key={group.section}>
+        <div key={group.section} className="w-full">
           <p
             className={`text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide ${
               collapsed ? "sr-only" : ""
             }`}
           >
-            {group.section}
+            {getSectionTranslation(group.section)}
           </p>
 
           <div className="flex flex-col gap-1">
@@ -40,13 +72,14 @@ export default function SidebarSections({
               }) => {
                 const Icon = item.icon;
                 const active = pathname === item.href;
+                const translatedLabel = getLabelTranslation(item.label);
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={`
-                      flex items-center rounded-md px-3 py-2 text-sm transition
+                      w-full flex items-center rounded-md px-3 py-2 text-sm transition
                       ${collapsed ? "justify-center" : "gap-3"}
                       ${
                         active
@@ -54,10 +87,10 @@ export default function SidebarSections({
                           : "text-gray-600 hover:bg-gray-100 "
                       }
                     `}
-                    title={item.label}
+                    title={translatedLabel}
                   >
                     <Icon className="w-4 h-4" />
-                    {!collapsed && <span>{item.label}</span>}
+                    {!collapsed && <span>{translatedLabel}</span>}
                   </Link>
                 );
               }

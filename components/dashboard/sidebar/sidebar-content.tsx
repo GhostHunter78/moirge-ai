@@ -10,8 +10,6 @@ import {
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
-  PanelRightOpen,
-  Sidebar,
 } from "lucide-react";
 import Link from "next/link";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
