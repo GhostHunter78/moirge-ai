@@ -76,7 +76,7 @@ export default function HomePageClient() {
       <HowItWorksSection userInfo={userInfo} />
       <TestimonialsSection userInfo={userInfo} />
       <FaqSection />
-      <Footer />
+      <Footer userInfo={userInfo} />
     </div>
   );
 }

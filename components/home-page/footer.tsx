@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { Link } from "@/lib/routing";
 import { SELLER_NAVBAR_PAGE_LINKS } from "@/constants/navbar-page-links";
 import { Facebook, Mail, MapPin, Phone } from "lucide-react";
+import { Profile } from "@/types/user-profile";
 
-function Footer() {
+function Footer({ userInfo }: { userInfo: Profile | null }) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -86,7 +86,7 @@ function Footer() {
                 Quick Links
               </h3>
               <ul className="space-y-3">
-                {SELLER_NAVBAR_PAGE_LINKS().map((link) => (
+                {SELLER_NAVBAR_PAGE_LINKS(userInfo?.role).map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
