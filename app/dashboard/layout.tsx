@@ -13,7 +13,6 @@ export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
-  loading: boolean;
 }) {
   const supabase = useMemo(() => createClient(), []);
   const [userInfo, setUserInfo] = useState<Profile | null>(null);

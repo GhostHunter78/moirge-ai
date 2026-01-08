@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { DashboardSection } from "@/constants/dashboard-sidebar-links";
+import { DashboardPageMetadata, DashboardSection } from "@/types/dashboard";
 
 export default function SidebarSections({
   sections,
@@ -62,7 +62,7 @@ export default function SidebarSections({
           </p>
 
           <div className="flex flex-col gap-1">
-            {group.items.map((item) => {
+            {group.items.map((item: DashboardPageMetadata) => {
               const Icon = item.icon;
               const active = pathname === item.href;
               const translatedLabel = getLabelTranslation(item.label);
