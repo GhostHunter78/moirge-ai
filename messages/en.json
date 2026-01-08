@@ -169,6 +169,11 @@
     }
   },
   "dashboard": {
+    "layout": {
+      "signInRequired": "Sign in required",
+      "signInRequiredDescription": "You need to be signed in to view your dashboard and access all of your features.",
+      "signIn": "Sign In"
+    },
     "sidebar": {
       "sections": {
         "general": "General",

@@ -169,6 +169,11 @@
     }
   },
   "dashboard": {
+    "layout": {
+      "signInRequired": "ავტორიზაცია აუცილებელია",
+      "signInRequiredDescription": "დაფის სანახავად და ყველა ფუნქციის გამოყენებისთვის გთხოვთ შეხვიდეთ სისტემაში.",
+      "signIn": "შესვლა"
+    },
     "sidebar": {
       "sections": {
         "general": "ზოგადი",
