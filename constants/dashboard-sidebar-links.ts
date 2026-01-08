@@ -1,3 +1,4 @@
+import { DashboardSection } from "@/types/dashboard";
 import {
   LayoutDashboard,
   User,
@@ -10,20 +11,48 @@ import {
   BarChart2,
 } from "lucide-react";
 
-export const DASHBOARD_SIDEBAR_LINKS = {
+export const DASHBOARD_SIDEBAR_LINKS: {
+  buyer: DashboardSection[];
+  seller: DashboardSection[];
+} = {
   buyer: [
     {
       section: "General",
       items: [
-        { label: "Overview", href: "/dashboard/buyer", icon: LayoutDashboard },
-        { label: "My Profile", href: "/dashboard/buyer/profile", icon: User },
+        {
+          label: "Overview",
+          href: "/dashboard/buyer",
+          icon: LayoutDashboard,
+          title: "Overview",
+          description:
+            "Get a comprehensive view of your account activity and statistics",
+        },
+        {
+          label: "My Profile",
+          href: "/dashboard/buyer/profile",
+          icon: User,
+          title: "My Profile",
+          description: "Manage your personal information and account settings",
+        },
       ],
     },
     {
       section: "Shopping",
       items: [
-        { label: "Orders", href: "/dashboard/buyer/orders", icon: ShoppingBag },
-        { label: "Saved", href: "/dashboard/buyer/saved", icon: Heart },
+        {
+          label: "Orders",
+          href: "/dashboard/buyer/orders",
+          icon: ShoppingBag,
+          title: "Orders",
+          description: "View and track all your orders and purchase history",
+        },
+        {
+          label: "Saved",
+          href: "/dashboard/buyer/saved",
+          icon: Heart,
+          title: "Saved Items",
+          description: "Browse your saved products and wishlist items",
+        },
       ],
     },
     {
@@ -33,11 +62,16 @@ export const DASHBOARD_SIDEBAR_LINKS = {
           label: "Messages",
           href: "/dashboard/buyer/messages",
           icon: MessageSquare,
+          title: "Messages",
+          description: "Communicate with sellers and manage your conversations",
         },
         {
           label: "Settings",
           href: "/dashboard/buyer/settings",
           icon: Settings,
+          title: "Settings",
+          description:
+            "Customize your account preferences and notification settings",
         },
       ],
     },
@@ -47,22 +81,39 @@ export const DASHBOARD_SIDEBAR_LINKS = {
     {
       section: "General",
       items: [
-        { label: "Overview", href: "/dashboard/seller", icon: LayoutDashboard },
+        {
+          label: "Overview",
+          href: "/dashboard/seller",
+          icon: LayoutDashboard,
+          title: "Overview",
+          description:
+            "Monitor your store performance and key metrics at a glance",
+        },
         {
           label: "Store Profile",
           href: "/dashboard/seller/store-profile",
           icon: Store,
+          title: "Store Profile",
+          description: "Manage your store information and branding",
         },
       ],
     },
     {
       section: "Commerce",
       items: [
-        { label: "Products", href: "/dashboard/seller/products", icon: List },
+        {
+          label: "Products",
+          href: "/dashboard/seller/products",
+          icon: List,
+          title: "Products",
+          description: "Manage your product catalog, inventory, and listings",
+        },
         {
           label: "Orders",
           href: "/dashboard/seller/orders",
           icon: ShoppingBag,
+          title: "Orders",
+          description: "View and process customer orders and shipments",
         },
       ],
     },
@@ -73,6 +124,8 @@ export const DASHBOARD_SIDEBAR_LINKS = {
           label: "Analytics",
           href: "/dashboard/seller/analytics",
           icon: BarChart2,
+          title: "Analytics",
+          description: "Analyze your sales performance and customer insights",
         },
       ],
     },
@@ -83,11 +136,15 @@ export const DASHBOARD_SIDEBAR_LINKS = {
           label: "Messages",
           href: "/dashboard/seller/messages",
           icon: MessageSquare,
+          title: "Messages",
+          description: "Respond to customer inquiries and manage conversations",
         },
         {
           label: "Settings",
           href: "/dashboard/seller/settings",
           icon: Settings,
+          title: "Settings",
+          description: "Configure your store settings and preferences",
         },
       ],
     },

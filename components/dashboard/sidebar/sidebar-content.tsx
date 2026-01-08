@@ -5,14 +5,10 @@ import { DASHBOARD_SIDEBAR_LINKS } from "@/constants/dashboard-sidebar-links";
 import { Profile } from "@/types/user-profile";
 import { signOut } from "@/actions/sign-out";
 import SidebarSections from "./sidebar-sections";
-import {
-  Bell,
-  LogOut,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from "lucide-react";
+import { Bell, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import Link from "next/link";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { useTranslations } from "next-intl";
 
 export default function SidebarContent({
   role,
@@ -25,6 +21,7 @@ export default function SidebarContent({
   collapsed?: boolean;
   onToggleCollapse?: () => void;
 }) {
+  const t = useTranslations("dashboard.sidebar");
   if (!userInfo?.role) return null;
   const sections = DASHBOARD_SIDEBAR_LINKS[userInfo.role];
   const isCollapsed = !!collapsed;
@@ -63,7 +60,11 @@ export default function SidebarContent({
           </div>
         </Link>
 
-        <div className="w-full flex items-center justify-start gap-x-5 mt-6">
+        <div
+          className={`w-full flex items-center justify-${
+            isCollapsed ? "center" : "start"
+          } gap-x-5 mt-6`}
+        >
           {!isCollapsed && (
             <div className="max-w-50 flex items-center justify-start gap-x-5">
               <button
@@ -112,7 +113,7 @@ export default function SidebarContent({
           aria-label="Logout"
         >
           <LogOut className="h-4 w-4" />
-          {!isCollapsed && <span>Logout</span>}
+          {!isCollapsed && <span>{t("logout")}</span>}
         </button>
       </div>
     </div>

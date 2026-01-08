@@ -175,6 +175,7 @@
       "signIn": "Sign In"
     },
     "sidebar": {
+      "logout": "Logout",
       "sections": {
         "general": "General",
         "shopping": "Shopping",

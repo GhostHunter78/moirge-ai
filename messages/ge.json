@@ -175,6 +175,7 @@
       "signIn": "შესვლა"
     },
     "sidebar": {
+      "logout": "გასვლა",
       "sections": {
         "general": "ზოგადი",
         "shopping": "შოპინგი",

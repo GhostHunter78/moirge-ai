@@ -3,15 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { DashboardSection } from "@/constants/dashboard-sidebar-links";
 
 export default function SidebarSections({
   sections,
   collapsed = false,
 }: {
-  sections: {
-    section: string;
-    items: { label: string; href: string; icon: React.ElementType }[];
-  }[];
+  sections: DashboardSection[];
   collapsed?: boolean;
 }) {
   const pathname = usePathname();
@@ -64,21 +62,16 @@ export default function SidebarSections({
           </p>
 
           <div className="flex flex-col gap-1">
-            {group.items.map(
-              (item: {
-                label: string;
-                href: string;
-                icon: React.ElementType;
-              }) => {
-                const Icon = item.icon;
-                const active = pathname === item.href;
-                const translatedLabel = getLabelTranslation(item.label);
+            {group.items.map((item) => {
+              const Icon = item.icon;
+              const active = pathname === item.href;
+              const translatedLabel = getLabelTranslation(item.label);
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`
                       w-full flex items-center rounded-md px-3 py-2 text-sm transition
                       ${collapsed ? "justify-center" : "gap-3"}
                       ${
@@ -87,14 +80,13 @@ export default function SidebarSections({
                           : "text-gray-600 hover:bg-gray-100 "
                       }
                     `}
-                    title={translatedLabel}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {!collapsed && <span>{translatedLabel}</span>}
-                  </Link>
-                );
-              }
-            )}
+                  title={translatedLabel}
+                >
+                  <Icon className="w-4 h-4" />
+                  {!collapsed && <span>{translatedLabel}</span>}
+                </Link>
+              );
+            })}
           </div>
         </div>
       ))}

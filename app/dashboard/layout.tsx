@@ -7,6 +7,7 @@ import DashboardSidebar from "@/components/dashboard/sidebar/dashboard-sidebar";
 import { Loader2, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import DashboardPageWrapper from "@/components/dashboard/dashboard-page-wrapper";
 
 export default function DashboardLayout({
   children,
@@ -87,7 +88,11 @@ export default function DashboardLayout({
   return (
     <div className="flex">
       <DashboardSidebar userInfo={userInfo as Profile} />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        <DashboardPageWrapper userInfo={userInfo as Profile}>
+          {children}
+        </DashboardPageWrapper>
+      </main>
     </div>
   );
 }
