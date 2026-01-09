@@ -1,6 +1,7 @@
 import { Button } from "../ui/button";
 import { Profile } from "@/types/user-profile";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 function HeroSection({
   isSignedIn,
@@ -11,6 +12,7 @@ function HeroSection({
 }) {
   const isSeller = userInfo?.role === "seller";
   const router = useRouter();
+  const t = useTranslations("homePage.heroSection");
 
   const handleStartAsBuyer = () => {
     if (!isSignedIn || isSeller) {
@@ -41,11 +43,11 @@ function HeroSection({
       />
       <div className="max-w-[1400px] mx-auto flex w-full items-center justify-between">
         <div className="flex flex-col justify-end z-10 pb-12 lg:pb-24 max-w-xl">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground leading-tight">
-            AI-powered ecommerce assistant for both buyers &amp; sellers.
+          <h1 className="text-3xl md:text-5xl lg:text-5xl font-bold mb-4 text-foreground leading-tight">
+            {t("title")}
           </h1>
           <p className="text-lg md:text-2xl text-muted-foreground mb-8">
-            Shop smarter. Sell faster. Increase trust and efficiency.
+            {t("description")}
           </p>
           <div className="flex gap-4">
             <Button
@@ -53,7 +55,7 @@ function HeroSection({
               className="text-base px-6 py-3"
               size="lg"
             >
-              Start as Buyer
+              {t("buttonText")}
             </Button>
             <Button
               variant="outline"
@@ -61,7 +63,7 @@ function HeroSection({
               size="lg"
               onClick={handleStartAsSeller}
             >
-              Start as Seller
+              {t("buttonTextSeller")}
             </Button>
           </div>
         </div>

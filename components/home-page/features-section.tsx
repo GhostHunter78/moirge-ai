@@ -7,52 +7,49 @@ import {
   PencilLine,
 } from "lucide-react";
 import { Profile } from "@/types/user-profile";
+import { useTranslations } from "next-intl";
 
 function FeaturesSection({ userInfo }: { userInfo: Profile | null }) {
+  const t = useTranslations("homePage.featuresSection");
+  const isBuyer = userInfo?.role === "buyer";
+
   const buyerFeatures = [
     {
-      title: "Smart Recommendations",
-      description:
-        "Enjoy personalized AI-powered product recommendations to help you find the perfect items with ease.",
+      title: t("buyerFeatures.smartRecommendations.title"),
+      description: t("buyerFeatures.smartRecommendations.description"),
       icon: <BrainCog className="w-9 h-9 text-primary" />,
     },
     {
-      title: "Virtual Try-On",
-      description:
-        "See how clothes would look on you instantly—just click one button to try products on virtually using AI.",
+      title: t("buyerFeatures.virtualTryOn.title"),
+      description: t("buyerFeatures.virtualTryOn.description"),
       icon: <Shirt className="w-9 h-9 text-primary" />,
     },
     {
-      title: "Safe & Verified Sellers",
-      description:
-        "Shop confidently with trusted, verified sellers and secure transactions on every purchase you make.",
+      title: t("buyerFeatures.safeVerifiedSellers.title"),
+      description: t("buyerFeatures.safeVerifiedSellers.description"),
       icon: <ShieldCheck className="w-9 h-9 text-primary" />,
     },
   ];
 
   const sellerFeatures = [
     {
-      title: "Generate Product Images",
-      description:
-        "Create stunning, high-quality product images instantly with AI-powered tools—no photography skills needed.",
+      title: t("sellerFeatures.generateProductImages.title"),
+      description: t("sellerFeatures.generateProductImages.description"),
       icon: <Images className="w-9 h-9 text-primary" />,
     },
     {
-      title: "Automated product description writing",
-      description:
-        "Let AI craft compelling, SEO-optimized product descriptions for every item in your shop automatically.",
+      title: t("sellerFeatures.automatedDescription.title"),
+      description: t("sellerFeatures.automatedDescription.description"),
       icon: <PencilLine className="w-9 h-9 text-primary" />,
     },
     {
-      title: "Analytics & insights",
-      description:
-        "Access real-time analytics and insights to track performance, understand customers, and boost your sales.",
+      title: t("sellerFeatures.analyticsInsights.title"),
+      description: t("sellerFeatures.analyticsInsights.description"),
       icon: <BarChart3 className="w-9 h-9 text-primary" />,
     },
   ];
 
-  const relevantFeatures =
-    userInfo?.role === "buyer" ? buyerFeatures : sellerFeatures;
+  const relevantFeatures = isBuyer ? buyerFeatures : sellerFeatures;
 
   return (
     <section className="relative py-16 px-6 md:px-16 bg-linear-to-b from-[#faf6ff] via-white to-[#f3f6ff] w-full">
@@ -65,16 +62,13 @@ function FeaturesSection({ userInfo }: { userInfo: Profile | null }) {
         <div className="max-w-[1400px] mx-auto relative">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-1 rounded-full bg-linear-to-r from-primary/10 to-secondary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3 shadow transition-colors duration-200">
-              What We Can
+              {t("badge")}
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">
-              {userInfo?.role === "buyer"
-                ? "Discover our Key Features for Buyers"
-                : "Discover our Key Features for Sellers"}
+              {isBuyer ? t("headingBuyer") : t("headingSeller")}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground">
-              Empowering your ecommerce experience—smarter, safer, and more
-              connected.
+              {t("description")}
             </p>
           </div>
           <div

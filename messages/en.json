@@ -196,5 +196,47 @@
         "analytics": "Analytics"
       }
     }
+  },
+  "homePage": {
+    "heroSection": {
+      "title": "AI-powered ecommerce assistant for both buyers & sellers. Shop smarter. Sell faster.",
+      "description": "Shop smarter. Sell faster. Increase trust and efficiency.",
+      "buttonText": "Start as Buyer",
+      "buttonTextSeller": "Start as Seller"
+    },
+    "featuresSection": {
+      "badge": "What We Can",
+      "headingBuyer": "Discover our Key Features for Buyers",
+      "headingSeller": "Discover our Key Features for Sellers",
+      "description": "Empowering your ecommerce experience—smarter, safer, and more connected.",
+      "buyerFeatures": {
+        "smartRecommendations": {
+          "title": "Smart Recommendations",
+          "description": "Enjoy personalized AI-powered product recommendations to help you find the perfect items with ease."
+        },
+        "virtualTryOn": {
+          "title": "Virtual Try-On",
+          "description": "See how clothes would look on you instantly—just click one button to try products on virtually using AI."
+        },
+        "safeVerifiedSellers": {
+          "title": "Safe & Verified Sellers",
+          "description": "Shop confidently with trusted, verified sellers and secure transactions on every purchase you make."
+        }
+      },
+      "sellerFeatures": {
+        "generateProductImages": {
+          "title": "Generate Product Images",
+          "description": "Create stunning, high-quality product images instantly with AI-powered tools—no photography skills needed."
+        },
+        "automatedDescription": {
+          "title": "Automated product description writing",
+          "description": "Let AI craft compelling, SEO-optimized product descriptions for every item in your shop automatically."
+        },
+        "analyticsInsights": {
+          "title": "Analytics & insights",
+          "description": "Access real-time analytics and insights to track performance, understand customers, and boost your sales."
+        }
+      }
+    }
   }
 }
