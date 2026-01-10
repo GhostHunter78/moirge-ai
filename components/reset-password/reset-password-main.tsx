@@ -39,8 +39,6 @@ function ResetPasswordMain() {
     setLoading(true);
 
     try {
-      // Supabase user is already identified via reset link/session.
-      // Changing password is done by updateUser({ password })
       const supabase = createClient();
       const { error } = await supabase.auth.updateUser({ password });
       if (error) {
@@ -104,7 +102,7 @@ function ResetPasswordMain() {
               >
                 New password
               </label>
-              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 transition mb-4">
+              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 tran[...]
                 <Lock className="h-5 w-5 text-teal-500" />
                 <Input
                   id="password"
@@ -140,7 +138,7 @@ function ResetPasswordMain() {
               >
                 Confirm password
               </label>
-              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 transition">
+              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 tran[...]
                 <Lock className="h-5 w-5 text-teal-500" />
                 <Input
                   id="confirm"
@@ -175,7 +173,7 @@ function ResetPasswordMain() {
               <Button
                 type="submit"
                 disabled={loading || !password || !confirmPassword}
-                className="mt-7 w-full rounded-2xl bg-teal-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-teal-500/30 transition hover:bg-teal-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-200 flex items-center justify-center"
+                className="mt-7 w-full rounded-2xl bg-teal-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-teal-500/30 transition hover:bg-teal-600 focus:o[...]
               >
                 {loading ? (
                   <span>
