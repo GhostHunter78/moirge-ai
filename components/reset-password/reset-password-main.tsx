@@ -102,7 +102,7 @@ function ResetPasswordMain() {
               >
                 New password
               </label>
-              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 tran[...]
+              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 transition mb-4">
                 <Lock className="h-5 w-5 text-teal-500" />
                 <Input
                   id="password"
@@ -138,7 +138,7 @@ function ResetPasswordMain() {
               >
                 Confirm password
               </label>
-              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 tran[...]
+              <div className="flex items-center bg-white border border-teal-200 rounded-2xl px-4 py-3 shadow-inner focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100 transition">
                 <Lock className="h-5 w-5 text-teal-500" />
                 <Input
                   id="confirm"
@@ -173,7 +173,7 @@ function ResetPasswordMain() {
               <Button
                 type="submit"
                 disabled={loading || !password || !confirmPassword}
-                className="mt-7 w-full rounded-2xl bg-teal-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-teal-500/30 transition hover:bg-teal-600 focus:o[...]
+                className="mt-7 w-full rounded-2xl bg-teal-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-teal-500/30 transition hover:bg-teal-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-200 flex items-center justify-center"
               >
                 {loading ? (
                   <span>
