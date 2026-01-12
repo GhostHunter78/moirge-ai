@@ -1,51 +1,6 @@
 import { Profile } from "@/types/user-profile";
 import { useRef, useEffect } from "react";
-
-const buyerSteps = [
-  {
-    title: "Sign Up or Log In",
-    description:
-      "Create your account in seconds or log in to get instant access to personalized shopping features.",
-  },
-  {
-    title: "Discover & Try",
-    description:
-      "Uncover handpicked items with AI-powered recommendations. Instantly try items on virtually for a fun, immersive experience.",
-  },
-  {
-    title: "Shop Confidently",
-    description:
-      "Purchase from verified sellers and enjoy a safe, seamless checkout with built-in protection.",
-  },
-  {
-    title: "Track & Receive",
-    description:
-      "Track your order in real-time and enjoy fast, reliable delivery right to your door.",
-  },
-];
-
-const sellerSteps = [
-  {
-    title: "Register as Seller",
-    description:
-      "Set up your seller shop quickly — just provide some details and start your journey.",
-  },
-  {
-    title: "Create Listings with AI",
-    description:
-      "Effortlessly generate pro product images and descriptions with AI. No studio needed.",
-  },
-  {
-    title: "Attract & Sell",
-    description:
-      "Reach active buyers as the AI boosts your visibility. Track interest in real-time.",
-  },
-  {
-    title: "Analyze & Grow",
-    description:
-      "Use powerful analytics to boost your shop's performance and confidence.",
-  },
-];
+import { useTranslations } from "next-intl";
 
 function useStepAnimations() {
   const itemsRef = useRef<Array<HTMLLIElement | null>>([]);
@@ -71,9 +26,49 @@ function useStepAnimations() {
 }
 
 function HowItWorksSection({ userInfo }: { userInfo: Profile | null }) {
+  const t = useTranslations("homePage.howItWorks");
   const isBuyer = userInfo?.role === "buyer";
-  const steps = isBuyer ? buyerSteps : sellerSteps;
   const itemsRef = useStepAnimations();
+
+  const buyerSteps = [
+    {
+      title: t("buyer.steps.step1.title"),
+      description: t("buyer.steps.step1.description"),
+    },
+    {
+      title: t("buyer.steps.step2.title"),
+      description: t("buyer.steps.step2.description"),
+    },
+    {
+      title: t("buyer.steps.step3.title"),
+      description: t("buyer.steps.step3.description"),
+    },
+    {
+      title: t("buyer.steps.step4.title"),
+      description: t("buyer.steps.step4.description"),
+    },
+  ];
+
+  const sellerSteps = [
+    {
+      title: t("seller.steps.step1.title"),
+      description: t("seller.steps.step1.description"),
+    },
+    {
+      title: t("seller.steps.step2.title"),
+      description: t("seller.steps.step2.description"),
+    },
+    {
+      title: t("seller.steps.step3.title"),
+      description: t("seller.steps.step3.description"),
+    },
+    {
+      title: t("seller.steps.step4.title"),
+      description: t("seller.steps.step4.description"),
+    },
+  ];
+
+  const steps = isBuyer ? buyerSteps : sellerSteps;
 
   return (
     <section className="relative w-full py-20 px-4 md:px-8 bg-linear-to-b from-[#f4f8ff] via-white to-[#f1f6fc] overflow-x-clip">
@@ -90,17 +85,13 @@ function HowItWorksSection({ userInfo }: { userInfo: Profile | null }) {
         <div className="max-w-[1400px] mx-auto relative">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-1 rounded-full bg-linear-to-r from-primary/10 to-secondary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3 shadow transition-colors duration-200">
-              How it works
+              {t("badge")}
             </span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4 drop-shadow leading-tight">
-              {isBuyer
-                ? "Shop Smarter in 4 Simple Steps"
-                : "Sell Effortlessly with AI in 4 Steps"}
+              {isBuyer ? t("buyer.heading") : t("seller.heading")}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
-              {isBuyer
-                ? "Explore, try, and buy with total confidence. See how easy intelligent shopping can be."
-                : "List, grow, and analyze your shop with seamless AI assistance. Start selling in minutes."}
+              {isBuyer ? t("buyer.description") : t("seller.description")}
             </p>
           </div>
           {/* Add gap between cards for both mobile and desktop */}

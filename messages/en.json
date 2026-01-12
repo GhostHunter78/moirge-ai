@@ -237,6 +237,53 @@
           "description": "Access real-time analytics and insights to track performance, understand customers, and boost your sales."
         }
       }
+    },
+    "howItWorks": {
+      "badge": "How it works",
+      "buyer": {
+        "heading": "Shop Smarter in 4 Simple Steps",
+        "description": "Explore, try, and buy with total confidence. See how easy intelligent shopping can be.",
+        "steps": {
+          "step1": {
+            "title": "Sign Up or Log In",
+            "description": "Create your account in seconds or log in to get instant access to personalized shopping features."
+          },
+          "step2": {
+            "title": "Discover & Try",
+            "description": "Uncover handpicked items with AI-powered recommendations. Instantly try items on virtually for a fun, immersive experience."
+          },
+          "step3": {
+            "title": "Shop Confidently",
+            "description": "Purchase from verified sellers and enjoy a safe, seamless checkout with built-in protection."
+          },
+          "step4": {
+            "title": "Track & Receive",
+            "description": "Track your order in real-time and enjoy fast, reliable delivery right to your door."
+          }
+        }
+      },
+      "seller": {
+        "heading": "Sell Effortlessly with AI in 4 Steps",
+        "description": "List, grow, and analyze your shop with seamless AI assistance. Start selling in minutes.",
+        "steps": {
+          "step1": {
+            "title": "Register as Seller",
+            "description": "Set up your seller shop quickly — just provide some details and start your journey."
+          },
+          "step2": {
+            "title": "Create Listings with AI",
+            "description": "Effortlessly generate pro product images and descriptions with AI. No studio needed."
+          },
+          "step3": {
+            "title": "Attract & Sell",
+            "description": "Reach active buyers as the AI boosts your visibility. Track interest in real-time."
+          },
+          "step4": {
+            "title": "Analyze & Grow",
+            "description": "Use powerful analytics to boost your shop's performance and confidence."
+          }
+        }
+      }
     }
   }
 }
