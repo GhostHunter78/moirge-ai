@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Profile } from "@/types/user-profile";
+import { useTranslations } from "next-intl";
 
 type Testimonial = {
   name: string;
@@ -71,6 +72,7 @@ function getRelevantTestimonials(userInfo: Profile | null) {
 }
 
 function TestimonialsSection({ userInfo }: { userInfo: Profile | null }) {
+  const t = useTranslations("homePage.testimonialsSection");
   const items = getRelevantTestimonials(userInfo);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -128,22 +130,21 @@ function TestimonialsSection({ userInfo }: { userInfo: Profile | null }) {
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center justify-between mb-12">
             <div className="max-w-xl space-y-5 text-center lg:text-left">
               <span className="inline-block px-4 py-1 rounded-full bg-linear-to-r from-primary/10 to-secondary/10 text-primary text-xs font-bold tracking-widest uppercase shadow-sm">
-                Testimonials
+                {t("badge")}
               </span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight drop-shadow-sm">
-                Loved by{" "}
+                {t("lovedBy")}{" "}
                 <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  buyers
+                  {t("buyers")}
                 </span>{" "}
-                &amp;{" "}
+                {t("and_apt")}{" "}
                 <span className="bg-linear-to-r from-secondary to-primary bg-clip-text text-transparent">
-                  sellers
+                  {t("sellers")}
                 </span>
                 .
               </h2>
               <p className="text-base md:text-lg text-muted-foreground">
-                Real stories from people who use AI to shop smarter, sell
-                faster, and build more trust in every interaction.
+                {t("description")}
               </p>
               <div className="hidden sm:flex items-center gap-4 text-sm text-muted-foreground/90">
                 <div className="flex -space-x-3">
@@ -158,8 +159,7 @@ function TestimonialsSection({ userInfo }: { userInfo: Profile | null }) {
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Join thousands of users trusting our AI to power every
-                  transaction.
+                  {t("joinThousands")}
                 </p>
               </div>
             </div>

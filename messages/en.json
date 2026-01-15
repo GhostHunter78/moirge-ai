@@ -284,6 +284,16 @@
           }
         }
       }
+    },
+    "testimonialsSection": {
+      "badge": "Testimonials",
+      "heading": "Loved by buyers & sellers.",
+      "description": "Real stories from people who use AI to shop smarter, sell faster, and build more trust in every interaction.",
+      "lovedBy": "Loved by",
+      "buyers": "buyers",
+      "sellers": "sellers",
+      "and_apt": "&",
+      "joinThousands": "Join thousands of users trusting our AI to power every transaction."
     }
   }
 }
