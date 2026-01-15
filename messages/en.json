@@ -298,6 +298,17 @@
     "faqSection": {
       "badge": "Frequently Asked Questions",
       "heading": "Got questions? We’ve got answers!"
+    },
+    "footer": {
+      "quickLinks": "Quick Links",
+      "support": "Support",
+      "faq": "FAQ",
+      "contact": "Contact",
+      "allRightsReserved": "All rights reserved.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies",
+      "description": "AI-powered ecommerce assistant for both buyers & sellers. Shop smarter. Sell faster."
     }
   }
 }

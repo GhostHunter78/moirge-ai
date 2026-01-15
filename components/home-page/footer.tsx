@@ -2,8 +2,10 @@ import { Link } from "@/lib/routing";
 import { SELLER_NAVBAR_PAGE_LINKS } from "@/constants/navbar-page-links";
 import { Facebook, Mail, MapPin, Phone } from "lucide-react";
 import { Profile } from "@/types/user-profile";
+import { useTranslations } from "next-intl";
 
 function Footer({ userInfo }: { userInfo: Profile | null }) {
+  const t = useTranslations("homePage.footer");
   const currentYear = new Date().getFullYear();
 
   return (
@@ -20,7 +22,7 @@ function Footer({ userInfo }: { userInfo: Profile | null }) {
       <div className="relative z-10 px-6 py-12 md:px-16 lg:px-32">
         <div className="max-w-[1400px] mx-auto">
           {/* Main Footer Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:flex gap-8 lg:justify-around mb-8">
             {/* Company Info */}
             <div className="lg:col-span-1">
               <div className="flex items-center gap-3 mb-4">
@@ -33,9 +35,8 @@ function Footer({ userInfo }: { userInfo: Profile | null }) {
                   Moirge AI
                 </span>
               </div>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                AI-powered ecommerce assistant for both buyers & sellers. Shop
-                smarter. Sell faster.
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4 max-w-sm">
+                {t("description")}
               </p>
               {/* Social Media Links */}
               <div className="flex items-center gap-3">
@@ -83,7 +84,7 @@ function Footer({ userInfo }: { userInfo: Profile | null }) {
             {/* Quick Links */}
             <div>
               <h3 className="text-foreground font-semibold text-lg mb-4">
-                Quick Links
+                {t("quickLinks")}
               </h3>
               <ul className="space-y-3">
                 {SELLER_NAVBAR_PAGE_LINKS(userInfo?.role).map((link) => (
@@ -100,55 +101,10 @@ function Footer({ userInfo }: { userInfo: Profile | null }) {
               </ul>
             </div>
 
-            {/* Support */}
-            <div>
-              <h3 className="text-foreground font-semibold text-lg mb-4">
-                Support
-              </h3>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/faq"
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm flex items-center gap-2 group"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground group-hover:bg-foreground transition-colors opacity-0 group-hover:opacity-100" />
-                    FAQ
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm flex items-center gap-2 group"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground group-hover:bg-foreground transition-colors opacity-0 group-hover:opacity-100" />
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm flex items-center gap-2 group"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground group-hover:bg-foreground transition-colors opacity-0 group-hover:opacity-100" />
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm flex items-center gap-2 group"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground group-hover:bg-foreground transition-colors opacity-0 group-hover:opacity-100" />
-                    Terms of Service
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
             {/* Contact Info */}
             <div>
               <h3 className="text-foreground font-semibold text-lg mb-4">
-                Contact
+                {t("contact")}
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3 text-muted-foreground text-sm">
@@ -181,28 +137,28 @@ function Footer({ userInfo }: { userInfo: Profile | null }) {
           <div className="pt-8 border-t border-border/50">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-muted-foreground text-sm text-center md:text-left">
-                © {currentYear} Moirge AI. All rights reserved.
+                © {currentYear} Moirge AI. {t("allRightsReserved")}
               </p>
               <div className="flex items-center gap-6 text-sm text-muted-foreground">
                 <Link
                   href="/privacy"
                   className="hover:text-foreground transition-colors"
                 >
-                  Privacy
+                  {t("privacy")}
                 </Link>
                 <span className="text-border">•</span>
                 <Link
                   href="/terms"
                   className="hover:text-foreground transition-colors"
                 >
-                  Terms
+                  {t("terms")}
                 </Link>
                 <span className="text-border">•</span>
                 <Link
                   href="/cookies"
                   className="hover:text-foreground transition-colors"
                 >
-                  Cookies
+                  {t("cookies")}
                 </Link>
               </div>
             </div>

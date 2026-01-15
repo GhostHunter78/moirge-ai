@@ -49,7 +49,7 @@ function HeroSection({
           <p className="text-lg md:text-2xl text-muted-foreground mb-8">
             {t("description")}
           </p>
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap gap-y-2">
             <Button
               onClick={handleStartAsBuyer}
               className="text-base px-6 py-3"
