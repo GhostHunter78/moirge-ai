@@ -294,6 +294,10 @@
       "sellers": "sellers",
       "and_apt": "&",
       "joinThousands": "Join thousands of users trusting our AI to power every transaction."
+    },
+    "faqSection": {
+      "badge": "Frequently Asked Questions",
+      "heading": "Got questions? We’ve got answers!"
     }
   }
 }

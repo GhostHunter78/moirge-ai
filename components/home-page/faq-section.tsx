@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const faqs = [
   {
@@ -30,6 +31,7 @@ const faqs = [
 ];
 
 function FaqSection() {
+  const t = useTranslations("homePage.faqSection");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -51,15 +53,11 @@ function FaqSection() {
         <div className="max-w-2xl mx-auto relative">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-1 rounded-full bg-linear-to-r from-primary/10 to-secondary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3 shadow transition-colors duration-200">
-              Frequently Asked Questions
+              {t("badge")}
             </span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4 drop-shadow-lg leading-tight">
-              Got questions? We’ve got answers!
+              {t("heading")}
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
-              Find quick answers to the most common questions from our buyers
-              and sellers.
-            </p>
           </div>
           <div className="space-y-5 rounded-2xl bg-white/60 shadow-xl px-2 sm:px-10 py-8 backdrop-blur-xl">
             {faqs.map((faq, idx) => (
