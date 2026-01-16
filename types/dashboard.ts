@@ -23,6 +23,7 @@ export interface DashboardPageHeaderProps {
   icon: LucideIcon;
   title: string;
   description: string;
+  userInfo?: Profile;
 }
 
 // overview page types

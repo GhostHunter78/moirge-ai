@@ -22,6 +22,7 @@ export default function DashboardPageWrapper({
             icon={pageMetadata.icon as LucideIcon}
             title={pageMetadata.title}
             description={pageMetadata.description}
+            userInfo={userInfo}
           />
         )}
         <div>{children}</div>
