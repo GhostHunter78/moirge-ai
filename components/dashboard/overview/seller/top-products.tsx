@@ -5,12 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge"; // Check if Badge exists
 import { TrendingUp } from "lucide-react";
-
-// Fallback if Badge doesn't exist, I will use span
-// Checking for Badge existence first is better, but I'll write the file optimistically and then check.
-// I'll stick to span with classes to be safe as I didn't see badge.tsx in the list.
 
 const TOP_PRODUCTS = [
   {
