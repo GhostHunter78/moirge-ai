@@ -1,7 +1,7 @@
 "use client";
 
-import OverviewSellerMain from "@/components/dashboard/overview/overview-seller-main";
-import OverviewBuyerMain from "@/components/dashboard/overview/overview-buyer-main";
+import OverviewSellerMain from "@/components/dashboard/overview/seller/overview-seller-main";
+import OverviewBuyerMain from "@/components/dashboard/overview/buyer/overview-buyer-main";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { Loader2 } from "lucide-react";
 
@@ -21,7 +21,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="px-4">
+    <div className="p-4">
       {userInfo.role === "seller" ? (
         <OverviewSellerMain />
       ) : (

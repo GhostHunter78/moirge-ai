@@ -24,3 +24,15 @@ export interface DashboardPageHeaderProps {
   title: string;
   description: string;
 }
+
+// overview page types
+export type KPI = {
+  label: string;
+  value: string | number;
+  icon: React.ElementType;
+  trend?: "up" | "down";
+};
+
+export interface KpiCardProps {
+  items: KPI[];
+}

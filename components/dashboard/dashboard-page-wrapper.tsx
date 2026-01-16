@@ -24,7 +24,7 @@ export default function DashboardPageWrapper({
             description={pageMetadata.description}
           />
         )}
-        <div className={pageMetadata ? "mt-8" : ""}>{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );
