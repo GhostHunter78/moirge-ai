@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function NotFound() {
+  const t = useTranslations("notFound");
+
   return (
     <main className="min-h-screen bg-white flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-xl mx-auto flex flex-col items-center text-center gap-6">
@@ -20,11 +23,10 @@ export default function NotFound() {
 
         <div className="space-y-3">
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
-            Oops...
+            {t("title")}
           </h1>
           <p className="text-sm sm:text-base text-slate-600 max-w-md mx-auto">
-            The page you&apos;re looking for doesn&apos;t exist, was removed, or
-            you might not have permission to view it.
+            {t("description")}
           </p>
         </div>
 
@@ -33,7 +35,7 @@ export default function NotFound() {
             href="/"
             className="inline-flex w-full sm:w-auto items-center justify-center rounded-lg bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal-600 focus-visible:ring-offset-white"
           >
-            Go back home
+            {t("goHome")}
           </Link>
 
           <button
@@ -41,7 +43,7 @@ export default function NotFound() {
             onClick={() => window.history.back()}
             className="inline-flex w-full sm:w-auto items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400 focus-visible:ring-offset-white"
           >
-            Go back to previous page
+            {t("goBack")}
           </button>
         </div>
       </div>

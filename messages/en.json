@@ -310,5 +310,11 @@
       "cookies": "Cookies",
       "description": "AI-powered ecommerce assistant for both buyers & sellers. Shop smarter. Sell faster."
     }
+  },
+  "notFound": {
+    "title": "Oops...",
+    "description": "The page you're looking for doesn't exist, was removed, or you might not have permission to view it.",
+    "goHome": "Go back home",
+    "goBack": "Go back to previous page"
   }
 }
