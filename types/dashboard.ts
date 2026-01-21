@@ -23,4 +23,17 @@ export interface DashboardPageHeaderProps {
   icon: LucideIcon;
   title: string;
   description: string;
+  userInfo?: Profile;
+}
+
+// overview page types
+export type KPI = {
+  label: string;
+  value: string | number;
+  icon: React.ElementType;
+  trend?: "up" | "down";
+};
+
+export interface KpiCardProps {
+  items: KPI[];
 }

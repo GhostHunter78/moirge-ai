@@ -22,9 +22,10 @@ export default function DashboardPageWrapper({
             icon={pageMetadata.icon as LucideIcon}
             title={pageMetadata.title}
             description={pageMetadata.description}
+            userInfo={userInfo}
           />
         )}
-        <div className={pageMetadata ? "mt-8" : ""}>{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );
