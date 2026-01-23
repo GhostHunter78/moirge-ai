@@ -19,11 +19,6 @@ const faqs = [
       "Our AI analyzes garment images and your inputs to create a realistic simulation, so you instantly see how an item fits or looks on you before you buy. No special equipment or uploads required!",
   },
   {
-    question: "Can I switch between buying and selling on the same account?",
-    answer:
-      "Yes! You can seamlessly switch roles after signing up. Easily manage purchases as a buyer and run your own shop as a seller—all with one account.",
-  },
-  {
     question: "What if I have an issue with my order or listing?",
     answer:
       "Our dedicated support team is here to help. Simply contact us through the Help Center or live chat, and we’ll resolve your issue as quickly as possible.",
