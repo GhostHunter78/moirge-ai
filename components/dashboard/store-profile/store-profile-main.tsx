@@ -100,13 +100,34 @@ function StoreProfileMain() {
               "Failed to load store profile. Please try refreshing the page."
             );
           }
+          
+          // If no store profile exists, prefill email and phone from user profile
+          if (error.code === "PGRST116" && userInfo) {
+            setFormData((prev) => ({
+              ...prev,
+              email: userInfo.email || "",
+              phone: userInfo.phone || "",
+            }));
+          }
         } else if (data) {
           const formDataFromDb = transformStoreProfileToFormData(data);
-          setFormData(formDataFromDb);
+          
+          // Prefill email and phone from user profile if store profile fields are empty
+          const prefilledData = {
+            ...formDataFromDb,
+            email: (formDataFromDb.email?.trim() || "") 
+              ? formDataFromDb.email 
+              : (userInfo?.email || ""),
+            phone: (formDataFromDb.phone?.trim() || "") 
+              ? formDataFromDb.phone 
+              : (userInfo?.phone || ""),
+          };
+          
+          setFormData(prefilledData);
           
           // Set logo preview if logo exists
-          if (formDataFromDb.storeLogo) {
-            setLogoPreview(formDataFromDb.storeLogo);
+          if (prefilledData.storeLogo) {
+            setLogoPreview(prefilledData.storeLogo);
           }
         }
       } catch (error) {
@@ -121,7 +142,7 @@ function StoreProfileMain() {
     };
 
     loadStoreProfile();
-  }, [userInfo?.id, t]);
+  }, [userInfo, t]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
