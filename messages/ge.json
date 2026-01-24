@@ -200,55 +200,55 @@
       "sections": {
         "basicInfo": {
           "title": "ძირითადი ინფორმაცია",
-          "description": "დააყენეთ თქვენი მაღაზიის ძირითადი დეტალები და ბრენდინგი"
+          "description": "მიუთითეთ თქვენი მაღაზიის ძირითადი დეტალები და ბრენდინგი"
         },
         "contactInfo": {
           "title": "საკონტაქტო ინფორმაცია",
-          "description": "როგორ შეუძლიათ მომხმარებლებს დაგიკავშირდნენ"
+          "description": "როგორ შეძლებენ მომხმარებლები თქვენთან დაკავშირებას"
         },
         "address": {
           "title": "მაღაზიის მისამართი",
           "description": "თქვენი მაღაზიის ფიზიკური მდებარეობა"
         },
         "socialMedia": {
-          "title": "სოციალური ქსელები და ვებ-საიტი",
-          "description": "დააკავშირეთ თქვენი სოციალური პროფილები და ვებ-საიტი"
+          "title": "სოციალური ქსელები და ვებგვერდი",
+          "description": "დააკავშირეთ თქვენი სოციალური პროფილები და ვებგვერდი"
         },
         "policies": {
           "title": "მაღაზიის პოლიტიკა",
-          "description": "განსაზღვრეთ თქვენი დაბრუნების, მიწოდებისა და კონფიდენციალურობის პოლიტიკა"
+          "description": "განსაზღვრეთ ნივთის დაბრუნების, მიწოდებისა და კონფიდენციალურობის წესები"
         }
       },
       "fields": {
         "storeLogo": "მაღაზიის ლოგო",
-        "logoHint": "ატვირთეთ კვადრატული სურათი (რეკომენდებული: 512x512px)",
-        "storeName": "მაღაზიის სახელი",
-        "storeNamePlaceholder": "შეიყვანეთ მაღაზიის სახელი",
+        "logoHint": "ატვირთეთ კვადრატული გამოსახულება (რეკომენდებულია: 512x512px)",
+        "storeName": "მაღაზიის დასახელება",
+        "storeNamePlaceholder": "ჩაწერეთ თქვენი მაღაზიის სახელი",
         "storeDescription": "მაღაზიის აღწერა",
-        "storeDescriptionPlaceholder": "მოყვით მომხმარებლებს თქვენი მაღაზიის შესახებ...",
+        "storeDescriptionPlaceholder": "გააცანით მომხმარებლებს თქვენი მაღაზია...",
         "phone": "ტელეფონის ნომერი",
-        "phonePlaceholder": "+995 555 123 456",
-        "email": "ელ. ფოსტა",
-        "emailPlaceholder": "store@example.com",
+        "phonePlaceholder": "+995 (---) -- -- --",
+        "email": "ელფოსტის მისამართი",
+        "emailPlaceholder": "info@თქვენიმაღაზია.ge",
         "address": "ქუჩის მისამართი",
-        "addressPlaceholder": "მთავარი ქუჩა 123",
+        "addressPlaceholder": "მაგ: რუსთაველის გამზირი N1",
         "city": "ქალაქი",
         "cityPlaceholder": "თბილისი",
         "state": "რეგიონი",
-        "statePlaceholder": "თბილისი",
-        "zipCode": "საფოსტო კოდი",
+        "statePlaceholder": "მაგ: იმერეთი",
+        "zipCode": "საფოსტო ინდექსი",
         "zipCodePlaceholder": "0100",
         "country": "ქვეყანა",
         "countryPlaceholder": "საქართველო",
-        "website": "ვებ-საიტი",
-        "websitePlaceholder": "https://yourstore.com",
+        "website": "ვებგვერდი",
+        "websitePlaceholder": "https://www.yourstore.ge",
         "socialPlaceholder": "https://...",
         "returnPolicy": "დაბრუნების პოლიტიკა",
-        "returnPolicyPlaceholder": "აღწერეთ თქვენი დაბრუნების პოლიტიკა...",
+        "returnPolicyPlaceholder": "აღწერეთ ნივთის დაბრუნების პირობები...",
         "shippingPolicy": "მიწოდების პოლიტიკა",
-        "shippingPolicyPlaceholder": "აღწერეთ თქვენი მიწოდების პოლიტიკა...",
+        "shippingPolicyPlaceholder": "აღწერეთ მიწოდების პირობები და ვადები...",
         "privacyPolicy": "კონფიდენციალურობის პოლიტიკა",
-        "privacyPolicyPlaceholder": "აღწერეთ თქვენი კონფიდენციალურობის პოლიტიკა..."
+        "privacyPolicyPlaceholder": "აღწერეთ პერსონალური მონაცემების დაცვის პოლიტიკა..."
       },
       "buttons": {
         "uploadLogo": "ლოგოს ატვირთვა",
@@ -256,10 +256,10 @@
         "saving": "ინახება..."
       },
       "errors": {
-        "storeNameRequired": "მაღაზიის სახელი სავალდებულოა",
-        "saveFailed": "მაღაზიის პროფილის შენახვა ვერ მოხერხდა. სცადეთ ხელახლა.",
-        "unexpectedError": "დაფიქსირდა მოულოდნელი შეცდომა. სცადეთ ხელახლა.",
-        "loadFailed": "მაღაზიის პროფილის ჩატვირთვა ვერ მოხერხდა. გთხოვთ, განაახლოთ გვერდი."
+        "storeNameRequired": "მაღაზიის დასახელების მითითება აუცილებელია",
+        "saveFailed": "პროფილის შენახვა ვერ მოხერხდა. გთხოვთ, სცადოთ თავიდან.",
+        "unexpectedError": "დაფიქსირდა მოულოდნელი შეცდომა. გთხოვთ, სცადოთ მოგვიანებით.",
+        "loadFailed": "მონაცემების ჩატვირთვა ვერ მოხერხდა. გთხოვთ, განაახლოთ გვერდი."
       },
       "messages": {
         "saveSuccess": "მაღაზიის პროფილი წარმატებით შეინახა! 🎉"
