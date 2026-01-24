@@ -195,6 +195,69 @@
         "products": "Products",
         "analytics": "Analytics"
       }
+    },
+    "storeProfile": {
+      "sections": {
+        "basicInfo": {
+          "title": "Basic Information",
+          "description": "Set up your store's basic details and branding"
+        },
+        "contactInfo": {
+          "title": "Contact Information",
+          "description": "How customers can reach you"
+        },
+        "address": {
+          "title": "Store Address",
+          "description": "Your store's physical location"
+        },
+        "socialMedia": {
+          "title": "Social Media & Website",
+          "description": "Connect your social media profiles and website"
+        },
+        "policies": {
+          "title": "Store Policies",
+          "description": "Define your return, shipping, and privacy policies"
+        }
+      },
+      "fields": {
+        "storeLogo": "Store Logo",
+        "logoHint": "Upload a square image (recommended: 512x512px)",
+        "storeName": "Store Name",
+        "storeNamePlaceholder": "Enter your store name",
+        "storeDescription": "Store Description",
+        "storeDescriptionPlaceholder": "Tell customers about your store...",
+        "phone": "Phone Number",
+        "phonePlaceholder": "+1 (555) 123-4567",
+        "email": "Email Address",
+        "emailPlaceholder": "store@example.com",
+        "address": "Street Address",
+        "addressPlaceholder": "123 Main Street",
+        "city": "City",
+        "cityPlaceholder": "New York",
+        "state": "State/Province",
+        "statePlaceholder": "NY",
+        "zipCode": "ZIP/Postal Code",
+        "zipCodePlaceholder": "10001",
+        "country": "Country",
+        "countryPlaceholder": "United States",
+        "website": "Website",
+        "websitePlaceholder": "https://yourstore.com",
+        "socialPlaceholder": "https://...",
+        "returnPolicy": "Return Policy",
+        "returnPolicyPlaceholder": "Describe your return policy...",
+        "shippingPolicy": "Shipping Policy",
+        "shippingPolicyPlaceholder": "Describe your shipping policy...",
+        "privacyPolicy": "Privacy Policy",
+        "privacyPolicyPlaceholder": "Describe your privacy policy..."
+      },
+      "buttons": {
+        "uploadLogo": "Upload Logo",
+        "saveChanges": "Save Changes",
+        "saving": "Saving..."
+      },
+      "errors": {
+        "storeNameRequired": "Store name is required"
+      }
     }
   },
   "homePage": {

@@ -195,6 +195,69 @@
         "products": "პროდუქტები",
         "analytics": "ანალიტიკა"
       }
+    },
+    "storeProfile": {
+      "sections": {
+        "basicInfo": {
+          "title": "ძირითადი ინფორმაცია",
+          "description": "დააყენეთ თქვენი მაღაზიის ძირითადი დეტალები და ბრენდინგი"
+        },
+        "contactInfo": {
+          "title": "საკონტაქტო ინფორმაცია",
+          "description": "როგორ შეუძლიათ მომხმარებლებს დაგიკავშირდნენ"
+        },
+        "address": {
+          "title": "მაღაზიის მისამართი",
+          "description": "თქვენი მაღაზიის ფიზიკური მდებარეობა"
+        },
+        "socialMedia": {
+          "title": "სოციალური ქსელები და ვებ-საიტი",
+          "description": "დააკავშირეთ თქვენი სოციალური პროფილები და ვებ-საიტი"
+        },
+        "policies": {
+          "title": "მაღაზიის პოლიტიკა",
+          "description": "განსაზღვრეთ თქვენი დაბრუნების, მიწოდებისა და კონფიდენციალურობის პოლიტიკა"
+        }
+      },
+      "fields": {
+        "storeLogo": "მაღაზიის ლოგო",
+        "logoHint": "ატვირთეთ კვადრატული სურათი (რეკომენდებული: 512x512px)",
+        "storeName": "მაღაზიის სახელი",
+        "storeNamePlaceholder": "შეიყვანეთ მაღაზიის სახელი",
+        "storeDescription": "მაღაზიის აღწერა",
+        "storeDescriptionPlaceholder": "მოყვით მომხმარებლებს თქვენი მაღაზიის შესახებ...",
+        "phone": "ტელეფონის ნომერი",
+        "phonePlaceholder": "+995 555 123 456",
+        "email": "ელ. ფოსტა",
+        "emailPlaceholder": "store@example.com",
+        "address": "ქუჩის მისამართი",
+        "addressPlaceholder": "მთავარი ქუჩა 123",
+        "city": "ქალაქი",
+        "cityPlaceholder": "თბილისი",
+        "state": "რეგიონი",
+        "statePlaceholder": "თბილისი",
+        "zipCode": "საფოსტო კოდი",
+        "zipCodePlaceholder": "0100",
+        "country": "ქვეყანა",
+        "countryPlaceholder": "საქართველო",
+        "website": "ვებ-საიტი",
+        "websitePlaceholder": "https://yourstore.com",
+        "socialPlaceholder": "https://...",
+        "returnPolicy": "დაბრუნების პოლიტიკა",
+        "returnPolicyPlaceholder": "აღწერეთ თქვენი დაბრუნების პოლიტიკა...",
+        "shippingPolicy": "მიწოდების პოლიტიკა",
+        "shippingPolicyPlaceholder": "აღწერეთ თქვენი მიწოდების პოლიტიკა...",
+        "privacyPolicy": "კონფიდენციალურობის პოლიტიკა",
+        "privacyPolicyPlaceholder": "აღწერეთ თქვენი კონფიდენციალურობის პოლიტიკა..."
+      },
+      "buttons": {
+        "uploadLogo": "ლოგოს ატვირთვა",
+        "saveChanges": "ცვლილებების შენახვა",
+        "saving": "ინახება..."
+      },
+      "errors": {
+        "storeNameRequired": "მაღაზიის სახელი სავალდებულოა"
+      }
     }
   },
   "homePage": {

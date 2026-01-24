@@ -1,9 +1,13 @@
-import StoreProfileMain from '@/components/dashboard/store-profile/store-profile-main'
+"use client";
+
+import StoreProfileMain from "@/components/dashboard/store-profile/store-profile-main";
 
 function StoreProfilePage() {
   return (
-    <StoreProfileMain />
-   )
+    <div className="p-4">
+      <StoreProfileMain />
+    </div>
+  );
 }
 
-export default StoreProfilePage
+export default StoreProfilePage;
