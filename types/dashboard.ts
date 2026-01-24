@@ -53,7 +53,7 @@ export interface StoreProfileFormData {
   website: string;
   facebook: string;
   instagram: string;
-  twitter: string;
+  tiktok: string;
   returnPolicy: string;
   shippingPolicy: string;
   privacyPolicy: string;
@@ -77,7 +77,7 @@ export interface StoreProfile {
   website: string;
   facebook: string;
   instagram: string;
-  twitter: string;
+  tiktok: string;
   return_policy: string;
   shipping_policy: string;
   privacy_policy: string;

@@ -258,10 +258,11 @@
       "errors": {
         "storeNameRequired": "Store name is required",
         "saveFailed": "Failed to save store profile. Please try again.",
-        "unexpectedError": "An unexpected error occurred. Please try again."
+        "unexpectedError": "An unexpected error occurred. Please try again.",
+        "loadFailed": "Failed to load store profile. Please try refreshing the page."
       },
       "messages": {
-        "saveSuccess": "Store profile saved successfully!"
+        "saveSuccess": "Store profile saved successfully! 🎉"
       }
     }
   },

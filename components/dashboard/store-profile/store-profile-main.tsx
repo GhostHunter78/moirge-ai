@@ -13,7 +13,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Store, Upload, Save, MapPin, Phone, Mail, Globe, Facebook, Instagram, Twitter } from "lucide-react";
+import { Store, Upload, Save, MapPin, Phone, Mail, Globe, Facebook, Instagram, Music2 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { StoreProfileFormData, StoreProfileErrors } from "@/types/dashboard";
@@ -38,7 +38,7 @@ function StoreProfileMain() {
     website: "",
     facebook: "",
     instagram: "",
-    twitter: "",
+    tiktok: "",
     returnPolicy: "",
     shippingPolicy: "",
     privacyPolicy: "",
@@ -97,6 +97,15 @@ function StoreProfileMain() {
         
         if (error) {
           console.error("Error loading store profile:", error);
+          // PGRST116 means no rows found, which is expected for new users
+          // Other errors should be shown to the user
+          if (error.code !== "PGRST116") {
+            toast.error(
+              error.message || 
+              t("errors.loadFailed") || 
+              "Failed to load store profile. Please try refreshing the page."
+            );
+          }
         } else if (data) {
           const formDataFromDb = transformStoreProfileToFormData(data);
           setFormData(formDataFromDb);
@@ -108,13 +117,17 @@ function StoreProfileMain() {
         }
       } catch (error) {
         console.error("Error loading store profile:", error);
+        toast.error(
+          t("errors.loadFailed") || 
+          "An unexpected error occurred while loading your store profile. Please try refreshing the page."
+        );
       } finally {
         setIsLoadingData(false);
       }
     };
 
     loadStoreProfile();
-  }, [userInfo?.id]);
+  }, [userInfo?.id, t]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -431,15 +444,15 @@ function StoreProfileMain() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="twitter">
-                  <Twitter className="w-4 h-4 inline mr-2" />
-                  Twitter
+                <Label htmlFor="tiktok">
+                  <Music2 className="w-4 h-4 inline mr-2" />
+                  TikTok
                 </Label>
                 <Input
-                  id="twitter"
-                  name="twitter"
+                  id="tiktok"
+                  name="tiktok"
                   type="url"
-                  value={formData.twitter}
+                  value={formData.tiktok}
                   onChange={handleChange}
                   placeholder={t("fields.socialPlaceholder")}
                 />
