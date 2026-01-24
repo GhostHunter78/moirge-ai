@@ -3,22 +3,16 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Store, Upload, Save, MapPin, Phone, Mail, Globe, Facebook, Instagram, Music2 } from "lucide-react";
-import Image from "next/image";
+import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { StoreProfileFormData, StoreProfileErrors } from "@/types/dashboard";
 import { getStoreProfile, saveStoreProfile, transformStoreProfileToFormData } from "@/lib/store-profile";
 import { useUserProfile } from "@/hooks/use-user-profile";
+import { StoreBasicInfo } from "./store-basic-info";
+import { StoreContactInfo } from "./store-contact-info";
+import { StoreAddress } from "./store-address";
+import { StoreSocialMedia } from "./store-social-media";
+import { StorePolicies } from "./store-policies";
 
 function StoreProfileMain() {
   const t = useTranslations("dashboard.storeProfile");
@@ -174,7 +168,7 @@ function StoreProfileMain() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading store profile...</p>
+          <p className="text-muted-foreground">Loading store profile page...</p>
         </div>
       </div>
     );
@@ -183,330 +177,33 @@ function StoreProfileMain() {
   return (
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Store Basic Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Store className="w-5 h-5" />
-              {t("sections.basicInfo.title")}
-            </CardTitle>
-            <CardDescription>
-              {t("sections.basicInfo.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Store Logo */}
-            <div className="space-y-2">
-              <Label htmlFor="storeLogo">{t("fields.storeLogo")}</Label>
-              <div className="flex items-center gap-4">
-                <div className="relative w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50">
-                  {logoPreview ? (
-                    <Image
-                      src={logoPreview}
-                      alt="Store logo"
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <Store className="w-8 h-8 text-gray-400" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="logo-upload"
-                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-                  >
-                    <Upload className="w-4 h-4" />
-                    {t("buttons.uploadLogo")}
-                  </label>
-                  <input
-                    id="logo-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                  />
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {t("fields.logoHint")}
-                  </p>
-                </div>
-              </div>
-            </div>
+        <StoreBasicInfo
+          formData={formData}
+          errors={errors}
+          logoPreview={logoPreview}
+          onFieldChange={handleChange}
+          onLogoUpload={handleLogoUpload}
+        />
 
-            {/* Store Name */}
-            <div className="space-y-2">
-              <Label htmlFor="storeName">
-                {t("fields.storeName")} <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="storeName"
-                name="storeName"
-                value={formData.storeName}
-                onChange={handleChange}
-                placeholder={t("fields.storeNamePlaceholder")}
-                className={errors.storeName ? "border-destructive" : ""}
-              />
-              {errors.storeName && (
-                <p className="text-sm text-destructive">{errors.storeName}</p>
-              )}
-            </div>
+        <StoreContactInfo
+          formData={formData}
+          onFieldChange={handleChange}
+        />
 
-            {/* Store Description */}
-            <div className="space-y-2">
-              <Label htmlFor="storeDescription">
-                {t("fields.storeDescription")}
-              </Label>
-              <Textarea
-                id="storeDescription"
-                name="storeDescription"
-                value={formData.storeDescription}
-                onChange={handleChange}
-                placeholder={t("fields.storeDescriptionPlaceholder")}
-                rows={4}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <StoreAddress
+          formData={formData}
+          onFieldChange={handleChange}
+        />
 
-        {/* Contact Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Phone className="w-5 h-5" />
-              {t("sections.contactInfo.title")}
-            </CardTitle>
-            <CardDescription>
-              {t("sections.contactInfo.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">
-                  <Phone className="w-4 h-4 inline mr-2" />
-                  {t("fields.phone")}
-                </Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder={t("fields.phonePlaceholder")}
-                />
-              </div>
+        <StoreSocialMedia
+          formData={formData}
+          onFieldChange={handleChange}
+        />
 
-              <div className="space-y-2">
-                <Label htmlFor="email">
-                  <Mail className="w-4 h-4 inline mr-2" />
-                  {t("fields.email")}
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder={t("fields.emailPlaceholder")}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Store Address */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="w-5 h-5" />
-              {t("sections.address.title")}
-            </CardTitle>
-            <CardDescription>
-              {t("sections.address.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="address">{t("fields.address")}</Label>
-              <Input
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                placeholder={t("fields.addressPlaceholder")}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="city">{t("fields.city")}</Label>
-                <Input
-                  id="city"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder={t("fields.cityPlaceholder")}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="state">{t("fields.state")}</Label>
-                <Input
-                  id="state"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  placeholder={t("fields.statePlaceholder")}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="zipCode">{t("fields.zipCode")}</Label>
-                <Input
-                  id="zipCode"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleChange}
-                  placeholder={t("fields.zipCodePlaceholder")}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="country">{t("fields.country")}</Label>
-              <Input
-                id="country"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                placeholder={t("fields.countryPlaceholder")}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Social Media & Website */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Globe className="w-5 h-5" />
-              {t("sections.socialMedia.title")}
-            </CardTitle>
-            <CardDescription>
-              {t("sections.socialMedia.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="website">
-                <Globe className="w-4 h-4 inline mr-2" />
-                {t("fields.website")}
-              </Label>
-              <Input
-                id="website"
-                name="website"
-                type="url"
-                value={formData.website}
-                onChange={handleChange}
-                placeholder={t("fields.websitePlaceholder")}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="facebook">
-                  <Facebook className="w-4 h-4 inline mr-2" />
-                  Facebook
-                </Label>
-                <Input
-                  id="facebook"
-                  name="facebook"
-                  type="url"
-                  value={formData.facebook}
-                  onChange={handleChange}
-                  placeholder={t("fields.socialPlaceholder")}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="instagram">
-                  <Instagram className="w-4 h-4 inline mr-2" />
-                  Instagram
-                </Label>
-                <Input
-                  id="instagram"
-                  name="instagram"
-                  type="url"
-                  value={formData.instagram}
-                  onChange={handleChange}
-                  placeholder={t("fields.socialPlaceholder")}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="tiktok">
-                  <Music2 className="w-4 h-4 inline mr-2" />
-                  TikTok
-                </Label>
-                <Input
-                  id="tiktok"
-                  name="tiktok"
-                  type="url"
-                  value={formData.tiktok}
-                  onChange={handleChange}
-                  placeholder={t("fields.socialPlaceholder")}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Store Policies */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("sections.policies.title")}</CardTitle>
-            <CardDescription>
-              {t("sections.policies.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="returnPolicy">{t("fields.returnPolicy")}</Label>
-              <Textarea
-                id="returnPolicy"
-                name="returnPolicy"
-                value={formData.returnPolicy}
-                onChange={handleChange}
-                placeholder={t("fields.returnPolicyPlaceholder")}
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="shippingPolicy">{t("fields.shippingPolicy")}</Label>
-              <Textarea
-                id="shippingPolicy"
-                name="shippingPolicy"
-                value={formData.shippingPolicy}
-                onChange={handleChange}
-                placeholder={t("fields.shippingPolicyPlaceholder")}
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="privacyPolicy">{t("fields.privacyPolicy")}</Label>
-              <Textarea
-                id="privacyPolicy"
-                name="privacyPolicy"
-                value={formData.privacyPolicy}
-                onChange={handleChange}
-                placeholder={t("fields.privacyPolicyPlaceholder")}
-                rows={3}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <StorePolicies
+          formData={formData}
+          onFieldChange={handleChange}
+        />
 
         {/* Submit Button */}
         <div className="flex justify-end gap-4">
