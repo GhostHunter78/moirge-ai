@@ -37,3 +37,48 @@ export type KPI = {
 export interface KpiCardProps {
   items: KPI[];
 }
+
+// store profile types
+export interface StoreProfileFormData {
+  storeName: string;
+  storeDescription: string;
+  storeLogo: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  website: string;
+  facebook: string;
+  instagram: string;
+  twitter: string;
+  returnPolicy: string;
+  shippingPolicy: string;
+  privacyPolicy: string;
+}
+
+export type StoreProfileErrors = Partial<Record<keyof StoreProfileFormData, string>>;
+
+export interface StoreProfile {
+  id: string;
+  user_id: string;
+  store_name: string;
+  store_description: string;
+  store_logo: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  country: string;
+  website: string;
+  facebook: string;
+  instagram: string;
+  twitter: string;
+  return_policy: string;
+  shipping_policy: string;
+  privacy_policy: string;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,31 +15,14 @@ import {
 } from "@/components/ui/card";
 import { Store, Upload, Save, MapPin, Phone, Mail, Globe, Facebook, Instagram, Twitter } from "lucide-react";
 import Image from "next/image";
-
-interface StoreProfileFormData {
-  storeName: string;
-  storeDescription: string;
-  storeLogo: string;
-  phone: string;
-  email: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-  website: string;
-  facebook: string;
-  instagram: string;
-  twitter: string;
-  returnPolicy: string;
-  shippingPolicy: string;
-  privacyPolicy: string;
-}
-
-type StoreProfileErrors = Partial<Record<keyof StoreProfileFormData, string>>;
+import { toast } from "sonner";
+import { StoreProfileFormData, StoreProfileErrors } from "@/types/dashboard";
+import { getStoreProfile, saveStoreProfile, transformStoreProfileToFormData } from "@/lib/store-profile";
+import { useUserProfile } from "@/hooks/use-user-profile";
 
 function StoreProfileMain() {
   const t = useTranslations("dashboard.storeProfile");
+  const { userInfo } = useUserProfile();
 
   const [formData, setFormData] = useState<StoreProfileFormData>({
     storeName: "",
@@ -63,6 +46,7 @@ function StoreProfileMain() {
 
   const [errors, setErrors] = useState<StoreProfileErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const clearFieldError = (field: keyof StoreProfileFormData) => {
@@ -102,8 +86,44 @@ function StoreProfileMain() {
     }
   };
 
+  // Load existing store profile data on mount
+  useEffect(() => {
+    const loadStoreProfile = async () => {
+      if (!userInfo?.id) return;
+
+      setIsLoadingData(true);
+      try {
+        const { data, error } = await getStoreProfile(userInfo.id);
+        
+        if (error) {
+          console.error("Error loading store profile:", error);
+        } else if (data) {
+          const formDataFromDb = transformStoreProfileToFormData(data);
+          setFormData(formDataFromDb);
+          
+          // Set logo preview if logo exists
+          if (formDataFromDb.storeLogo) {
+            setLogoPreview(formDataFromDb.storeLogo);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading store profile:", error);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    loadStoreProfile();
+  }, [userInfo?.id]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!userInfo?.id) {
+      toast.error("User not authenticated");
+      return;
+    }
+
     setIsLoading(true);
 
     // Basic validation
@@ -119,18 +139,33 @@ function StoreProfileMain() {
       return;
     }
 
-    // TODO: Implement API call to save store profile
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Store profile data:", formData);
-      // Show success message
+      const { error } = await saveStoreProfile(userInfo.id, formData);
+      
+      if (error) {
+        console.error("Error saving store profile:", error);
+        toast.error(error.message || t("errors.saveFailed") || "Failed to save store profile. Please try again.");
+      } else {
+        toast.success(t("messages.saveSuccess") || "Store profile saved successfully!");
+      }
     } catch (error) {
       console.error("Error saving store profile:", error);
+      toast.error(t("errors.unexpectedError") || "An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isLoadingData) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading store profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

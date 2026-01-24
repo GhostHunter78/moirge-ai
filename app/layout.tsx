@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { cookies } from "next/headers";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,7 +33,9 @@ export default async function RootLayout({
       </head>
       <body className="antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
+        <Toaster />
           {children}
+          
         </NextIntlClientProvider>
       </body>
     </html>

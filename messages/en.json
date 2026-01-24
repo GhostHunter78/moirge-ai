@@ -256,7 +256,12 @@
         "saving": "Saving..."
       },
       "errors": {
-        "storeNameRequired": "Store name is required"
+        "storeNameRequired": "Store name is required",
+        "saveFailed": "Failed to save store profile. Please try again.",
+        "unexpectedError": "An unexpected error occurred. Please try again."
+      },
+      "messages": {
+        "saveSuccess": "Store profile saved successfully!"
       }
     }
   },
