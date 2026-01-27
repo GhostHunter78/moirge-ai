@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -498,9 +499,14 @@ export default function SellerProductsMain() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <Button className="h-8 rounded-full bg-slate-50 px-3 text-xs font-medium text-slate-900 hover:bg-slate-100">
-                      <Pencil className="mr-1.5 h-3.5 w-3.5" />
-                      Edit product details
+                    <Button
+                      className="h-8 rounded-full bg-slate-50 px-3 text-xs font-medium text-slate-900 hover:bg-slate-100"
+                      asChild
+                    >
+                      <Link href={`/dashboard/seller/products/${featured.id}`}>
+                        <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                        Edit product details
+                      </Link>
                     </Button>
                     <Button
                       variant="outline"
@@ -552,10 +558,16 @@ export default function SellerProductsMain() {
                       className="border-b border-slate-100/80 bg-white/80 last:border-0 hover:bg-slate-50/80"
                     >
                       <td className="max-w-[220px] px-3 py-2.5 align-top">
-                        <div className="flex gap-2">
+                        <Link
+                          href={`/dashboard/seller/products/${product.id}`}
+                          className="flex gap-2"
+                        >
                           <div className="relative mt-0.5 h-9 w-9 overflow-hidden rounded-md border border-slate-100 bg-slate-50">
                             <Image
-                              src={product.thumbnail_url ?? "/images/hero-section-girl-asset.png"}
+                              src={
+                                product.thumbnail_url ??
+                                "/images/hero-section-girl-asset.png"
+                              }
                               alt={product.title}
                               fill
                               className="object-cover"
@@ -586,7 +598,7 @@ export default function SellerProductsMain() {
                             </div>
                             <StatusPill status={product.status} />
                           </div>
-                        </div>
+                        </Link>
                       </td>
 
                       <td className="hidden px-3 py-2.5 align-middle text-[11px] text-slate-600 sm:table-cell">
@@ -648,8 +660,11 @@ export default function SellerProductsMain() {
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                            asChild
                           >
-                            <Eye className="h-3.5 w-3.5" />
+                            <Link href={`/dashboard/seller/products/${product.id}`}>
+                              <Eye className="h-3.5 w-3.5" />
+                            </Link>
                           </Button>
                           <Button
                             variant="ghost"
