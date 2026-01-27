@@ -1,14 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import type { Product } from "@/lib/products";
+import type { Product, ProductStatus } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, Star, Package, TrendingUp, DollarSign, Edit, Eye } from "lucide-react";
 import { createClient } from "@/lib/supabaseClient";
+import { updateProductAction } from "@/actions/products";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 function StatusBadge({ status }: { status: Product["status"] }) {
@@ -60,6 +79,19 @@ export default function SellerProductDetailMain() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Edit dialog state
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formTitle, setFormTitle] = useState("");
+  const [formPrice, setFormPrice] = useState("");
+  const [formCategory, setFormCategory] = useState("");
+  const [formStock, setFormStock] = useState("");
+  const [formStatus, setFormStatus] = useState<ProductStatus>("draft");
+  const [formDescription, setFormDescription] = useState("");
+  const [formFeatured, setFormFeatured] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   useEffect(() => {
     if (!productId) return;
 
@@ -103,6 +135,125 @@ export default function SellerProductDetailMain() {
 
     void loadData();
   }, [productId]);
+
+  // Initialize form when opening edit dialog
+  const handleOpenEditDialog = () => {
+    if (!product) return;
+    setFormTitle(product.title);
+    setFormPrice(product.price.toString());
+    setFormCategory(product.category ?? "");
+    setFormStock(product.stock.toString());
+    setFormStatus(product.status);
+    setFormDescription(product.description ?? "");
+    setFormFeatured(product.featured);
+    setImagePreview(product.thumbnail_url);
+    setImageFile(null);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setImageFile(file);
+
+    if (!file) {
+      setImagePreview(product?.thumbnail_url ?? null);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUpdateProduct = async () => {
+    if (!product) return;
+
+    if (!formTitle.trim()) {
+      toast.error("Please add a product title.");
+      return;
+    }
+
+    const numericPrice = Number(formPrice);
+    if (Number.isNaN(numericPrice) || numericPrice < 0) {
+      toast.error("Please provide a valid price.");
+      return;
+    }
+
+    const numericStock = formStock.trim().length ? Number(formStock) : 0;
+    if (Number.isNaN(numericStock) || numericStock < 0) {
+      toast.error("Please provide a valid stock number.");
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      const supabase = createClient();
+      let thumbnailUrlToUse: string | undefined = product.thumbnail_url ?? undefined;
+
+      // Upload new image if provided
+      if (imageFile && product.seller_id) {
+        const extension = imageFile.name.split(".").pop() || "jpg";
+        const fileName = `${crypto.randomUUID()}.${extension}`;
+        const filePath = `${product.seller_id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("product-images")
+          .upload(filePath, imageFile, {
+            upsert: false, // Don't overwrite, use unique filename
+          });
+
+        if (uploadError) {
+          console.error("Error uploading product image", uploadError);
+          toast.error("Could not upload product image. Please try again.");
+          setIsSaving(false);
+          return;
+        }
+
+        const { data: publicUrlData } = supabase.storage
+          .from("product-images")
+          .getPublicUrl(filePath);
+
+        thumbnailUrlToUse = publicUrlData.publicUrl;
+      }
+
+      const updatePayload: Parameters<typeof updateProductAction>[1] = {
+        title: formTitle.trim(),
+        description: formDescription.trim() || undefined,
+        price: numericPrice,
+        category: formCategory.trim() || undefined,
+        stock: numericStock,
+        status: formStatus,
+        featured: formFeatured,
+      };
+
+      // Only include thumbnail_url if it's being changed
+      if (thumbnailUrlToUse !== undefined && thumbnailUrlToUse !== product.thumbnail_url) {
+        updatePayload.thumbnail_url = thumbnailUrlToUse;
+      }
+
+      const { data: updatedProduct, error: updateError } =
+        await updateProductAction(product.id, updatePayload);
+
+      if (updateError || !updatedProduct) {
+        console.error("Error updating product", updateError);
+        toast.error(
+          (updateError as { message?: string } | null)?.message ||
+            "Could not update product. Please try again."
+        );
+        setIsSaving(false);
+        return;
+      }
+
+      setProduct(updatedProduct);
+      toast.success("Product updated successfully.");
+      setIsEditDialogOpen(false);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -265,12 +416,10 @@ export default function SellerProductDetailMain() {
                 <div className="flex flex-wrap gap-2 pt-2">
                   <Button
                     className="rounded-full bg-emerald-500 px-4 text-xs font-medium text-emerald-950 hover:bg-emerald-400"
-                    asChild
+                    onClick={handleOpenEditDialog}
                   >
-                    <Link href={`/dashboard/seller/products/${product.id}`}>
-                      <Edit className="mr-2 h-3.5 w-3.5" />
-                      Edit product
-                    </Link>
+                    <Edit className="mr-2 h-3.5 w-3.5" />
+                    Edit product
                   </Button>
                   <Button
                     variant="outline"
@@ -349,6 +498,175 @@ export default function SellerProductDetailMain() {
               </div>
             </div>
           )}
+
+          {/* Edit Product Dialog */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle>Edit product</DialogTitle>
+                <DialogDescription>
+                  Update product details. Changes will be saved immediately.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 py-2">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">
+                    Title
+                  </label>
+                  <Input
+                    value={formTitle}
+                    onChange={(e) => setFormTitle(e.target.value)}
+                    placeholder="Midnight Nylon Bomber Jacket"
+                    className="h-9 text-xs"
+                  />
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">
+                      Price
+                    </label>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formPrice}
+                      onChange={(e) => setFormPrice(e.target.value)}
+                      placeholder="129.00"
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">
+                      Stock
+                    </label>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={formStock}
+                      onChange={(e) => setFormStock(e.target.value)}
+                      placeholder="34"
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">
+                      Category
+                    </label>
+                    <Input
+                      value={formCategory}
+                      onChange={(e) => setFormCategory(e.target.value)}
+                      placeholder="Outerwear, Footwear, Accessories..."
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">
+                      Status
+                    </label>
+                    <Select
+                      value={formStatus}
+                      onValueChange={(v) =>
+                        setFormStatus(v as ProductStatus)
+                      }
+                    >
+                      <SelectTrigger className="h-9 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="out_of_stock">Out of stock</SelectItem>
+                        <SelectItem value="archived">Archived</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">
+                    Product image
+                  </label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    className="h-9 text-xs cursor-pointer"
+                    onChange={handleImageChange}
+                  />
+                  {imagePreview && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="relative h-14 w-14 overflow-hidden rounded-md border border-slate-200 bg-slate-50">
+                        <Image
+                          src={imagePreview}
+                          alt="Preview"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        {imageFile
+                          ? "New image will replace the current one."
+                          : "Current product image."}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700">
+                    Description
+                  </label>
+                  <Textarea
+                    value={formDescription}
+                    onChange={(e) => setFormDescription(e.target.value)}
+                    placeholder="Tell the story of this piece—materials, fit, styling suggestions..."
+                    className="min-h-[80px] text-xs"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="featured"
+                    checked={formFeatured}
+                    onChange={(e) => setFormFeatured(e.target.checked)}
+                    className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
+                  />
+                  <label
+                    htmlFor="featured"
+                    className="text-xs font-medium text-slate-700"
+                  >
+                    Mark as featured product
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full text-xs"
+                  onClick={() => setIsEditDialogOpen(false)}
+                  disabled={isSaving}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  className="rounded-full bg-emerald-500 text-xs font-medium text-emerald-950 hover:bg-emerald-400"
+                  onClick={handleUpdateProduct}
+                  disabled={isSaving}
+                >
+                  {isSaving ? "Saving..." : "Save changes"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </>
       )}
     </div>
