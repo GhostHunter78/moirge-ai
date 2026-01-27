@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,7 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useUserProfile } from "@/hooks/use-user-profile";
+import { getSellerProducts, Product } from "@/lib/products";
+import { createProductAction } from "@/actions/products";
+import { createClient } from "@/lib/supabaseClient";
+import { toast } from "sonner";
 import {
   Plus,
   Search,
@@ -20,91 +28,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-type ProductStatus = "active" | "draft" | "out-of-stock" | "archived";
-
-type SellerProduct = {
-  id: string;
-  name: string;
-  sku: string;
-  price: number;
-  currency: string;
-  status: ProductStatus;
-  category: string;
-  stock: number;
-  sold: number;
-  rating: number;
-  thumbnail: string;
-  featured?: boolean;
-};
-
-const MOCK_PRODUCTS: SellerProduct[] = [
-  {
-    id: "1",
-    name: "Midnight Nylon Bomber Jacket",
-    sku: "JK-8421",
-    price: 129,
-    currency: "USD",
-    status: "active",
-    category: "Outerwear",
-    stock: 34,
-    sold: 182,
-    rating: 4.8,
-    thumbnail: "/images/ferrari-jacket-asset.png",
-    featured: true,
-  },
-  {
-    id: "2",
-    name: "Cityline Tapered Trousers",
-    sku: "TR-6139",
-    price: 89,
-    currency: "USD",
-    status: "active",
-    category: "Bottoms",
-    stock: 12,
-    sold: 96,
-    rating: 4.5,
-    thumbnail: "/images/trousers-asset.png",
-  },
-  {
-    id: "3",
-    name: "Studio Weight Hoodie",
-    sku: "HD-2044",
-    price: 79,
-    currency: "USD",
-    status: "out-of-stock",
-    category: "Sweatshirts",
-    stock: 0,
-    sold: 214,
-    rating: 4.9,
-    thumbnail: "/images/hoodie-asset.png",
-  },
-  {
-    id: "4",
-    name: "Weekend Canvas Sneakers",
-    sku: "SN-9012",
-    price: 99,
-    currency: "USD",
-    status: "draft",
-    category: "Footwear",
-    stock: 48,
-    sold: 0,
-    rating: 0,
-    thumbnail: "/images/sneakers-asset.png",
-  },
-  {
-    id: "5",
-    name: "Sunshadow Acetate Sunglasses",
-    sku: "AC-7735",
-    price: 59,
-    currency: "USD",
-    status: "active",
-    category: "Accessories",
-    stock: 67,
-    sold: 142,
-    rating: 4.6,
-    thumbnail: "/images/sunglasses-asset.png",
-  },
-];
+type ProductStatus = "active" | "draft" | "out_of_stock" | "archived";
 
 function StatusPill({ status }: { status: ProductStatus }) {
   const map: Record<
@@ -121,7 +45,7 @@ function StatusPill({ status }: { status: ProductStatus }) {
       className: "bg-slate-50 text-slate-700 border-slate-100",
       dotClass: "bg-slate-400",
     },
-    "out-of-stock": {
+    out_of_stock: {
       label: "Out of stock",
       className: "bg-amber-50 text-amber-800 border-amber-100",
       dotClass: "bg-amber-500",
@@ -219,23 +143,61 @@ function MetricCard({
 }
 
 export default function SellerProductsMain() {
+  const { userInfo } = useUserProfile();
+  const supabase = useMemo(() => createClient(), []);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ProductStatus | "all">(
     "all"
   );
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const [formTitle, setFormTitle] = useState("");
+  const [formPrice, setFormPrice] = useState("");
+  const [formCategory, setFormCategory] = useState("");
+  const [formStock, setFormStock] = useState("");
+  const [formStatus, setFormStatus] = useState<ProductStatus>("draft");
+  const [formDescription, setFormDescription] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      if (!userInfo?.id) return;
+      setIsLoading(true);
+      const { data, error } = await getSellerProducts(userInfo.id);
+      if (error) {
+        console.error("Error loading products", error);
+        toast.error("Failed to load products. Please try again.");
+      } else if (data) {
+        setProducts(data);
+      } else {
+        setProducts([]);
+      }
+      setIsLoading(false);
+    };
+
+    loadProducts();
+  }, [userInfo]);
 
   const categories = useMemo(() => {
-    const set = new Set(MOCK_PRODUCTS.map((p) => p.category));
+    const set = new Set(
+      products
+        .map((p) => p.category)
+        .filter((c): c is string => !!c && c.trim().length > 0)
+    );
     return ["all", ...Array.from(set)];
-  }, []);
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
-    return MOCK_PRODUCTS.filter((product) => {
+    return products.filter((product) => {
       const matchesQuery =
         !query.trim() ||
-        product.name.toLowerCase().includes(query.toLowerCase()) ||
-        product.sku.toLowerCase().includes(query.toLowerCase());
+        product.title.toLowerCase().includes(query.toLowerCase()) ||
+        (product.sku ?? "").toLowerCase().includes(query.toLowerCase());
 
       const matchesStatus =
         statusFilter === "all" || product.status === statusFilter;
@@ -245,15 +207,117 @@ export default function SellerProductsMain() {
 
       return matchesQuery && matchesStatus && matchesCategory;
     });
-  }, [query, statusFilter, categoryFilter]);
+  }, [query, statusFilter, categoryFilter, products]);
 
-  const totalActive = MOCK_PRODUCTS.filter((p) => p.status === "active").length;
-  const totalOutOfStock = MOCK_PRODUCTS.filter(
-    (p) => p.status === "out-of-stock"
+  const totalActive = products.filter((p) => p.status === "active").length;
+  const totalOutOfStock = products.filter(
+    (p) => p.status === "out_of_stock"
   ).length;
-  const totalDrafts = MOCK_PRODUCTS.filter((p) => p.status === "draft").length;
+  const totalDrafts = products.filter((p) => p.status === "draft").length;
 
-  const featured = MOCK_PRODUCTS.find((p) => p.featured);
+  const featured = products.find((p) => p.featured);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setImageFile(file);
+
+    if (!file) {
+      setImagePreview(null);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCreateProduct = async () => {
+    if (!userInfo?.id) {
+      toast.error("You need to be signed in as a seller to add products.");
+      return;
+    }
+
+    if (!formTitle.trim()) {
+      toast.error("Please add a product title.");
+      return;
+    }
+
+    const numericPrice = Number(formPrice);
+    if (Number.isNaN(numericPrice) || numericPrice < 0) {
+      toast.error("Please provide a valid price.");
+      return;
+    }
+
+    const numericStock = formStock.trim().length ? Number(formStock) : 0;
+    if (Number.isNaN(numericStock) || numericStock < 0) {
+      toast.error("Please provide a valid stock number.");
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      let thumbnailUrlToUse: string | undefined;
+
+      if (imageFile && userInfo?.id) {
+        const extension = imageFile.name.split(".").pop() || "jpg";
+        const fileName = `${crypto.randomUUID()}.${extension}`;
+        const filePath = `${userInfo.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("product-images")
+          .upload(filePath, imageFile);
+
+        if (uploadError) {
+          console.error("Error uploading product image", uploadError);
+          toast.error("Could not upload product image. Please try again.");
+          return;
+        }
+
+        const { data: publicUrlData } = supabase.storage
+          .from("product-images")
+          .getPublicUrl(filePath);
+
+        thumbnailUrlToUse = publicUrlData.publicUrl;
+      }
+
+      const { data, error } = await createProductAction({
+        title: formTitle.trim(),
+        description: formDescription.trim() || undefined,
+        price: numericPrice,
+        category: formCategory.trim() || undefined,
+        stock: numericStock,
+        status: formStatus,
+        thumbnail_url: thumbnailUrlToUse,
+      });
+
+      if (error || !data) {
+        console.error("Error creating product", error);
+        toast.error(
+          (error as { message?: string } | null)?.message ||
+            "Could not create product. Please try again."
+        );
+        return;
+      }
+
+      setProducts((prev) => [data, ...prev]);
+      toast.success("Product added to your catalog.");
+      setIsDialogOpen(false);
+
+      setFormTitle("");
+      setFormPrice("");
+      setFormCategory("");
+      setFormStock("");
+      setFormStatus("draft");
+      setFormDescription("");
+      setImageFile(null);
+      setImagePreview(null);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -281,7 +345,10 @@ export default function SellerProductsMain() {
           </div>
 
           <div className="flex flex-col items-start gap-2 sm:items-end">
-            <Button className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs sm:text-sm font-medium text-emerald-950 shadow-lg shadow-emerald-500/30 hover:bg-emerald-400">
+            <Button
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs sm:text-sm font-medium text-emerald-950 shadow-lg shadow-emerald-500/30 hover:bg-emerald-400"
+              onClick={() => setIsDialogOpen(true)}
+            >
               <Plus className="h-4 w-4" />
               New product
             </Button>
@@ -389,8 +456,8 @@ export default function SellerProductsMain() {
                 <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 sm:w-40">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_0,rgba(248,250,252,0.14),transparent_55%)]" />
                   <Image
-                    src={featured.thumbnail}
-                    alt={featured.name}
+                    src={featured.thumbnail_url ?? "/images/hero-section-girl-asset.png"}
+                    alt={featured.title}
                     fill
                     className="object-contain object-center mix-blend-screen"
                   />
@@ -402,7 +469,7 @@ export default function SellerProductsMain() {
                       Featured hero product
                     </div>
                     <h2 className="mt-2 text-sm sm:text-base font-semibold tracking-tight">
-                      {featured.name}
+                      {featured.title}
                     </h2>
                     <p className="mt-1 text-[11px] text-slate-300/90">
                       Ideal for campaigns, lookbooks and hero sections. Adjust
@@ -419,7 +486,7 @@ export default function SellerProductsMain() {
                     </div>
                     <div>
                       <p className="text-slate-400">Sold</p>
-                      <p className="font-medium">{featured.sold}</p>
+                      <p className="font-medium">{featured.sold_count}</p>
                     </div>
                     <div>
                       <p className="text-slate-400">Rating</p>
@@ -467,7 +534,19 @@ export default function SellerProductsMain() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts.map((product) => (
+                  {isLoading && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="px-3 py-10 text-center text-xs text-slate-400"
+                      >
+                        Loading your products...
+                      </td>
+                    </tr>
+                  )}
+
+                  {!isLoading &&
+                    filteredProducts.map((product) => (
                     <tr
                       key={product.id}
                       className="border-b border-slate-100/80 bg-white/80 last:border-0 hover:bg-slate-50/80"
@@ -476,8 +555,8 @@ export default function SellerProductsMain() {
                         <div className="flex gap-2">
                           <div className="relative mt-0.5 h-9 w-9 overflow-hidden rounded-md border border-slate-100 bg-slate-50">
                             <Image
-                              src={product.thumbnail}
-                              alt={product.name}
+                              src={product.thumbnail_url ?? "/images/hero-section-girl-asset.png"}
+                              alt={product.title}
                               fill
                               className="object-cover"
                             />
@@ -485,7 +564,7 @@ export default function SellerProductsMain() {
                           <div className="space-y-1">
                             <div className="flex items-center gap-1.5">
                               <p className="line-clamp-1 text-[11px] font-medium text-slate-900">
-                                {product.name}
+                                {product.title}
                               </p>
                               {product.featured && (
                                 <span className="inline-flex items-center rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-medium text-amber-700 ring-1 ring-amber-100">
@@ -494,12 +573,16 @@ export default function SellerProductsMain() {
                               )}
                             </div>
                             <div className="flex flex-wrap items-center gap-1.5">
-                              <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-medium text-slate-500">
-                                {product.category}
-                              </span>
-                              <span className="text-[9px] text-slate-400">
-                                SKU {product.sku}
-                              </span>
+                              {product.category && (
+                                <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-medium text-slate-500">
+                                  {product.category}
+                                </span>
+                              )}
+                              {product.sku && (
+                                <span className="text-[9px] text-slate-400">
+                                  SKU {product.sku}
+                                </span>
+                              )}
                             </div>
                             <StatusPill status={product.status} />
                           </div>
@@ -541,7 +624,7 @@ export default function SellerProductsMain() {
 
                       <td className="hidden px-3 py-2.5 align-middle text-[11px] text-slate-600 md:table-cell">
                         <div className="space-y-1">
-                          <p className="font-medium">{product.sold} sold</p>
+                          <p className="font-medium">{product.sold_count} sold</p>
                           {product.rating > 0 ? (
                             <p className="inline-flex items-center gap-1 text-[10px] text-slate-500">
                               <Star className="h-3 w-3 text-amber-400" />
@@ -580,7 +663,7 @@ export default function SellerProductsMain() {
                     </tr>
                   ))}
 
-                  {filteredProducts.length === 0 && (
+                  {!isLoading && filteredProducts.length === 0 && (
                     <tr>
                       <td
                         colSpan={5}
@@ -597,6 +680,156 @@ export default function SellerProductsMain() {
           </Card>
         </div>
       </Card>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Create product</DialogTitle>
+            <DialogDescription>
+              Add a new item to your catalog. You can refine details later.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-700">
+                Title
+              </label>
+              <Input
+                value={formTitle}
+                onChange={(e) => setFormTitle(e.target.value)}
+                placeholder="Midnight Nylon Bomber Jacket"
+                className="h-9 text-xs"
+              />
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  Price
+                </label>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formPrice}
+                  onChange={(e) => setFormPrice(e.target.value)}
+                  placeholder="129.00"
+                  className="h-9 text-xs"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  Stock
+                </label>
+                <Input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={formStock}
+                  onChange={(e) => setFormStock(e.target.value)}
+                  placeholder="34"
+                  className="h-9 text-xs"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  Category
+                </label>
+                <Input
+                  value={formCategory}
+                  onChange={(e) => setFormCategory(e.target.value)}
+                  placeholder="Outerwear, Footwear, Accessories..."
+                  className="h-9 text-xs"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-700">
+                  Status
+                </label>
+                <Select
+                  value={formStatus}
+                  onValueChange={(v) =>
+                    setFormStatus(v as ProductStatus)
+                  }
+                >
+                  <SelectTrigger className="h-9 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="out_of_stock">Out of stock</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-700">
+                Product image
+              </label>
+              <Input
+                type="file"
+                accept="image/*"
+                className="h-9 text-xs cursor-pointer"
+                onChange={handleImageChange}
+              />
+              {imagePreview && (
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="relative h-14 w-14 overflow-hidden rounded-md border border-slate-200 bg-slate-50">
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <p className="text-[11px] text-slate-500">
+                    This image will be used as the thumbnail in your catalog.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-700">
+                Description
+              </label>
+              <Textarea
+                value={formDescription}
+                onChange={(e) => setFormDescription(e.target.value)}
+                placeholder="Tell the story of this piece—materials, fit, styling suggestions..."
+                className="min-h-[80px] text-xs"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full text-xs"
+              onClick={() => setIsDialogOpen(false)}
+              disabled={isSaving}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              className="rounded-full bg-emerald-500 text-xs font-medium text-emerald-950 hover:bg-emerald-400"
+              onClick={handleCreateProduct}
+              disabled={isSaving}
+            >
+              {isSaving ? "Saving..." : "Create product"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
