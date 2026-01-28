@@ -7,10 +7,22 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useUserProfile } from "@/hooks/use-user-profile";
@@ -64,7 +76,7 @@ function StatusPill({ status }: { status: ProductStatus }) {
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium",
-        cfg.className
+        cfg.className,
       )}
     >
       <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dotClass)} />
@@ -112,7 +124,7 @@ function MetricCard({
       className={cn(
         "relative overflow-hidden border-none bg-linear-to-br from-white via-slate-50 to-slate-100/80 p-4 sm:p-5",
         "ring-1",
-        styles.ring
+        styles.ring,
       )}
     >
       <div className="absolute -top-10 -right-6 h-24 w-24 rounded-full bg-linear-to-br from-slate-200/60 to-slate-50/0 blur-2xl" />
@@ -133,7 +145,7 @@ function MetricCard({
           className={cn(
             "hidden sm:flex items-center justify-center rounded-full bg-white/80",
             "h-10 w-10 border border-slate-100 backdrop-blur-sm",
-            styles.glow
+            styles.glow,
           )}
         >
           <Star className="h-4 w-4 text-amber-400" />
@@ -148,7 +160,7 @@ export default function SellerProductsMain() {
   const supabase = useMemo(() => createClient(), []);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ProductStatus | "all">(
-    "all"
+    "all",
   );
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [products, setProducts] = useState<Product[]>([]);
@@ -162,8 +174,8 @@ export default function SellerProductsMain() {
   const [formStock, setFormStock] = useState("");
   const [formStatus, setFormStatus] = useState<ProductStatus>("draft");
   const [formDescription, setFormDescription] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -188,7 +200,7 @@ export default function SellerProductsMain() {
     const set = new Set(
       products
         .map((p) => p.category)
-        .filter((c): c is string => !!c && c.trim().length > 0)
+        .filter((c): c is string => !!c && c.trim().length > 0),
     );
     return ["all", ...Array.from(set)];
   }, [products]);
@@ -212,26 +224,34 @@ export default function SellerProductsMain() {
 
   const totalActive = products.filter((p) => p.status === "active").length;
   const totalOutOfStock = products.filter(
-    (p) => p.status === "out_of_stock"
+    (p) => p.status === "out_of_stock",
   ).length;
   const totalDrafts = products.filter((p) => p.status === "draft").length;
 
   const featured = products.find((p) => p.featured);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    setImageFile(file);
+    const files = Array.from(e.target.files ?? []);
 
-    if (!file) {
-      setImagePreview(null);
+    if (!files.length) {
+      setImageFiles([]);
+      setImagePreviews([]);
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    setImageFiles(files);
+
+    // Generate previews for all selected images
+    Promise.all(
+      files.map(
+        (file) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(file);
+          }),
+      ),
+    ).then((results) => setImagePreviews(results));
   };
 
   const handleCreateProduct = async () => {
@@ -261,27 +281,33 @@ export default function SellerProductsMain() {
 
     try {
       let thumbnailUrlToUse: string | undefined;
+      let galleryUrls: string[] | undefined;
 
-      if (imageFile && userInfo?.id) {
-        const extension = imageFile.name.split(".").pop() || "jpg";
-        const fileName = `${crypto.randomUUID()}.${extension}`;
-        const filePath = `${userInfo.id}/${fileName}`;
+      if (imageFiles.length > 0 && userInfo?.id) {
+        const uploads = await Promise.all(
+          imageFiles.map(async (file) => {
+            const extension = file.name.split(".").pop() || "jpg";
+            const fileName = `${crypto.randomUUID()}.${extension}`;
+            const filePath = `${userInfo.id}/${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from("product-images")
-          .upload(filePath, imageFile);
+            const { error: uploadError } = await supabase.storage
+              .from("product-images")
+              .upload(filePath, file);
 
-        if (uploadError) {
-          console.error("Error uploading product image", uploadError);
-          toast.error("Could not upload product image. Please try again.");
-          return;
-        }
+            if (uploadError) {
+              throw uploadError;
+            }
 
-        const { data: publicUrlData } = supabase.storage
-          .from("product-images")
-          .getPublicUrl(filePath);
+            const { data: publicUrlData } = supabase.storage
+              .from("product-images")
+              .getPublicUrl(filePath);
 
-        thumbnailUrlToUse = publicUrlData.publicUrl;
+            return publicUrlData.publicUrl;
+          }),
+        );
+
+        galleryUrls = uploads;
+        thumbnailUrlToUse = uploads[0];
       }
 
       const { data, error } = await createProductAction({
@@ -292,13 +318,14 @@ export default function SellerProductsMain() {
         stock: numericStock,
         status: formStatus,
         thumbnail_url: thumbnailUrlToUse,
+        image_urls: galleryUrls,
       });
 
       if (error || !data) {
         console.error("Error creating product", error);
         toast.error(
           (error as { message?: string } | null)?.message ||
-            "Could not create product. Please try again."
+            "Could not create product. Please try again.",
         );
         return;
       }
@@ -313,8 +340,8 @@ export default function SellerProductsMain() {
       setFormStock("");
       setFormStatus("draft");
       setFormDescription("");
-      setImageFile(null);
-      setImagePreview(null);
+      setImageFiles([]);
+      setImagePreviews([]);
     } finally {
       setIsSaving(false);
     }
@@ -408,9 +435,7 @@ export default function SellerProductsMain() {
           <div className="flex flex-wrap items-center gap-2">
             <Select
               value={statusFilter}
-              onValueChange={(v) =>
-                setStatusFilter(v as ProductStatus | "all")
-              }
+              onValueChange={(v) => setStatusFilter(v as ProductStatus | "all")}
             >
               <SelectTrigger className="h-9 min-w-[130px] rounded-full border-slate-200 bg-slate-50/80 text-xs">
                 <SelectValue placeholder="Status" />
@@ -457,7 +482,10 @@ export default function SellerProductsMain() {
                 <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 sm:w-40">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_0,rgba(248,250,252,0.14),transparent_55%)]" />
                   <Image
-                    src={featured.thumbnail_url ?? "/images/hero-section-girl-asset.png"}
+                    src={
+                      featured.thumbnail_url ??
+                      "/images/hero-section-girl-asset.png"
+                    }
                     alt={featured.title}
                     fill
                     className="object-contain object-center mix-blend-screen"
@@ -526,7 +554,9 @@ export default function SellerProductsMain() {
               <table className="min-w-full border-collapse text-xs">
                 <thead>
                   <tr className="border-b border-slate-200/80 bg-slate-100/80 text-[10px] uppercase tracking-[0.14em] text-slate-500">
-                    <th className="px-3 py-2.5 text-left font-medium">Product</th>
+                    <th className="px-3 py-2.5 text-left font-medium">
+                      Product
+                    </th>
                     <th className="hidden px-3 py-2.5 text-left font-medium sm:table-cell">
                       Inventory
                     </th>
@@ -553,130 +583,137 @@ export default function SellerProductsMain() {
 
                   {!isLoading &&
                     filteredProducts.map((product) => (
-                    <tr
-                      key={product.id}
-                      className="border-b border-slate-100/80 bg-white/80 last:border-0 hover:bg-slate-50/80"
-                    >
-                      <td className="max-w-[220px] px-3 py-2.5 align-top">
-                        <Link
-                          href={`/dashboard/seller/products/${product.id}`}
-                          className="flex gap-2"
-                        >
-                          <div className="relative mt-0.5 h-9 w-9 overflow-hidden rounded-md border border-slate-100 bg-slate-50">
-                            <Image
-                              src={
-                                product.thumbnail_url ??
-                                "/images/hero-section-girl-asset.png"
-                              }
-                              alt={product.title}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
+                      <tr
+                        key={product.id}
+                        className="border-b border-slate-100/80 bg-white/80 last:border-0 hover:bg-slate-50/80"
+                      >
+                        <td className="max-w-[220px] px-3 py-2.5 align-top">
+                          <Link
+                            href={`/dashboard/seller/products/${product.id}`}
+                            className="flex gap-2"
+                          >
+                            <div className="relative mt-0.5 h-9 w-9 overflow-hidden rounded-md border border-slate-100 bg-slate-50">
+                              <Image
+                                src={
+                                  product.thumbnail_url ??
+                                  "/images/hero-section-girl-asset.png"
+                                }
+                                alt={product.title}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-1.5">
+                                <p className="line-clamp-1 text-[11px] font-medium text-slate-900">
+                                  {product.title}
+                                </p>
+                                {product.featured && (
+                                  <span className="inline-flex items-center rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-medium text-amber-700 ring-1 ring-amber-100">
+                                    Hero
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                {product.category && (
+                                  <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-medium text-slate-500">
+                                    {product.category}
+                                  </span>
+                                )}
+                                {product.sku && (
+                                  <span className="text-[9px] text-slate-400">
+                                    SKU {product.sku}
+                                  </span>
+                                )}
+                              </div>
+                              <StatusPill status={product.status} />
+                            </div>
+                          </Link>
+                        </td>
+
+                        <td className="hidden px-3 py-2.5 align-middle text-[11px] text-slate-600 sm:table-cell">
                           <div className="space-y-1">
-                            <div className="flex items-center gap-1.5">
-                              <p className="line-clamp-1 text-[11px] font-medium text-slate-900">
-                                {product.title}
-                              </p>
-                              {product.featured && (
-                                <span className="inline-flex items-center rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-medium text-amber-700 ring-1 ring-amber-100">
-                                  Hero
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex flex-wrap items-center gap-1.5">
-                              {product.category && (
-                                <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-medium text-slate-500">
-                                  {product.category}
-                                </span>
-                              )}
-                              {product.sku && (
-                                <span className="text-[9px] text-slate-400">
-                                  SKU {product.sku}
-                                </span>
-                              )}
-                            </div>
-                            <StatusPill status={product.status} />
-                          </div>
-                        </Link>
-                      </td>
-
-                      <td className="hidden px-3 py-2.5 align-middle text-[11px] text-slate-600 sm:table-cell">
-                        <div className="space-y-1">
-                          <p className="font-medium">
-                            {product.stock} in stock
-                          </p>
-                          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                            <div
-                              className={cn(
-                                "h-full rounded-full bg-emerald-500",
-                                product.stock === 0 && "bg-rose-500",
-                                product.stock > 0 &&
-                                  product.stock < 15 &&
-                                  "bg-amber-500"
-                              )}
-                              style={{
-                                width: `${
-                                  product.stock === 0
-                                    ? 4
-                                    : Math.min(100, (product.stock / 80) * 100)
-                                }%`,
-                              }}
-                            />
-                          </div>
-                          <p className="text-[10px] text-slate-400">
-                            {product.stock === 0
-                              ? "Restock recommended"
-                              : product.stock < 15
-                              ? "Running low · plan restock"
-                              : "Healthy inventory"}
-                          </p>
-                        </div>
-                      </td>
-
-                      <td className="hidden px-3 py-2.5 align-middle text-[11px] text-slate-600 md:table-cell">
-                        <div className="space-y-1">
-                          <p className="font-medium">{product.sold_count} sold</p>
-                          {product.rating > 0 ? (
-                            <p className="inline-flex items-center gap-1 text-[10px] text-slate-500">
-                              <Star className="h-3 w-3 text-amber-400" />
-                              {product.rating.toFixed(1)} average rating
+                            <p className="font-medium">
+                              {product.stock} in stock
                             </p>
-                          ) : (
+                            <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                              <div
+                                className={cn(
+                                  "h-full rounded-full bg-emerald-500",
+                                  product.stock === 0 && "bg-rose-500",
+                                  product.stock > 0 &&
+                                    product.stock < 15 &&
+                                    "bg-amber-500",
+                                )}
+                                style={{
+                                  width: `${
+                                    product.stock === 0
+                                      ? 4
+                                      : Math.min(
+                                          100,
+                                          (product.stock / 80) * 100,
+                                        )
+                                  }%`,
+                                }}
+                              />
+                            </div>
                             <p className="text-[10px] text-slate-400">
-                              Not rated yet
+                              {product.stock === 0
+                                ? "Restock recommended"
+                                : product.stock < 15
+                                  ? "Running low · plan restock"
+                                  : "Healthy inventory"}
                             </p>
-                          )}
-                        </div>
-                      </td>
+                          </div>
+                        </td>
 
-                      <td className="px-3 py-2.5 align-middle text-right text-[11px] font-medium text-slate-900">
-                        {product.currency} {product.price}
-                      </td>
+                        <td className="hidden px-3 py-2.5 align-middle text-[11px] text-slate-600 md:table-cell">
+                          <div className="space-y-1">
+                            <p className="font-medium">
+                              {product.sold_count} sold
+                            </p>
+                            {product.rating > 0 ? (
+                              <p className="inline-flex items-center gap-1 text-[10px] text-slate-500">
+                                <Star className="h-3 w-3 text-amber-400" />
+                                {product.rating.toFixed(1)} average rating
+                              </p>
+                            ) : (
+                              <p className="text-[10px] text-slate-400">
+                                Not rated yet
+                              </p>
+                            )}
+                          </div>
+                        </td>
 
-                      <td className="px-2 py-2.5 align-middle">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                            asChild
-                          >
-                            <Link href={`/dashboard/seller/products/${product.id}`}>
-                              <Eye className="h-3.5 w-3.5" />
-                            </Link>
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                          >
-                            <MoreHorizontal className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        <td className="px-3 py-2.5 align-middle text-right text-[11px] font-medium text-slate-900">
+                          {product.currency} {product.price}
+                        </td>
+
+                        <td className="px-2 py-2.5 align-middle">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                              asChild
+                            >
+                              <Link
+                                href={`/dashboard/seller/products/${product.id}`}
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                              </Link>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                            >
+                              <MoreHorizontal className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
 
                   {!isLoading && filteredProducts.length === 0 && (
                     <tr>
@@ -767,9 +804,7 @@ export default function SellerProductsMain() {
                 </label>
                 <Select
                   value={formStatus}
-                  onValueChange={(v) =>
-                    setFormStatus(v as ProductStatus)
-                  }
+                  onValueChange={(v) => setFormStatus(v as ProductStatus)}
                 >
                   <SelectTrigger className="h-9 text-xs">
                     <SelectValue />
@@ -786,26 +821,35 @@ export default function SellerProductsMain() {
 
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
-                Product image
+                Product photos
               </label>
               <Input
                 type="file"
                 accept="image/*"
+                multiple
                 className="h-9 text-xs cursor-pointer"
                 onChange={handleImageChange}
               />
-              {imagePreview && (
-                <div className="mt-2 flex items-center gap-2">
-                  <div className="relative h-14 w-14 overflow-hidden rounded-md border border-slate-200 bg-slate-50">
-                    <Image
-                      src={imagePreview}
-                      alt="Preview"
-                      fill
-                      className="object-cover"
-                    />
+              {imagePreviews.length > 0 && (
+                <div className="mt-2 space-y-2">
+                  <div className="flex flex-wrap gap-2">
+                    {imagePreviews.map((preview, index) => (
+                      <div
+                        key={preview}
+                        className="relative h-14 w-14 overflow-hidden rounded-md border border-slate-200 bg-slate-50"
+                      >
+                        <Image
+                          src={preview}
+                          alt={`Preview ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    This image will be used as the thumbnail in your catalog.
+                    The first image will be used as the thumbnail in your
+                    catalog.
                   </p>
                 </div>
               )}
@@ -848,4 +892,3 @@ export default function SellerProductsMain() {
     </div>
   );
 }
-

@@ -12,6 +12,7 @@ export interface Product {
   sku: string | null;
   category: string | null;
   thumbnail_url: string | null;
+  image_urls: string[] | null;
   featured: boolean;
   stock: number;
   sold_count: number;
@@ -30,6 +31,11 @@ export interface CreateProductPayload {
   sku?: string;
   category?: string;
   thumbnail_url?: string;
+  /**
+   * Optional gallery images for the product.
+   * When provided, the first image is typically used as the primary visual.
+   */
+  image_urls?: string[];
   featured?: boolean;
   stock?: number;
   status?: ProductStatus;
@@ -49,7 +55,7 @@ export async function getSellerProducts(sellerId: string) {
 
 export async function createProduct(
   sellerId: string,
-  payload: CreateProductPayload
+  payload: CreateProductPayload,
 ) {
   const supabase = createClient();
 
@@ -64,6 +70,7 @@ export async function createProduct(
       sku: payload.sku ?? null,
       category: payload.category ?? null,
       thumbnail_url: payload.thumbnail_url ?? null,
+      image_urls: payload.image_urls ?? null,
       featured: payload.featured ?? false,
       stock: payload.stock ?? 0,
       status: payload.status ?? "draft",
@@ -73,4 +80,3 @@ export async function createProduct(
 
   return { data: data as Product | null, error };
 }
-

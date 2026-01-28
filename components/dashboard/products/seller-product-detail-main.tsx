@@ -24,7 +24,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Star, Package, TrendingUp, DollarSign, Edit, Eye } from "lucide-react";
+import {
+  ArrowLeft,
+  Star,
+  Package,
+  TrendingUp,
+  DollarSign,
+  Edit,
+  Eye,
+} from "lucide-react";
 import { createClient } from "@/lib/supabaseClient";
 import { updateProductAction } from "@/actions/products";
 import { toast } from "sonner";
@@ -60,7 +68,7 @@ function StatusBadge({ status }: { status: Product["status"] }) {
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium",
-        cfg.className
+        cfg.className,
       )}
     >
       <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dot)} />
@@ -89,8 +97,9 @@ export default function SellerProductDetailMain() {
   const [formStatus, setFormStatus] = useState<ProductStatus>("draft");
   const [formDescription, setFormDescription] = useState("");
   const [formFeatured, setFormFeatured] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     if (!productId) return;
@@ -99,7 +108,7 @@ export default function SellerProductDetailMain() {
 
     const loadData = async () => {
       setLoading(true);
-      
+
       // Load product
       const { data, error } = await supabase
         .from("products")
@@ -147,24 +156,25 @@ export default function SellerProductDetailMain() {
     setFormDescription(product.description ?? "");
     setFormFeatured(product.featured);
     setImagePreview(product.thumbnail_url);
-    setImageFile(null);
+    setImageFiles([]);
     setIsEditDialogOpen(true);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    setImageFile(file);
+    const files = Array.from(e.target.files ?? []);
+    setImageFiles(files);
 
-    if (!file) {
+    if (!files.length) {
       setImagePreview(product?.thumbnail_url ?? null);
       return;
     }
 
+    const first = files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result as string);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(first);
   };
 
   const handleUpdateProduct = async () => {
@@ -191,32 +201,43 @@ export default function SellerProductDetailMain() {
 
     try {
       const supabase = createClient();
-      let thumbnailUrlToUse: string | undefined = product.thumbnail_url ?? undefined;
+      let thumbnailUrlToUse: string | undefined =
+        product.thumbnail_url ?? undefined;
+      let galleryUrls: string[] | undefined;
 
-      // Upload new image if provided
-      if (imageFile && product.seller_id) {
-        const extension = imageFile.name.split(".").pop() || "jpg";
-        const fileName = `${crypto.randomUUID()}.${extension}`;
-        const filePath = `${product.seller_id}/${fileName}`;
+      // Upload new images if provided
+      if (imageFiles.length > 0 && product.seller_id) {
+        const uploads = await Promise.all(
+          imageFiles.map(async (file) => {
+            const extension = file.name.split(".").pop() || "jpg";
+            const fileName = `${crypto.randomUUID()}.${extension}`;
+            const filePath = `${product.seller_id}/${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from("product-images")
-          .upload(filePath, imageFile, {
-            upsert: false, // Don't overwrite, use unique filename
-          });
+            const { error: uploadError } = await supabase.storage
+              .from("product-images")
+              .upload(filePath, file, {
+                upsert: false, // Don't overwrite, use unique filename
+              });
 
-        if (uploadError) {
-          console.error("Error uploading product image", uploadError);
-          toast.error("Could not upload product image. Please try again.");
-          setIsSaving(false);
-          return;
+            if (uploadError) {
+              throw uploadError;
+            }
+
+            const { data: publicUrlData } = supabase.storage
+              .from("product-images")
+              .getPublicUrl(filePath);
+
+            return publicUrlData.publicUrl;
+          }),
+        );
+
+        const existingGallery = product.image_urls ?? [];
+        galleryUrls = [...existingGallery, ...uploads];
+
+        // If there was no thumbnail before, use the first gallery image as thumbnail
+        if (!thumbnailUrlToUse) {
+          thumbnailUrlToUse = galleryUrls[0];
         }
-
-        const { data: publicUrlData } = supabase.storage
-          .from("product-images")
-          .getPublicUrl(filePath);
-
-        thumbnailUrlToUse = publicUrlData.publicUrl;
       }
 
       const updatePayload: Parameters<typeof updateProductAction>[1] = {
@@ -230,8 +251,15 @@ export default function SellerProductDetailMain() {
       };
 
       // Only include thumbnail_url if it's being changed
-      if (thumbnailUrlToUse !== undefined && thumbnailUrlToUse !== product.thumbnail_url) {
+      if (
+        thumbnailUrlToUse !== undefined &&
+        thumbnailUrlToUse !== product.thumbnail_url
+      ) {
         updatePayload.thumbnail_url = thumbnailUrlToUse;
+      }
+
+      if (galleryUrls) {
+        updatePayload.image_urls = galleryUrls;
       }
 
       const { data: updatedProduct, error: updateError } =
@@ -241,7 +269,7 @@ export default function SellerProductDetailMain() {
         console.error("Error updating product", updateError);
         toast.error(
           (updateError as { message?: string } | null)?.message ||
-            "Could not update product. Please try again."
+            "Could not update product. Please try again.",
         );
         setIsSaving(false);
         return;
@@ -254,6 +282,14 @@ export default function SellerProductDetailMain() {
       setIsSaving(false);
     }
   };
+
+  const fallbackImage =
+    product?.thumbnail_url ?? "/images/hero-section-girl-asset.png";
+
+  const galleryImages =
+    product?.image_urls && product.image_urls.length > 0
+      ? product.image_urls
+      : [fallbackImage];
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -287,19 +323,41 @@ export default function SellerProductDetailMain() {
           {/* Main Product Card */}
           <Card className="overflow-hidden border-slate-200/80 bg-white/90 backdrop-blur-sm">
             <div className="grid gap-6 p-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] lg:p-8">
-              {/* Image Section */}
+              {/* Image Section with gallery */}
               <div className="space-y-4">
                 <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-slate-100 shadow-sm">
                   <Image
-                    src={
-                      product.thumbnail_url ??
-                      "/images/hero-section-girl-asset.png"
-                    }
+                    src={galleryImages[selectedImageIndex] ?? fallbackImage}
                     alt={product.title}
                     fill
                     className="object-cover"
                   />
                 </div>
+
+                {galleryImages.length > 1 && (
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {galleryImages.map((img, index) => (
+                      <button
+                        key={img + index}
+                        type="button"
+                        onClick={() => setSelectedImageIndex(index)}
+                        className={cn(
+                          "relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border transition-all",
+                          selectedImageIndex === index
+                            ? "border-emerald-500 ring-2 ring-emerald-500/40"
+                            : "border-slate-200 hover:border-slate-300",
+                        )}
+                      >
+                        <Image
+                          src={img}
+                          alt={`${product.title} ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Details Section */}
@@ -362,8 +420,8 @@ export default function SellerProductDetailMain() {
                       {product.stock === 0
                         ? "Out of stock"
                         : product.stock < 15
-                        ? "Running low"
-                        : "In stock"}
+                          ? "Running low"
+                          : "In stock"}
                     </p>
                   </div>
 
@@ -571,9 +629,7 @@ export default function SellerProductDetailMain() {
                     </label>
                     <Select
                       value={formStatus}
-                      onValueChange={(v) =>
-                        setFormStatus(v as ProductStatus)
-                      }
+                      onValueChange={(v) => setFormStatus(v as ProductStatus)}
                     >
                       <SelectTrigger className="h-9 text-xs">
                         <SelectValue />
@@ -581,7 +637,9 @@ export default function SellerProductDetailMain() {
                       <SelectContent>
                         <SelectItem value="draft">Draft</SelectItem>
                         <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="out_of_stock">Out of stock</SelectItem>
+                        <SelectItem value="out_of_stock">
+                          Out of stock
+                        </SelectItem>
                         <SelectItem value="archived">Archived</SelectItem>
                       </SelectContent>
                     </Select>
@@ -590,11 +648,12 @@ export default function SellerProductDetailMain() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-slate-700">
-                    Product image
+                    Product photos
                   </label>
                   <Input
                     type="file"
                     accept="image/*"
+                    multiple
                     className="h-9 text-xs cursor-pointer"
                     onChange={handleImageChange}
                   />
@@ -609,9 +668,9 @@ export default function SellerProductDetailMain() {
                         />
                       </div>
                       <p className="text-[11px] text-slate-500">
-                        {imageFile
-                          ? "New image will replace the current one."
-                          : "Current product image."}
+                        {imageFiles.length
+                          ? "Selected images will be added to this product’s gallery. The first one may be used as the thumbnail."
+                          : "Current primary product image."}
                       </p>
                     </div>
                   )}
@@ -672,4 +731,3 @@ export default function SellerProductDetailMain() {
     </div>
   );
 }
-

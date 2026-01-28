@@ -31,6 +31,7 @@ export async function createProductAction(payload: CreateProductPayload) {
       sku: payload.sku ?? null,
       category: payload.category ?? null,
       thumbnail_url: payload.thumbnail_url ?? null,
+      image_urls: payload.image_urls ?? null,
       featured: payload.featured ?? false,
       stock: payload.stock ?? 0,
       status: payload.status ?? "draft",
@@ -43,7 +44,7 @@ export async function createProductAction(payload: CreateProductPayload) {
 
 export async function updateProductAction(
   productId: string,
-  payload: Partial<CreateProductPayload> & { featured?: boolean }
+  payload: Partial<CreateProductPayload> & { featured?: boolean },
 ) {
   const supabase = await createClient();
 
@@ -89,6 +90,8 @@ export async function updateProductAction(
     updateData.category = payload.category ?? null;
   if (payload.thumbnail_url !== undefined)
     updateData.thumbnail_url = payload.thumbnail_url ?? null;
+  if (payload.image_urls !== undefined)
+    updateData.image_urls = payload.image_urls ?? null;
   if (payload.featured !== undefined) updateData.featured = payload.featured;
   if (payload.stock !== undefined) updateData.stock = payload.stock;
   if (payload.status !== undefined) updateData.status = payload.status;
@@ -100,7 +103,7 @@ export async function updateProductAction(
       .select("*")
       .eq("id", productId)
       .single();
-    
+
     return { data: currentProduct as Product | null, error: null };
   }
 
@@ -127,4 +130,3 @@ export async function updateProductAction(
 
   return { data: data as Product, error: null };
 }
-
