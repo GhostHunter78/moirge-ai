@@ -325,7 +325,7 @@ export default function SellerProductDetailMain() {
             <div className="grid gap-6 p-4 sm:p-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] lg:p-8">
               {/* Image Section with gallery */}
               <div className="space-y-4">
-                <div className="relative aspect-[4/5] sm:aspect-square w-full max-w-xs sm:max-w-none mx-auto overflow-hidden rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-slate-100 shadow-sm">
+                <div className="relative aspect-4/5 sm:aspect-square w-full max-w-xs sm:max-w-none mx-auto overflow-hidden rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-slate-100 shadow-sm">
                   <Image
                     src={galleryImages[selectedImageIndex] ?? fallbackImage}
                     alt={product.title}

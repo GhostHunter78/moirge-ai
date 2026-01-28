@@ -38,6 +38,7 @@ export default function SidebarSections({
       Messages: "messages",
       Settings: "settings",
       "Store Profile": "storeProfile",
+      "Public Store Page": "publicStorePage",
       Products: "products",
       Analytics: "analytics",
     };

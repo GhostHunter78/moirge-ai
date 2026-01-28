@@ -96,6 +96,13 @@ export const DASHBOARD_SIDEBAR_LINKS: {
           title: "Store Profile",
           description: "Manage your store information and branding",
         },
+        {
+          label: "Public Store Page",
+          href: "/dashboard/seller/public-store",
+          icon: Store,
+          title: "Public Store Page",
+          description: "Preview how your store looks to buyers",
+        },
       ],
     },
     {
