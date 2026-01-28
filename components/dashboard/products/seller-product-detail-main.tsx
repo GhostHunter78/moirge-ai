@@ -292,9 +292,9 @@ export default function SellerProductDetailMain() {
       : [fallbackImage];
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
+    <div className="space-y-6 p-4 sm:p-5 md:p-6 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Button
           variant="ghost"
           size="sm"
@@ -322,10 +322,10 @@ export default function SellerProductDetailMain() {
         <>
           {/* Main Product Card */}
           <Card className="overflow-hidden border-slate-200/80 bg-white/90 backdrop-blur-sm">
-            <div className="grid gap-6 p-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] lg:p-8">
+            <div className="grid gap-6 p-4 sm:p-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] lg:p-8">
               {/* Image Section with gallery */}
               <div className="space-y-4">
-                <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-slate-100 shadow-sm">
+                <div className="relative aspect-[4/5] sm:aspect-square w-full max-w-xs sm:max-w-none mx-auto overflow-hidden rounded-2xl border border-slate-200 bg-linear-to-br from-slate-50 to-slate-100 shadow-sm">
                   <Image
                     src={galleryImages[selectedImageIndex] ?? fallbackImage}
                     alt={product.title}
@@ -335,14 +335,14 @@ export default function SellerProductDetailMain() {
                 </div>
 
                 {galleryImages.length > 1 && (
-                  <div className="flex gap-2 overflow-x-auto pb-1">
+                  <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 sm:mx-0 sm:px-0 justify-center sm:justify-start">
                     {galleryImages.map((img, index) => (
                       <button
                         key={img + index}
                         type="button"
                         onClick={() => setSelectedImageIndex(index)}
                         className={cn(
-                          "relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border transition-all",
+                          "relative h-12 w-12 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-lg border transition-all",
                           selectedImageIndex === index
                             ? "border-emerald-500 ring-2 ring-emerald-500/40"
                             : "border-slate-200 hover:border-slate-300",
@@ -559,7 +559,7 @@ export default function SellerProductDetailMain() {
 
           {/* Edit Product Dialog */}
           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-            <DialogContent className="max-w-lg">
+            <DialogContent className="w-[95vw] max-w-lg max-h-[90vh] overflow-y-auto sm:w-full">
               <DialogHeader>
                 <DialogTitle>Edit product</DialogTitle>
                 <DialogDescription>
