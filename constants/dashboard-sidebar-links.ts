@@ -9,6 +9,7 @@ import {
   Store,
   List,
   BarChart2,
+  Globe,
 } from "lucide-react";
 
 export const DASHBOARD_SIDEBAR_LINKS: {
@@ -99,7 +100,7 @@ export const DASHBOARD_SIDEBAR_LINKS: {
         {
           label: "Public Store Page",
           href: "/dashboard/seller/public-store",
-          icon: Store,
+          icon: Globe,
           title: "Public Store Page",
           description: "Preview how your store looks to buyers",
         },

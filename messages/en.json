@@ -223,6 +223,8 @@
       "fields": {
         "storeLogo": "Store Logo",
         "logoHint": "Upload a square image (recommended: 512x512px)",
+        "storeCover": "Store Cover Image",
+        "coverHint": "Upload a wide image (recommended: 1200x400px) that will appear at the top of your public store page",
         "storeName": "Store Name",
         "storeNamePlaceholder": "Enter your store name",
         "storeDescription": "Store Description",

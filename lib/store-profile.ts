@@ -6,7 +6,7 @@ import { StoreProfile, StoreProfileFormData } from "@/types/dashboard";
  */
 export async function getStoreProfile(userId: string) {
   const supabase = createClient();
-  
+
   const { data, error } = await supabase
     .from("store_profiles")
     .select("*")
@@ -30,7 +30,7 @@ export async function getStoreProfile(userId: string) {
  */
 export async function saveStoreProfile(
   userId: string,
-  profileData: StoreProfileFormData
+  profileData: StoreProfileFormData,
 ) {
   const supabase = createClient();
 
@@ -40,6 +40,7 @@ export async function saveStoreProfile(
     store_name: profileData.storeName,
     store_description: profileData.storeDescription,
     store_logo: profileData.storeLogo,
+    store_cover: profileData.storeCover ?? null,
     phone: profileData.phone,
     email: profileData.email,
     address: profileData.address,
@@ -85,12 +86,13 @@ export async function deleteStoreProfile(userId: string) {
  * Transform database row to form data format
  */
 export function transformStoreProfileToFormData(
-  dbRow: StoreProfile
+  dbRow: StoreProfile,
 ): StoreProfileFormData {
   return {
     storeName: dbRow.store_name || "",
     storeDescription: dbRow.store_description || "",
     storeLogo: dbRow.store_logo || "",
+    storeCover: dbRow.store_cover || "",
     phone: dbRow.phone || "",
     email: dbRow.email || "",
     address: dbRow.address || "",

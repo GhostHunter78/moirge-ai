@@ -19,10 +19,12 @@ interface StoreBasicInfoProps {
   formData: StoreProfileFormData;
   errors: StoreProfileErrors;
   logoPreview: string | null;
+  coverPreview: string | null;
   onFieldChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onLogoUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onCoverUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function StoreBasicInfo({
@@ -31,6 +33,8 @@ export function StoreBasicInfo({
   logoPreview,
   onFieldChange,
   onLogoUpload,
+  coverPreview,
+  onCoverUpload,
 }: StoreBasicInfoProps) {
   const t = useTranslations("dashboard.storeProfile");
 
@@ -41,11 +45,50 @@ export function StoreBasicInfo({
           <Store className="w-5 h-5" />
           {t("sections.basicInfo.title")}
         </CardTitle>
-        <CardDescription>
-          {t("sections.basicInfo.description")}
-        </CardDescription>
+        <CardDescription>{t("sections.basicInfo.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Store Cover Image */}
+        <div className="space-y-2">
+          <Label htmlFor="storeCover">
+            {t("fields.storeCover", { defaultMessage: "Store Cover Image" })}
+          </Label>
+          <div className="space-y-2">
+            <div className="relative w-full h-32 sm:h-40 rounded-lg border-2 border-dashed border-gray-300 overflow-hidden bg-gray-50">
+              {coverPreview ? (
+                <Image
+                  src={coverPreview}
+                  alt="Store cover"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                  {t("fields.coverHint", {
+                    defaultMessage: "Upload a wide image to use as your cover",
+                  })}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <label
+                htmlFor="cover-upload"
+                className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
+              >
+                <Upload className="w-4 h-4" />
+                {t("buttons.uploadCover", { defaultMessage: "Upload Cover" })}
+              </label>
+              <input
+                id="cover-upload"
+                type="file"
+                accept="image/*"
+                onChange={onCoverUpload}
+                className="hidden"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Store Logo */}
         <div className="space-y-2">
           <Label htmlFor="storeLogo">{t("fields.storeLogo")}</Label>

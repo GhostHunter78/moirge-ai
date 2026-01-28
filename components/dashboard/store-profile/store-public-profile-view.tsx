@@ -85,10 +85,19 @@ export default function StorePublicProfileView({
       {/* Hero section with cover + logo */}
       <Card className="overflow-hidden border-slate-200 bg-slate-950 text-slate-50">
         <div className="relative h-40 sm:h-48 w-full bg-linear-to-r from-slate-900 via-slate-800 to-slate-900">
-          <div className="absolute inset-0 opacity-70">
-            <div className="absolute -left-20 -top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.5),transparent_60%)] blur-2xl" />
-            <div className="absolute right-[-10%] bottom-[-20%] h-56 w-56 rounded-full bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.45),transparent_60%)] blur-2xl" />
-          </div>
+          {store.store_cover ? (
+            <Image
+              src={store.store_cover}
+              alt={`${storeName} cover`}
+              fill
+              className="object-cover opacity-90"
+            />
+          ) : (
+            <div className="absolute inset-0 opacity-70">
+              <div className="absolute -left-20 -top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.5),transparent_60%)] blur-2xl" />
+              <div className="absolute right-[-10%] bottom-[-20%] h-56 w-56 rounded-full bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.45),transparent_60%)] blur-2xl" />
+            </div>
+          )}
         </div>
 
         <div className="px-4 sm:px-6 pb-6 sm:pb-8 -mt-12 sm:-mt-16 relative">

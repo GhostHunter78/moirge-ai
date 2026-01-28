@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { StoreProfileFormData, StoreProfileErrors } from "@/types/dashboard";
-import { getStoreProfile, saveStoreProfile, transformStoreProfileToFormData } from "@/lib/store-profile";
+import {
+  getStoreProfile,
+  saveStoreProfile,
+  transformStoreProfileToFormData,
+} from "@/lib/store-profile";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { StoreBasicInfo } from "./store-basic-info";
 import { StoreContactInfo } from "./store-contact-info";
@@ -22,6 +26,7 @@ function StoreProfileMain() {
     storeName: "",
     storeDescription: "",
     storeLogo: "",
+    storeCover: "",
     phone: "",
     email: "",
     address: "",
@@ -42,6 +47,7 @@ function StoreProfileMain() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
   const clearFieldError = (field: keyof StoreProfileFormData) => {
     setErrors((prevErrors) => ({
@@ -51,7 +57,7 @@ function StoreProfileMain() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     const field = name as keyof StoreProfileFormData;
@@ -80,6 +86,22 @@ function StoreProfileMain() {
     }
   };
 
+  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setCoverPreview(result);
+        setFormData((prev) => ({
+          ...prev,
+          storeCover: result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Load existing store profile data on mount
   useEffect(() => {
     const loadStoreProfile = async () => {
@@ -88,19 +110,19 @@ function StoreProfileMain() {
       setIsLoadingData(true);
       try {
         const { data, error } = await getStoreProfile(userInfo.id);
-        
+
         if (error) {
           console.error("Error loading store profile:", error);
           // PGRST116 means no rows found, which is expected for new users
           // Other errors should be shown to the user
           if (error.code !== "PGRST116") {
             toast.error(
-              error.message || 
-              t("errors.loadFailed") || 
-              "Failed to load store profile. Please try refreshing the page."
+              error.message ||
+                t("errors.loadFailed") ||
+                "Failed to load store profile. Please try refreshing the page.",
             );
           }
-          
+
           // If no store profile exists, prefill email and phone from user profile
           if (error.code === "PGRST116" && userInfo) {
             setFormData((prev) => ({
@@ -111,30 +133,37 @@ function StoreProfileMain() {
           }
         } else if (data) {
           const formDataFromDb = transformStoreProfileToFormData(data);
-          
+
           // Prefill email and phone from user profile if store profile fields are empty
           const prefilledData = {
             ...formDataFromDb,
-            email: (formDataFromDb.email?.trim() || "") 
-              ? formDataFromDb.email 
-              : (userInfo?.email || ""),
-            phone: (formDataFromDb.phone?.trim() || "") 
-              ? formDataFromDb.phone 
-              : (userInfo?.phone || ""),
+            email:
+              formDataFromDb.email?.trim() || ""
+                ? formDataFromDb.email
+                : userInfo?.email || "",
+            phone:
+              formDataFromDb.phone?.trim() || ""
+                ? formDataFromDb.phone
+                : userInfo?.phone || "",
           };
-          
+
           setFormData(prefilledData);
-          
+
           // Set logo preview if logo exists
           if (prefilledData.storeLogo) {
             setLogoPreview(prefilledData.storeLogo);
+          }
+
+          // Set cover preview if cover exists
+          if (prefilledData.storeCover) {
+            setCoverPreview(prefilledData.storeCover);
           }
         }
       } catch (error) {
         console.error("Error loading store profile:", error);
         toast.error(
-          t("errors.loadFailed") || 
-          "An unexpected error occurred while loading your store profile. Please try refreshing the page."
+          t("errors.loadFailed") ||
+            "An unexpected error occurred while loading your store profile. Please try refreshing the page.",
         );
       } finally {
         setIsLoadingData(false);
@@ -146,7 +175,7 @@ function StoreProfileMain() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!userInfo?.id) {
       toast.error("User not authenticated");
       return;
@@ -156,7 +185,7 @@ function StoreProfileMain() {
 
     // Basic validation
     const newErrors: StoreProfileErrors = {};
-    
+
     if (!formData.storeName.trim()) {
       newErrors.storeName = t("errors.storeNameRequired");
     }
@@ -169,16 +198,25 @@ function StoreProfileMain() {
 
     try {
       const { error } = await saveStoreProfile(userInfo.id, formData);
-      
+
       if (error) {
         console.error("Error saving store profile:", error);
-        toast.error(error.message || t("errors.saveFailed") || "Failed to save store profile. Please try again.");
+        toast.error(
+          error.message ||
+            t("errors.saveFailed") ||
+            "Failed to save store profile. Please try again.",
+        );
       } else {
-        toast.success(t("messages.saveSuccess") || "Store profile saved successfully!");
+        toast.success(
+          t("messages.saveSuccess") || "Store profile saved successfully!",
+        );
       }
     } catch (error) {
       console.error("Error saving store profile:", error);
-      toast.error(t("errors.unexpectedError") || "An unexpected error occurred. Please try again.");
+      toast.error(
+        t("errors.unexpectedError") ||
+          "An unexpected error occurred. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -204,35 +242,21 @@ function StoreProfileMain() {
           logoPreview={logoPreview}
           onFieldChange={handleChange}
           onLogoUpload={handleLogoUpload}
+          coverPreview={coverPreview}
+          onCoverUpload={handleCoverUpload}
         />
 
-        <StoreContactInfo
-          formData={formData}
-          onFieldChange={handleChange}
-        />
+        <StoreContactInfo formData={formData} onFieldChange={handleChange} />
 
-        <StoreAddress
-          formData={formData}
-          onFieldChange={handleChange}
-        />
+        <StoreAddress formData={formData} onFieldChange={handleChange} />
 
-        <StoreSocialMedia
-          formData={formData}
-          onFieldChange={handleChange}
-        />
+        <StoreSocialMedia formData={formData} onFieldChange={handleChange} />
 
-        <StorePolicies
-          formData={formData}
-          onFieldChange={handleChange}
-        />
+        <StorePolicies formData={formData} onFieldChange={handleChange} />
 
         {/* Submit Button */}
         <div className="flex justify-end gap-4">
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="min-w-[120px]"
-          >
+          <Button type="submit" disabled={isLoading} className="min-w-[120px]">
             {isLoading ? (
               <>
                 <span className="animate-spin mr-2">⏳</span>

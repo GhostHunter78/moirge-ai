@@ -43,6 +43,7 @@ export interface StoreProfileFormData {
   storeName: string;
   storeDescription: string;
   storeLogo: string;
+  storeCover?: string;
   phone: string;
   email: string;
   address: string;
@@ -59,7 +60,9 @@ export interface StoreProfileFormData {
   privacyPolicy: string;
 }
 
-export type StoreProfileErrors = Partial<Record<keyof StoreProfileFormData, string>>;
+export type StoreProfileErrors = Partial<
+  Record<keyof StoreProfileFormData, string>
+>;
 
 export interface StoreProfile {
   id: string;
@@ -67,6 +70,7 @@ export interface StoreProfile {
   store_name: string;
   store_description: string;
   store_logo: string;
+  store_cover?: string | null;
   phone: string;
   email: string;
   address: string;
