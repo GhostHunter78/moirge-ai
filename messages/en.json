@@ -255,6 +255,7 @@
       },
       "buttons": {
         "uploadLogo": "Upload Logo",
+        "uploadCover": "Upload Cover",
         "saveChanges": "Save Changes",
         "saving": "Saving..."
       },
@@ -266,6 +267,92 @@
       },
       "messages": {
         "saveSuccess": "Store profile saved successfully! 🎉"
+      }
+    },
+    "sellerProducts": {
+      "hero": {
+        "badge": "Seller workspace",
+        "title": "Curate your product story.",
+        "description": "Craft a purposeful, engaging assortment. Effortlessly manage your products—all in one place, with full control over inventory, visibility, and the story you share.",
+        "newProduct": "New product",
+        "importCatalog": "Or import from existing catalog"
+      },
+      "metrics": {
+        "liveProducts": "Live products",
+        "liveProductsHint": "Visible in your storefront right now",
+        "lowStock": "Low / out of stock",
+        "lowStockHint": "Items that need your attention",
+        "drafts": "Draft concepts",
+        "draftsHint": "Quietly in progress, not yet visible"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name or SKU",
+        "statusPlaceholder": "Status",
+        "allStatuses": "All statuses",
+        "categoryPlaceholder": "Category",
+        "allCategories": "All categories"
+      },
+      "status": {
+        "active": "Active",
+        "draft": "Draft",
+        "outOfStock": "Out of stock",
+        "archived": "Archived"
+      },
+      "table": {
+        "product": "Product",
+        "inventory": "Inventory",
+        "performance": "Performance",
+        "price": "Price",
+        "inStock": "in stock",
+        "sold": "sold",
+        "averageRating": "average rating",
+        "notRatedYet": "Not rated yet",
+        "restockRecommended": "Restock recommended",
+        "runningLow": "Running low · plan restock",
+        "healthyInventory": "Healthy inventory",
+        "heroBadge": "Hero",
+        "loading": "Loading your products...",
+        "empty": "No products match this view yet. Adjust filters or add a new item to your collection."
+      },
+      "featured": {
+        "badge": "Featured hero product",
+        "hint": "Ideal for campaigns, lookbooks and hero sections. Adjust photography and copy to tell the right story.",
+        "price": "Price",
+        "sold": "Sold",
+        "rating": "Rating",
+        "editDetails": "Edit product details",
+        "viewStorefront": "View in storefront"
+      },
+      "createDialog": {
+        "title": "Create product",
+        "description": "Add a new item to your catalog. You can refine details later.",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Midnight Nylon Bomber Jacket",
+        "priceLabel": "Price",
+        "pricePlaceholder": "129.00",
+        "stockLabel": "Stock",
+        "stockPlaceholder": "34",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Outerwear, Footwear, Accessories...",
+        "statusLabel": "Status",
+        "photosLabel": "Product photos",
+        "photosHint": "The first image will be used as the thumbnail in your catalog.",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Tell the story of this piece—materials, fit, styling suggestions...",
+        "cancel": "Cancel",
+        "create": "Create product",
+        "saving": "Saving..."
+      },
+      "errors": {
+        "loadFailed": "Failed to load products. Please try again.",
+        "signInRequired": "You need to be signed in as a seller to add products.",
+        "titleRequired": "Please add a product title.",
+        "invalidPrice": "Please provide a valid price.",
+        "invalidStock": "Please provide a valid stock number.",
+        "createFailed": "Could not create product. Please try again."
+      },
+      "toast": {
+        "createSuccess": "Product added to your catalog."
       }
     }
   },
