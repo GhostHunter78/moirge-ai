@@ -32,6 +32,7 @@ import {
   DollarSign,
   Edit,
   Eye,
+  X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabaseClient";
 import { updateProductAction } from "@/actions/products";
@@ -90,6 +91,8 @@ export default function SellerProductDetailMain() {
   // Edit dialog state
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [formImageUrls, setFormImageUrls] = useState<string[]>([]);
+  const [formThumbnailUrl, setFormThumbnailUrl] = useState<string | null>(null);
   const [formTitle, setFormTitle] = useState("");
   const [formPrice, setFormPrice] = useState("");
   const [formCategory, setFormCategory] = useState("");
@@ -150,6 +153,8 @@ export default function SellerProductDetailMain() {
     if (!product) return;
     setFormTitle(product.title);
     setFormPrice(product.price.toString());
+    setFormImageUrls(product.image_urls ?? []);
+    setFormThumbnailUrl(product.thumbnail_url);
     setFormCategory(product.category ?? "");
     setFormStock(product.stock.toString());
     setFormStatus(product.status);
@@ -177,6 +182,26 @@ export default function SellerProductDetailMain() {
     reader.readAsDataURL(first);
   };
 
+  const handleRemoveExistingImage = (urlToRemove: string) => {
+    setFormImageUrls((prev) => {
+      const next = prev.filter((url) => url !== urlToRemove);
+
+      // If we removed the current thumbnail, choose a new one (first remaining) or clear it
+      setFormThumbnailUrl((current) => {
+        if (current === urlToRemove) {
+          return next[0] ?? null;
+        }
+        return current;
+      });
+
+      return next;
+    });
+  };
+
+  const handleSetAsThumbnail = (url: string) => {
+    setFormThumbnailUrl(url);
+  };
+
   const handleUpdateProduct = async () => {
     if (!product) return;
 
@@ -202,10 +227,10 @@ export default function SellerProductDetailMain() {
     try {
       const supabase = createClient();
       let thumbnailUrlToUse: string | undefined =
-        product.thumbnail_url ?? undefined;
-      let galleryUrls: string[] | undefined;
+        formThumbnailUrl ?? undefined;
+      let galleryUrls: string[] = [...formImageUrls];
 
-      // Upload new images if provided
+      // Upload new images if provided – they will be appended to the (possibly edited) gallery
       if (imageFiles.length > 0 && product.seller_id) {
         const uploads = await Promise.all(
           imageFiles.map(async (file) => {
@@ -231,8 +256,7 @@ export default function SellerProductDetailMain() {
           }),
         );
 
-        const existingGallery = product.image_urls ?? [];
-        galleryUrls = [...existingGallery, ...uploads];
+        galleryUrls = [...galleryUrls, ...uploads];
 
         // If there was no thumbnail before, use the first gallery image as thumbnail
         if (!thumbnailUrlToUse) {
@@ -258,9 +282,8 @@ export default function SellerProductDetailMain() {
         updatePayload.thumbnail_url = thumbnailUrlToUse;
       }
 
-      if (galleryUrls) {
-        updatePayload.image_urls = galleryUrls;
-      }
+      // Always send the updated gallery (including any deletions)
+      updatePayload.image_urls = galleryUrls;
 
       const { data: updatedProduct, error: updateError } =
         await updateProductAction(product.id, updatePayload);
@@ -672,6 +695,47 @@ export default function SellerProductDetailMain() {
                           ? "Selected images will be added to this product’s gallery. The first one may be used as the thumbnail."
                           : "Current primary product image."}
                       </p>
+                    </div>
+                  )}
+                  {formImageUrls.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      <p className="text-[11px] font-medium text-slate-700">
+                        Existing gallery
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {formImageUrls.map((url) => (
+                          <div
+                            key={url}
+                            className="relative h-16 w-16 overflow-hidden rounded-md border border-slate-200 bg-slate-50"
+                          >
+                            <Image
+                              src={url}
+                              alt="Gallery image"
+                              fill
+                              className="object-cover"
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px] text-white hover:bg-black/80"
+                              onClick={() => handleRemoveExistingImage(url)}
+                              aria-label="Remove image"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                            <button
+                              type="button"
+                              className={`absolute bottom-1 left-1 rounded-full px-1.5 py-px text-[10px] font-medium ${
+                                formThumbnailUrl === url
+                                  ? "bg-emerald-500/90 text-emerald-950"
+                                  : "bg-white/80 text-slate-700 hover:bg-white"
+                              }`}
+                              onClick={() => handleSetAsThumbnail(url)}
+                            >
+                              Main
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
