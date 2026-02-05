@@ -5,6 +5,7 @@ import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import type { Product, ProductStatus } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -40,28 +41,37 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 function StatusBadge({ status }: { status: Product["status"] }) {
+  const tStatus = useTranslations("dashboard.sellerProducts.status");
+
+  const statusKeyMap: Record<Product["status"], keyof ReturnType<typeof tStatus>> = {
+    active: "active",
+    draft: "draft",
+    out_of_stock: "outOfStock",
+    archived: "archived",
+  } as unknown as Record<Product["status"], any>;
+
   const config = {
     active: {
-      label: "Active",
+      label: tStatus("active"),
       className: "bg-emerald-50 text-emerald-700 border-emerald-100",
       dot: "bg-emerald-500",
     },
     draft: {
-      label: "Draft",
+      label: tStatus("draft"),
       className: "bg-slate-50 text-slate-700 border-slate-100",
       dot: "bg-slate-400",
     },
     out_of_stock: {
-      label: "Out of stock",
+      label: tStatus("outOfStock"),
       className: "bg-amber-50 text-amber-800 border-amber-100",
       dot: "bg-amber-500",
     },
     archived: {
-      label: "Archived",
+      label: tStatus("archived"),
       className: "bg-rose-50 text-rose-700 border-rose-100",
       dot: "bg-rose-500",
     },
-  };
+  } as const;
 
   const cfg = config[status];
 
@@ -82,6 +92,11 @@ export default function SellerProductDetailMain() {
   const params = useParams();
   const router = useRouter();
   const productId = (params?.productId ?? "") as string;
+
+  const tDetail = useTranslations("dashboard.sellerProducts.detail");
+  const tEdit = useTranslations("dashboard.sellerProducts.editDialog");
+  const tErrors = useTranslations("dashboard.sellerProducts.errors");
+  const tToast = useTranslations("dashboard.sellerProducts.toast");
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -120,7 +135,7 @@ export default function SellerProductDetailMain() {
         .single();
 
       if (error || !data) {
-        setError("Product not found or you do not have permission to view it.");
+        setError(tDetail("loadError"));
         setProduct(null);
         setLoading(false);
         return;
@@ -206,19 +221,19 @@ export default function SellerProductDetailMain() {
     if (!product) return;
 
     if (!formTitle.trim()) {
-      toast.error("Please add a product title.");
+      toast.error(tErrors("titleRequired"));
       return;
     }
 
     const numericPrice = Number(formPrice);
     if (Number.isNaN(numericPrice) || numericPrice < 0) {
-      toast.error("Please provide a valid price.");
+      toast.error(tErrors("invalidPrice"));
       return;
     }
 
     const numericStock = formStock.trim().length ? Number(formStock) : 0;
     if (Number.isNaN(numericStock) || numericStock < 0) {
-      toast.error("Please provide a valid stock number.");
+      toast.error(tErrors("invalidStock"));
       return;
     }
 
@@ -292,14 +307,14 @@ export default function SellerProductDetailMain() {
         console.error("Error updating product", updateError);
         toast.error(
           (updateError as { message?: string } | null)?.message ||
-            "Could not update product. Please try again.",
+            tErrors("createFailed"),
         );
         setIsSaving(false);
         return;
       }
 
       setProduct(updatedProduct);
-      toast.success("Product updated successfully.");
+      toast.success(tToast("updateSuccess"));
       setIsEditDialogOpen(false);
     } finally {
       setIsSaving(false);
@@ -325,13 +340,13 @@ export default function SellerProductDetailMain() {
           onClick={() => router.back()}
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to products
+          {tDetail("backToProducts")}
         </Button>
       </div>
 
       {loading && (
         <Card className="p-8 text-center">
-          <p className="text-sm text-slate-500">Loading product details...</p>
+          <p className="text-sm text-slate-500">{tDetail("loading")}</p>
         </Card>
       )}
 
@@ -401,7 +416,7 @@ export default function SellerProductDetailMain() {
                         <StatusBadge status={product.status} />
                         {product.featured && (
                           <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-amber-100">
-                            Featured
+                            {tDetail("featuredBadge")}
                           </span>
                         )}
                       </div>
@@ -421,7 +436,7 @@ export default function SellerProductDetailMain() {
                     <div className="flex items-center gap-2 text-slate-600">
                       <DollarSign className="h-4 w-4" />
                       <p className="text-xs font-medium uppercase tracking-[0.1em]">
-                        Price
+                        {tDetail("priceLabel")}
                       </p>
                     </div>
                     <p className="mt-2 text-2xl font-bold text-slate-900">
@@ -433,7 +448,7 @@ export default function SellerProductDetailMain() {
                     <div className="flex items-center gap-2 text-slate-600">
                       <Package className="h-4 w-4" />
                       <p className="text-xs font-medium uppercase tracking-[0.1em]">
-                        Stock
+                        {tDetail("stockLabel")}
                       </p>
                     </div>
                     <p className="mt-2 text-2xl font-bold text-slate-900">
@@ -441,10 +456,10 @@ export default function SellerProductDetailMain() {
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
                       {product.stock === 0
-                        ? "Out of stock"
+                        ? tDetail("stockOut")
                         : product.stock < 15
-                          ? "Running low"
-                          : "In stock"}
+                          ? tDetail("stockLow")
+                          : tDetail("stockIn")}
                     </p>
                   </div>
 
@@ -452,20 +467,22 @@ export default function SellerProductDetailMain() {
                     <div className="flex items-center gap-2 text-slate-600">
                       <TrendingUp className="h-4 w-4" />
                       <p className="text-xs font-medium uppercase tracking-[0.1em]">
-                        Sold
+                        {tDetail("soldLabel")}
                       </p>
                     </div>
                     <p className="mt-2 text-2xl font-bold text-slate-900">
                       {product.sold_count}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">Total sales</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {tDetail("soldHint")}
+                    </p>
                   </div>
 
                   <div className="rounded-xl border border-slate-200 bg-linear-to-br from-purple-50 to-purple-100/50 p-4">
                     <div className="flex items-center gap-2 text-slate-600">
                       <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                       <p className="text-xs font-medium uppercase tracking-[0.1em]">
-                        Rating
+                        {tDetail("ratingLabel")}
                       </p>
                     </div>
                     <p className="mt-2 text-2xl font-bold text-slate-900">
@@ -473,10 +490,12 @@ export default function SellerProductDetailMain() {
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
                       {product.rating_count > 0
-                        ? `${product.rating_count} review${
-                            product.rating_count === 1 ? "" : "s"
+                        ? `${product.rating_count} ${
+                            product.rating_count === 1
+                              ? tDetail("ratingReviews")
+                              : tDetail("ratingReviewsPlural")
                           }`
-                        : "No reviews yet"}
+                        : tDetail("ratingNone")}
                     </p>
                   </div>
                 </div>
@@ -485,7 +504,7 @@ export default function SellerProductDetailMain() {
                 {product.description && (
                   <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
                     <h2 className="text-sm font-semibold text-slate-900">
-                      Description
+                      {tDetail("descriptionTitle")}
                     </h2>
                     <p className="mt-2 text-sm leading-relaxed text-slate-600 whitespace-pre-line">
                       {product.description}
@@ -500,14 +519,14 @@ export default function SellerProductDetailMain() {
                     onClick={handleOpenEditDialog}
                   >
                     <Edit className="mr-2 h-3.5 w-3.5" />
-                    Edit product
+                    {tEdit("title")}
                   </Button>
                   <Button
                     variant="outline"
                     className="rounded-full border-slate-200 text-xs"
                   >
                     <Eye className="mr-2 h-3.5 w-3.5" />
-                    View in storefront
+                    {tDetail("viewStorefront")}
                   </Button>
                 </div>
               </div>
@@ -519,7 +538,7 @@ export default function SellerProductDetailMain() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-slate-900">
-                  Other products from your catalog
+                  {tDetail("otherProductsTitle")}
                 </h2>
                 <Button
                   variant="ghost"
@@ -527,7 +546,7 @@ export default function SellerProductDetailMain() {
                   className="text-xs"
                   onClick={() => router.push("/dashboard/seller/products")}
                 >
-                  View all
+                  {tDetail("viewAll")}
                 </Button>
               </div>
 
@@ -569,7 +588,7 @@ export default function SellerProductDetailMain() {
                         <div className="mt-2 flex items-center gap-2">
                           <StatusBadge status={related.status} />
                           <span className="text-xs text-slate-400">
-                            {related.stock} in stock
+                            {related.stock} {tDetail("stockIn").toLowerCase()}
                           </span>
                         </div>
                       </div>
@@ -584,21 +603,19 @@ export default function SellerProductDetailMain() {
           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogContent className="w-[95vw] max-w-lg max-h-[90vh] overflow-y-auto sm:w-full">
               <DialogHeader>
-                <DialogTitle>Edit product</DialogTitle>
-                <DialogDescription>
-                  Update product details. Changes will be saved immediately.
-                </DialogDescription>
+                <DialogTitle>{tEdit("title")}</DialogTitle>
+                <DialogDescription>{tEdit("description")}</DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4 py-2">
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-slate-700">
-                    Title
+                    {tEdit("titleLabel")}
                   </label>
                   <Input
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
-                    placeholder="Midnight Nylon Bomber Jacket"
+                    placeholder={tEdit("titlePlaceholder")}
                     className="h-9 text-xs"
                   />
                 </div>
@@ -606,7 +623,7 @@ export default function SellerProductDetailMain() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      Price
+                      {tEdit("priceLabel")}
                     </label>
                     <Input
                       type="number"
@@ -614,13 +631,13 @@ export default function SellerProductDetailMain() {
                       step="0.01"
                       value={formPrice}
                       onChange={(e) => setFormPrice(e.target.value)}
-                      placeholder="129.00"
+                      placeholder={tEdit("pricePlaceholder")}
                       className="h-9 text-xs"
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      Stock
+                      {tEdit("stockLabel")}
                     </label>
                     <Input
                       type="number"
@@ -628,7 +645,7 @@ export default function SellerProductDetailMain() {
                       step="1"
                       value={formStock}
                       onChange={(e) => setFormStock(e.target.value)}
-                      placeholder="34"
+                      placeholder={tEdit("stockPlaceholder")}
                       className="h-9 text-xs"
                     />
                   </div>
@@ -637,18 +654,18 @@ export default function SellerProductDetailMain() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      Category
+                      {tEdit("categoryLabel")}
                     </label>
                     <Input
                       value={formCategory}
                       onChange={(e) => setFormCategory(e.target.value)}
-                      placeholder="Outerwear, Footwear, Accessories..."
+                      placeholder={tEdit("categoryPlaceholder")}
                       className="h-9 text-xs"
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      Status
+                      {tEdit("statusLabel")}
                     </label>
                     <Select
                       value={formStatus}
@@ -671,7 +688,7 @@ export default function SellerProductDetailMain() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-slate-700">
-                    Product photos
+                    {tEdit("photosLabel")}
                   </label>
                   <Input
                     type="file"
@@ -692,15 +709,15 @@ export default function SellerProductDetailMain() {
                       </div>
                       <p className="text-[11px] text-slate-500">
                         {imageFiles.length
-                          ? "Selected images will be added to this product’s gallery. The first one may be used as the thumbnail."
-                          : "Current primary product image."}
+                          ? tDetail("selectedImagesHint")
+                          : tDetail("primaryImageHint")}
                       </p>
                     </div>
                   )}
                   {formImageUrls.length > 0 && (
                     <div className="mt-3 space-y-2">
                       <p className="text-[11px] font-medium text-slate-700">
-                        Existing gallery
+                        {tDetail("existingGallery")}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {formImageUrls.map((url) => (
@@ -731,7 +748,7 @@ export default function SellerProductDetailMain() {
                               }`}
                               onClick={() => handleSetAsThumbnail(url)}
                             >
-                              Main
+                              {tDetail("mainBadge")}
                             </button>
                           </div>
                         ))}
@@ -742,12 +759,12 @@ export default function SellerProductDetailMain() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-slate-700">
-                    Description
+                    {tEdit("descriptionLabel")}
                   </label>
                   <Textarea
                     value={formDescription}
                     onChange={(e) => setFormDescription(e.target.value)}
-                    placeholder="Tell the story of this piece—materials, fit, styling suggestions..."
+                    placeholder={tEdit("descriptionPlaceholder")}
                     className="min-h-[80px] text-xs"
                   />
                 </div>
@@ -764,7 +781,7 @@ export default function SellerProductDetailMain() {
                     htmlFor="featured"
                     className="text-xs font-medium text-slate-700"
                   >
-                    Mark as featured product
+                    {tEdit("featuredLabel")}
                   </label>
                 </div>
               </div>
@@ -777,7 +794,7 @@ export default function SellerProductDetailMain() {
                   onClick={() => setIsEditDialogOpen(false)}
                   disabled={isSaving}
                 >
-                  Cancel
+                  {tEdit("cancel")}
                 </Button>
                 <Button
                   size="sm"
@@ -785,7 +802,7 @@ export default function SellerProductDetailMain() {
                   onClick={handleUpdateProduct}
                   disabled={isSaving}
                 >
-                  {isSaving ? "Saving..." : "Save changes"}
+                  {isSaving ? tEdit("saving") : tEdit("save")}
                 </Button>
               </div>
             </DialogContent>

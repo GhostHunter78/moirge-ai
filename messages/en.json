@@ -352,7 +352,53 @@
         "createFailed": "Could not create product. Please try again."
       },
       "toast": {
-        "createSuccess": "Product added to your catalog."
+        "createSuccess": "Product added to your catalog.",
+        "updateSuccess": "Product updated successfully."
+      },
+      "detail": {
+        "backToProducts": "Back to products",
+        "loading": "Loading product details...",
+        "loadError": "Product not found or you do not have permission to view it.",
+        "otherProductsTitle": "Other products from your catalog",
+        "viewAll": "View all",
+        "priceLabel": "Price",
+        "stockLabel": "Stock",
+        "stockOut": "Out of stock",
+        "stockLow": "Running low",
+        "stockIn": "In stock",
+        "soldLabel": "Sold",
+        "soldHint": "Total sales",
+        "ratingLabel": "Rating",
+        "ratingReviews": "review",
+        "ratingReviewsPlural": "reviews",
+        "ratingNone": "No reviews yet",
+        "descriptionTitle": "Description",
+        "featuredBadge": "Featured",
+        "viewStorefront": "View in storefront",
+        "existingGallery": "Existing gallery",
+        "primaryImageHint": "Current primary product image.",
+        "selectedImagesHint": "Selected images will be added to this product’s gallery. The first one may be used as the thumbnail.",
+        "mainBadge": "Main"
+      },
+      "editDialog": {
+        "title": "Edit product",
+        "description": "Update product details. Changes will be saved immediately.",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Midnight Nylon Bomber Jacket",
+        "priceLabel": "Price",
+        "pricePlaceholder": "129.00",
+        "stockLabel": "Stock",
+        "stockPlaceholder": "34",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Outerwear, Footwear, Accessories...",
+        "statusLabel": "Status",
+        "photosLabel": "Product photos",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Tell the story of this piece—materials, fit, styling suggestions...",
+        "featuredLabel": "Mark as featured product",
+        "cancel": "Cancel",
+        "save": "Save changes",
+        "saving": "Saving..."
       }
     }
   },

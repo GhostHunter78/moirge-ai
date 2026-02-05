@@ -352,7 +352,53 @@
         "createFailed": "პროდუქტის შექმნა ვერ მოხერხდა. გთხოვთ, სცადოთ თავიდან."
       },
       "toast": {
-        "createSuccess": "პროდუქტი წარმატებით დაემატა თქვენს კატალოგს."
+        "createSuccess": "პროდუქტი წარმატებით დაემატა თქვენს კატალოგს.",
+        "updateSuccess": "პროდუქტი წარმატებით განახლდა."
+      },
+      "detail": {
+        "backToProducts": "დაბრუნება პროდუქტების სიაში",
+        "loading": "იტვირთება პროდუქტის დეტალები...",
+        "loadError": "პროდუქტი ვერ მოიძებნა ან არ გაქვთ მის სანახავად ნებართვა.",
+        "otherProductsTitle": "სხვა პროდუქტები თქვენი კატალოგიდან",
+        "viewAll": "ყველას ნახვა",
+        "priceLabel": "ფასი",
+        "stockLabel": "მარაგი",
+        "stockOut": "ამოწურულია",
+        "stockLow": "მარაგი იწურება",
+        "stockIn": "მარაგშია",
+        "soldLabel": "გაიყიდა",
+        "soldHint": "გაყიდვების რაოდენობა",
+        "ratingLabel": "რეიტინგი",
+        "ratingReviews": "შეფასება",
+        "ratingReviewsPlural": "შეფასება",
+        "ratingNone": "ჯერ არ შეფასებულა",
+        "descriptionTitle": "აღწერა",
+        "featuredBadge": "რჩეული",
+        "viewStorefront": "მაღაზიაში ნახვა",
+        "existingGallery": "არსებული გალერეა",
+        "primaryImageHint": "მიმდინარე ძირითადი პროდუქტის სურათი.",
+        "selectedImagesHint": "არჩევილი სურათები დაემატება პროდუქტის გალერეას. პირველი სურათი შეიძლება გახდეს მთავარი.",
+        "mainBadge": "მთავარი"
+      },
+      "editDialog": {
+        "title": "პროდუქტის რედაქტირება",
+        "description": "განაახლეთ პროდუქტის დეტალები. ცვლილებები მყისიერად შეინახება.",
+        "titleLabel": "დასახელება",
+        "titlePlaceholder": "მაგ: მუქი ლურჯი ბომბერი",
+        "priceLabel": "ფასი",
+        "pricePlaceholder": "129.00",
+        "stockLabel": "რაოდენობა",
+        "stockPlaceholder": "34",
+        "categoryLabel": "კატეგორია",
+        "categoryPlaceholder": "ზედა ტანსაცმელი, ფეხსაცმელი, აქსესუარები...",
+        "statusLabel": "სტატუსი",
+        "photosLabel": "პროდუქტის ფოტოები",
+        "descriptionLabel": "აღწერა",
+        "descriptionPlaceholder": "მოუყევით მომხმარებელს ამ ნივთის შესახებ — მასალა, ზომა, სტილის რჩევები...",
+        "featuredLabel": "ჩანიშნეთ, როგორც რჩეული პროდუქტი",
+        "cancel": "გაუქმება",
+        "save": "ცვლილებების შენახვა",
+        "saving": "ინახება..."
       }
     }
   },
