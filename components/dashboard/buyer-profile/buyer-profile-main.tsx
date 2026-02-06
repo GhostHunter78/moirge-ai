@@ -1,12 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useUserProfile } from "@/hooks/use-user-profile";
-import { BuyerProfileFormData, BuyerProfileErrors, BuyerAddress, BuyerPreferences } from "@/types/buyer-profile";
+import {
+  BuyerProfileFormData,
+  BuyerProfileErrors,
+  BuyerAddressFormData,
+  BuyerPreferences,
+  BuyerStats,
+} from "@/types/buyer-profile";
+import {
+  getBuyerProfile,
+  saveBuyerProfile,
+  saveBuyerPreferences,
+  updateBuyerAvatar,
+  updateUserProfile,
+  getBuyerAddresses,
+  getBuyerStats,
+  transformBuyerProfileToFormData,
+  transformBuyerProfileToPreferences,
+  transformAddressesToFormData,
+} from "@/lib/buyer-profile";
 import { BuyerProfileHeader } from "./buyer-profile-header";
 import { BuyerPersonalInfo } from "./buyer-profile-personal-info";
 import { BuyerSecuritySettings } from "./buyer-profile-security";
@@ -29,21 +47,13 @@ function BuyerProfileMain() {
     gender: "",
   });
 
-  const [addresses, setAddresses] = useState<BuyerAddress[]>([
-    {
-      id: "1",
-      label: "Home",
-      fullName: "",
-      phone: "",
-      addressLine1: "",
-      addressLine2: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      country: "",
-      isDefault: true,
-    },
-  ]);
+  const [addresses, setAddresses] = useState<BuyerAddressFormData[]>([]);
+  const [stats, setStats] = useState<BuyerStats>({
+    totalOrders: 0,
+    wishlistItems: 0,
+    reviewsGiven: 0,
+    addressCount: 0,
+  });
 
   const [preferences, setPreferences] = useState<BuyerPreferences>({
     emailNotifications: true,
@@ -60,32 +70,73 @@ function BuyerProfileMain() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"personal" | "security" | "addresses" | "preferences">("personal");
+  const [activeTab, setActiveTab] = useState<
+    "personal" | "security" | "addresses" | "preferences"
+  >("personal");
 
-  // Load user profile data on mount
-  useEffect(() => {
-    const loadProfile = async () => {
-      if (!userInfo?.id) return;
+  // Load all profile data on mount
+  const loadProfileData = useCallback(async () => {
+    if (!userInfo?.id) return;
 
-      setIsLoadingData(true);
-      try {
-        // Set form data from user profile
-        setFormData((prev) => ({
-          ...prev,
+    setIsLoadingData(true);
+    try {
+      // Load buyer profile, addresses, and stats in parallel
+      const [profileResult, addressesResult, statsResult] = await Promise.all([
+        getBuyerProfile(userInfo.id),
+        getBuyerAddresses(userInfo.id),
+        getBuyerStats(userInfo.id),
+      ]);
+
+      // Handle profile data
+      if (profileResult.error) {
+        console.error("Error loading profile:", profileResult.error);
+      }
+
+      // Transform and set form data
+      const transformedFormData = transformBuyerProfileToFormData(
+        profileResult.data,
+        {
           username: userInfo.username || "",
           email: userInfo.email || "",
           phone: userInfo.phone || "",
-        }));
-      } catch (error) {
-        console.error("Error loading profile:", error);
-        toast.error(t("errors.loadFailed"));
-      } finally {
-        setIsLoadingData(false);
-      }
-    };
+        },
+      );
+      setFormData(transformedFormData);
 
-    loadProfile();
+      // Set avatar preview if exists
+      if (transformedFormData.avatar) {
+        setAvatarPreview(transformedFormData.avatar);
+      }
+
+      // Transform and set preferences
+      const transformedPreferences = transformBuyerProfileToPreferences(
+        profileResult.data,
+      );
+      setPreferences(transformedPreferences);
+
+      // Handle addresses
+      if (addressesResult.error) {
+        console.error("Error loading addresses:", addressesResult.error);
+      } else {
+        const transformedAddresses = transformAddressesToFormData(
+          addressesResult.data,
+        );
+        setAddresses(transformedAddresses);
+      }
+
+      // Set stats
+      setStats(statsResult);
+    } catch (error) {
+      console.error("Error loading profile:", error);
+      toast.error(t("errors.loadFailed"));
+    } finally {
+      setIsLoadingData(false);
+    }
   }, [userInfo, t]);
+
+  useEffect(() => {
+    loadProfileData();
+  }, [loadProfileData]);
 
   const clearFieldError = (field: keyof BuyerProfileFormData) => {
     setErrors((prevErrors) => ({
@@ -95,7 +146,9 @@ function BuyerProfileMain() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     const field = name as keyof BuyerProfileFormData;
@@ -103,32 +156,60 @@ function BuyerProfileMain() {
       ...prev,
       [field]: value,
     }));
-    if (errors[field]) {
+    if (
+      errors &&
+      typeof errors === "object" &&
+      errors[field as keyof BuyerProfileErrors]
+    ) {
       clearFieldError(field);
     }
   };
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (file && userInfo?.id) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         const result = reader.result as string;
         setAvatarPreview(result);
         setFormData((prev) => ({
           ...prev,
           avatar: result,
         }));
+
+        // Save avatar to database immediately
+        const { error } = await updateBuyerAvatar(userInfo.id, result);
+        if (error) {
+          console.error("Error saving avatar:", error);
+          toast.error(t("errors.saveFailed"));
+        } else {
+          toast.success(t("messages.saveSuccess"));
+        }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handlePreferenceChange = (key: keyof BuyerPreferences, value: boolean | string) => {
-    setPreferences((prev) => ({
-      ...prev,
+  const handlePreferenceChange = async (
+    key: keyof BuyerPreferences,
+    value: boolean | string,
+  ) => {
+    const newPreferences = {
+      ...preferences,
       [key]: value,
-    }));
+    };
+    setPreferences(newPreferences);
+
+    // Save preferences to database
+    if (userInfo?.id) {
+      const { error } = await saveBuyerPreferences(userInfo.id, newPreferences);
+      if (error) {
+        console.error("Error saving preferences:", error);
+        // Revert on error
+        setPreferences(preferences);
+        toast.error(t("errors.saveFailed"));
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -155,9 +236,36 @@ function BuyerProfileMain() {
     }
 
     try {
-      // Simulating API call - you would replace this with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success(t("messages.saveSuccess"));
+      // Update username and phone in the main profiles table
+      // This ensures changes are reflected across the entire platform
+      const { error: profileError } = await updateUserProfile(userInfo.id, {
+        username: formData.username,
+        phone: formData.phone,
+      });
+
+      if (profileError) {
+        console.error("Error updating user profile:", profileError);
+        toast.error(t("errors.saveFailed"));
+        setIsLoading(false);
+        return;
+      }
+
+      // Save additional buyer profile data to buyer_profiles table
+      const { error: buyerProfileError } = await saveBuyerProfile(userInfo.id, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        bio: formData.bio,
+        avatar: formData.avatar,
+        dateOfBirth: formData.dateOfBirth,
+        gender: formData.gender,
+      });
+
+      if (buyerProfileError) {
+        console.error("Error saving buyer profile:", buyerProfileError);
+        toast.error(t("errors.saveFailed"));
+      } else {
+        toast.success(t("messages.saveSuccess"));
+      }
     } catch (error) {
       console.error("Error saving profile:", error);
       toast.error(t("errors.saveFailed"));
@@ -165,6 +273,14 @@ function BuyerProfileMain() {
       setIsLoading(false);
     }
   };
+
+  // Callback to refresh stats after address changes
+  const refreshStats = useCallback(async () => {
+    if (userInfo?.id) {
+      const newStats = await getBuyerStats(userInfo.id);
+      setStats(newStats);
+    }
+  }, [userInfo?.id]);
 
   if (isLoadingData) {
     return (
@@ -185,6 +301,7 @@ function BuyerProfileMain() {
         avatarPreview={avatarPreview}
         onAvatarUpload={handleAvatarUpload}
         userInfo={userInfo}
+        stats={stats}
       />
 
       {/* Tab Navigation */}
@@ -224,7 +341,11 @@ function BuyerProfileMain() {
               />
 
               <div className="flex justify-end mt-6 pt-6 border-t border-gray-100">
-                <Button type="submit" disabled={isLoading} className="min-w-[140px]">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="min-w-[140px]"
+                >
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -244,7 +365,11 @@ function BuyerProfileMain() {
           {activeTab === "security" && <BuyerSecuritySettings />}
 
           {activeTab === "addresses" && (
-            <BuyerAddresses addresses={addresses} setAddresses={setAddresses} />
+            <BuyerAddresses
+              addresses={addresses}
+              setAddresses={setAddresses}
+              onAddressChange={refreshStats}
+            />
           )}
 
           {activeTab === "preferences" && (

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Camera, Package, Heart, Star, MapPin } from "lucide-react";
 import Image from "next/image";
-import { BuyerProfileFormData } from "@/types/buyer-profile";
+import { BuyerProfileFormData, BuyerStats } from "@/types/buyer-profile";
 import { Profile } from "@/types/user-profile";
 
 interface BuyerProfileHeaderProps {
@@ -11,6 +11,7 @@ interface BuyerProfileHeaderProps {
   avatarPreview: string | null;
   onAvatarUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   userInfo: Profile | null;
+  stats: BuyerStats;
 }
 
 export function BuyerProfileHeader({
@@ -18,15 +19,16 @@ export function BuyerProfileHeader({
   avatarPreview,
   onAvatarUpload,
   userInfo,
+  stats: profileStats,
 }: BuyerProfileHeaderProps) {
   const t = useTranslations("dashboard.buyerProfile");
 
-  // Mock stats - would come from API in real app
+  // Stats from real data
   const stats = [
-    { icon: Package, label: t("stats.orders"), value: "12" },
-    { icon: Heart, label: t("stats.wishlist"), value: "24" },
-    { icon: Star, label: t("stats.reviews"), value: "8" },
-    { icon: MapPin, label: t("stats.addresses"), value: "2" },
+    { icon: Package, label: t("stats.orders"), value: profileStats.totalOrders.toString() },
+    { icon: Heart, label: t("stats.wishlist"), value: profileStats.wishlistItems.toString() },
+    { icon: Star, label: t("stats.reviews"), value: profileStats.reviewsGiven.toString() },
+    { icon: MapPin, label: t("stats.addresses"), value: profileStats.addressCount.toString() },
   ];
 
   const displayName = formData.firstName && formData.lastName 
