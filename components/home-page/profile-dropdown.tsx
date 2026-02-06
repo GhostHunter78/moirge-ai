@@ -35,7 +35,15 @@ export function ProfileDropDown({ user }: { user: Profile }) {
 
   const commonItems = () => (
     <>
-      <Link href={`/dashboard/${user.role}/profile/${user.id}`}>
+      <Link
+        href={
+          user.role === "seller"
+            ? `/dashboard/seller/store-profile`
+            : user.role === "buyer"
+              ? `/dashboard/buyer/profile`
+              : "#"
+        }
+      >
         <DropdownMenuItem className="mx-1 px-3 py-3 cursor-pointer rounded-xl hover:bg-linear-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300 group">
           <div className="flex items-center w-full">
             <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3 group-hover:bg-blue-200 transition-colors">

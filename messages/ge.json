@@ -400,6 +400,218 @@
         "save": "ცვლილებების შენახვა",
         "saving": "ინახება..."
       }
+    },
+    "buyerProfile": {
+      "loading": "პროფილის ჩატვირთვა...",
+      "memberSince": "წევრია {year} წლიდან",
+      "tabs": {
+        "personal": "პირადი ინფო",
+        "security": "უსაფრთხოება",
+        "addresses": "მისამართები",
+        "preferences": "პარამეტრები"
+      },
+      "stats": {
+        "orders": "შეკვეთები",
+        "wishlist": "სურვილები",
+        "reviews": "შეფასებები",
+        "addresses": "მისამართები"
+      },
+      "sections": {
+        "personal": {
+          "title": "პირადი ინფორმაცია",
+          "description": "განაახლეთ თქვენი პირადი მონაცემები"
+        },
+        "security": {
+          "title": "უსაფრთხოების პარამეტრები",
+          "description": "მართეთ თქვენი პაროლი და უსაფრთხოების პარამეტრები"
+        },
+        "addresses": {
+          "title": "მიწოდების მისამართები",
+          "description": "მართეთ თქვენი მიწოდების მისამართები"
+        },
+        "preferences": {
+          "title": "პარამეტრები",
+          "description": "შეტყობინებების და ჩვენების პარამეტრები"
+        }
+      },
+      "fields": {
+        "username": "მომხმარებლის სახელი",
+        "usernamePlaceholder": "შეიყვანეთ მომხმარებლის სახელი",
+        "email": "ელ. ფოსტა",
+        "emailPlaceholder": "you@example.com",
+        "emailHint": "ელ. ფოსტა არ შეიცვლება. საჭიროების შემთხვევაში დაუკავშირდით მხარდაჭერას.",
+        "firstName": "სახელი",
+        "firstNamePlaceholder": "შეიყვანეთ თქვენი სახელი",
+        "lastName": "გვარი",
+        "lastNamePlaceholder": "შეიყვანეთ თქვენი გვარი",
+        "phone": "ტელეფონის ნომერი",
+        "phonePlaceholder": "+995 555 123 456",
+        "dateOfBirth": "დაბადების თარიღი",
+        "gender": "სქესი",
+        "genderOptions": {
+          "male": "მამაკაცი",
+          "female": "ქალი",
+          "other": "სხვა",
+          "prefer_not_to_say": "არ მსურს მითითება"
+        },
+        "bio": "ბიო",
+        "bioPlaceholder": "მოგვიყევით თქვენს შესახებ...",
+        "characters": "სიმბოლო"
+      },
+      "buttons": {
+        "saveChanges": "ცვლილებების შენახვა",
+        "saving": "ინახება...",
+        "cancel": "გაუქმება",
+        "saveAddress": "მისამართის შენახვა",
+        "updatePassword": "პაროლის განახლება",
+        "updating": "ნახლდება..."
+      },
+      "security": {
+        "changePassword": "პაროლის შეცვლა",
+        "currentPassword": "მიმდინარე პაროლი",
+        "newPassword": "ახალი პაროლი",
+        "confirmPassword": "დაადასტურეთ ახალი პაროლი",
+        "passwordChanged": "პაროლი წარმატებით განახლდა!",
+        "strength": {
+          "label": "პაროლის სიძლიერე",
+          "weak": "სუსტი",
+          "fair": "საშუალო",
+          "good": "კარგი",
+          "strong": "ძლიერი",
+          "excellent": "შესანიშნავი"
+        },
+        "requirements": {
+          "title": "პაროლის მოთხოვნები",
+          "minLength": "მინიმუმ 8 სიმბოლო",
+          "lowercase": "ერთი პატარა ასო",
+          "uppercase": "ერთი დიდი ასო",
+          "number": "ერთი რიცხვი",
+          "special": "ერთი სპეციალური სიმბოლო"
+        },
+        "twoFactor": {
+          "title": "ორფაქტორიანი ავთენტიფიკაცია",
+          "description": "დაამატეთ უსაფრთხოების დამატებითი შრე ორფაქტორიანი ავთენტიფიკაციით.",
+          "enable": "ჩართვა"
+        },
+        "loginHistory": {
+          "title": "ბოლო შესვლების ისტორია",
+          "current": "მიმდინარე",
+          "revoke": "გაუქმება"
+        }
+      },
+      "addresses": {
+        "addNew": "მისამართის დამატება",
+        "addFirst": "დაამატეთ პირველი მისამართი",
+        "newAddress": "ახალი მისამართი",
+        "editAddress": "მისამართის რედაქტირება",
+        "empty": "ჯერ არ დაგიმატებიათ მისამართი.",
+        "default": "ძირითადი",
+        "setDefault": "ძირითადად დაყენება",
+        "labels": {
+          "home": "სახლი",
+          "work": "სამსახური",
+          "other": "სხვა"
+        },
+        "fields": {
+          "label": "მისამართის ტიპი",
+          "fullName": "სრული სახელი",
+          "fullNamePlaceholder": "გიორგი გიორგაძე",
+          "phone": "ტელეფონის ნომერი",
+          "phonePlaceholder": "+995 555 123 456",
+          "addressLine1": "ქუჩის მისამართი",
+          "addressLine1Placeholder": "რუსთაველის გამზ. 123",
+          "addressLine2": "ბინა, კორპუსი და ა.შ. (არასავალდებულო)",
+          "addressLine2Placeholder": "ბინა 4ბ",
+          "city": "ქალაქი",
+          "cityPlaceholder": "თბილისი",
+          "state": "რეგიონი",
+          "statePlaceholder": "თბილისი",
+          "zipCode": "საფოსტო კოდი",
+          "zipCodePlaceholder": "0100",
+          "country": "ქვეყანა",
+          "countryPlaceholder": "საქართველო"
+        },
+        "errors": {
+          "requiredFields": "გთხოვთ შეავსოთ ყველა სავალდებულო ველი",
+          "saveFailed": "მისამართის შენახვა ვერ მოხერხდა",
+          "deleteFailed": "მისამართის წაშლა ვერ მოხერხდა"
+        },
+        "messages": {
+          "added": "მისამართი წარმატებით დაემატა",
+          "updated": "მისამართი წარმატებით განახლდა",
+          "deleted": "მისამართი წაიშალა",
+          "defaultSet": "ძირითადი მისამართი განახლდა"
+        }
+      },
+      "preferences": {
+        "notifications": {
+          "title": "შეტყობინებები",
+          "description": "აირჩიეთ, როგორ გსურთ მიიღოთ განახლებები",
+          "email": {
+            "title": "ელ. ფოსტის შეტყობინებები",
+            "description": "მიიღეთ განახლებები ელ. ფოსტით"
+          },
+          "sms": {
+            "title": "SMS შეტყობინებები",
+            "description": "მიიღეთ მნიშვნელოვანი განახლებები SMS-ით"
+          },
+          "orders": {
+            "title": "შეკვეთის განახლებები",
+            "description": "შეტყობინებები თქვენი შეკვეთების შესახებ"
+          },
+          "promotions": {
+            "title": "აქციები და ფასდაკლებები",
+            "description": "სპეციალური შეთავაზებები და ფასდაკლებები"
+          },
+          "newsletter": {
+            "title": "ბიულეტენი",
+            "description": "ყოველკვირეული სიახლეები და რეკომენდაციები"
+          }
+        },
+        "appearance": {
+          "title": "გარეგნობა",
+          "description": "მოარგეთ აპლიკაციის გარეგნობა",
+          "darkMode": {
+            "title": "ბნელი რეჟიმი",
+            "description": "გადართეთ მუქ ფერთა სქემაზე"
+          }
+        },
+        "regional": {
+          "title": "რეგიონული პარამეტრები",
+          "description": "დააკონფიგურირეთ ენა და ვალუტა",
+          "language": {
+            "title": "ენა",
+            "description": "აირჩიეთ სასურველი ენა"
+          },
+          "currency": {
+            "title": "ვალუტა",
+            "description": "აირჩიეთ სასურველი ვალუტა"
+          }
+        },
+        "dangerZone": {
+          "title": "საფრთხის ზონა",
+          "description": "შეუქცევადი მოქმედებები თქვენს ანგარიშზე",
+          "deleteAccount": {
+            "title": "ანგარიშის წაშლა",
+            "description": "სამუდამოდ წაშალეთ თქვენი ანგარიში და ყველა მონაცემი",
+            "button": "ანგარიშის წაშლა"
+          }
+        }
+      },
+      "errors": {
+        "loadFailed": "პროფილის ჩატვირთვა ვერ მოხერხდა. სცადეთ ხელახლა.",
+        "saveFailed": "პროფილის შენახვა ვერ მოხერხდა. სცადეთ ხელახლა.",
+        "notAuthenticated": "პროფილის განსახლებისთვის საჭიროა ავტორიზაცია.",
+        "usernameRequired": "მომხმარებლის სახელი სავალდებულოა",
+        "currentPasswordRequired": "მიმდინარე პაროლი სავალდებულოა",
+        "newPasswordRequired": "ახალი პაროლი სავალდებულოა",
+        "passwordTooShort": "პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს",
+        "passwordsDoNotMatch": "პაროლები არ ემთხვევა",
+        "passwordChangeFailed": "პაროლის შეცვლა ვერ მოხერხდა. სცადეთ ხელახლა."
+      },
+      "messages": {
+        "saveSuccess": "პროფილი წარმატებით განახლდა!"
+      }
     }
   },
   "homePage": {

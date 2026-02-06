@@ -400,6 +400,218 @@
         "save": "Save changes",
         "saving": "Saving..."
       }
+    },
+    "buyerProfile": {
+      "loading": "Loading your profile...",
+      "memberSince": "Member since {year}",
+      "tabs": {
+        "personal": "Personal Info",
+        "security": "Security",
+        "addresses": "Addresses",
+        "preferences": "Preferences"
+      },
+      "stats": {
+        "orders": "Orders",
+        "wishlist": "Wishlist",
+        "reviews": "Reviews",
+        "addresses": "Addresses"
+      },
+      "sections": {
+        "personal": {
+          "title": "Personal Information",
+          "description": "Update your personal details and profile information"
+        },
+        "security": {
+          "title": "Security Settings",
+          "description": "Manage your password and security preferences"
+        },
+        "addresses": {
+          "title": "Shipping Addresses",
+          "description": "Manage your delivery addresses"
+        },
+        "preferences": {
+          "title": "Preferences",
+          "description": "Customize your notification and display preferences"
+        }
+      },
+      "fields": {
+        "username": "Username",
+        "usernamePlaceholder": "Enter your username",
+        "email": "Email Address",
+        "emailPlaceholder": "you@example.com",
+        "emailHint": "Email cannot be changed. Contact support if you need to update it.",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Enter your first name",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Enter your last name",
+        "phone": "Phone Number",
+        "phonePlaceholder": "+995 555 123 456",
+        "dateOfBirth": "Date of Birth",
+        "gender": "Gender",
+        "genderOptions": {
+          "male": "Male",
+          "female": "Female",
+          "other": "Other",
+          "prefer_not_to_say": "Prefer not to say"
+        },
+        "bio": "Bio",
+        "bioPlaceholder": "Tell us a bit about yourself...",
+        "characters": "characters"
+      },
+      "buttons": {
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "saveAddress": "Save Address",
+        "updatePassword": "Update Password",
+        "updating": "Updating..."
+      },
+      "security": {
+        "changePassword": "Change Password",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "passwordChanged": "Password updated successfully!",
+        "strength": {
+          "label": "Password strength",
+          "weak": "Weak",
+          "fair": "Fair",
+          "good": "Good",
+          "strong": "Strong",
+          "excellent": "Excellent"
+        },
+        "requirements": {
+          "title": "Password requirements",
+          "minLength": "At least 8 characters",
+          "lowercase": "One lowercase letter",
+          "uppercase": "One uppercase letter",
+          "number": "One number",
+          "special": "One special character"
+        },
+        "twoFactor": {
+          "title": "Two-Factor Authentication",
+          "description": "Add an extra layer of security to your account by enabling two-factor authentication.",
+          "enable": "Enable 2FA"
+        },
+        "loginHistory": {
+          "title": "Recent Login Activity",
+          "current": "Current",
+          "revoke": "Revoke"
+        }
+      },
+      "addresses": {
+        "addNew": "Add Address",
+        "addFirst": "Add your first address",
+        "newAddress": "New Address",
+        "editAddress": "Edit Address",
+        "empty": "You haven't added any addresses yet.",
+        "default": "Default",
+        "setDefault": "Set as default",
+        "labels": {
+          "home": "Home",
+          "work": "Work",
+          "other": "Other"
+        },
+        "fields": {
+          "label": "Address Type",
+          "fullName": "Full Name",
+          "fullNamePlaceholder": "John Doe",
+          "phone": "Phone Number",
+          "phonePlaceholder": "+995 555 123 456",
+          "addressLine1": "Street Address",
+          "addressLine1Placeholder": "123 Main Street",
+          "addressLine2": "Apartment, Suite, etc. (Optional)",
+          "addressLine2Placeholder": "Apt 4B",
+          "city": "City",
+          "cityPlaceholder": "Tbilisi",
+          "state": "State/Region",
+          "statePlaceholder": "Tbilisi",
+          "zipCode": "ZIP Code",
+          "zipCodePlaceholder": "0100",
+          "country": "Country",
+          "countryPlaceholder": "Georgia"
+        },
+        "errors": {
+          "requiredFields": "Please fill in all required fields",
+          "saveFailed": "Failed to save address",
+          "deleteFailed": "Failed to delete address"
+        },
+        "messages": {
+          "added": "Address added successfully",
+          "updated": "Address updated successfully",
+          "deleted": "Address removed",
+          "defaultSet": "Default address updated"
+        }
+      },
+      "preferences": {
+        "notifications": {
+          "title": "Notifications",
+          "description": "Choose how you want to receive updates",
+          "email": {
+            "title": "Email Notifications",
+            "description": "Receive updates via email"
+          },
+          "sms": {
+            "title": "SMS Notifications",
+            "description": "Get text messages for important updates"
+          },
+          "orders": {
+            "title": "Order Updates",
+            "description": "Notifications about your orders"
+          },
+          "promotions": {
+            "title": "Promotions & Deals",
+            "description": "Special offers and discounts"
+          },
+          "newsletter": {
+            "title": "Newsletter",
+            "description": "Weekly digest and recommendations"
+          }
+        },
+        "appearance": {
+          "title": "Appearance",
+          "description": "Customize how the app looks",
+          "darkMode": {
+            "title": "Dark Mode",
+            "description": "Switch to a darker color scheme"
+          }
+        },
+        "regional": {
+          "title": "Regional Settings",
+          "description": "Configure your language and currency",
+          "language": {
+            "title": "Language",
+            "description": "Choose your preferred language"
+          },
+          "currency": {
+            "title": "Currency",
+            "description": "Select your preferred currency"
+          }
+        },
+        "dangerZone": {
+          "title": "Danger Zone",
+          "description": "Irreversible actions that affect your account",
+          "deleteAccount": {
+            "title": "Delete Account",
+            "description": "Permanently delete your account and all associated data",
+            "button": "Delete Account"
+          }
+        }
+      },
+      "errors": {
+        "loadFailed": "Failed to load profile. Please try again.",
+        "saveFailed": "Failed to save profile. Please try again.",
+        "notAuthenticated": "You must be logged in to update your profile.",
+        "usernameRequired": "Username is required",
+        "currentPasswordRequired": "Current password is required",
+        "newPasswordRequired": "New password is required",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "passwordsDoNotMatch": "Passwords do not match",
+        "passwordChangeFailed": "Failed to change password. Please try again."
+      },
+      "messages": {
+        "saveSuccess": "Profile updated successfully!"
+      }
     }
   },
   "homePage": {
