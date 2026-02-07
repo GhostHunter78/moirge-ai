@@ -64,7 +64,7 @@ export default function StorePublicProfileView({
     );
   }
 
-  const storeName = store.store_name || owner?.username || "Store";
+  const storeName = store.store_name || ""
   const description = store.store_description || "";
 
   const fullAddress = [
