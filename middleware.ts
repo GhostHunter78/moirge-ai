@@ -8,6 +8,7 @@ const publicRoutes = [
   "/auth/signup",
   "/forgot-password",
   "/verify-email",
+  "/store", // Public store pages: /store/[sellerId] — anyone can view a store
 ];
 
 // Check if a path is a public route

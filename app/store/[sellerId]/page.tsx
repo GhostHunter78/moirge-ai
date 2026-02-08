@@ -1,20 +1,18 @@
 import { notFound } from "next/navigation";
-import { createClient as createServerClient } from "@/lib/supabaseServer";
+import { createClient } from "@/lib/supabaseServer";
 import type { StoreProfile } from "@/types/dashboard";
 import type { Profile } from "@/types/user-profile";
 import StorePublicProfileView from "@/components/dashboard/store-profile/store-public-profile-view";
 
 interface StorePublicPageProps {
-  params: {
-    sellerId: string;
-  };
+  params: Promise<{ sellerId: string }>;
 }
 
 export default async function StorePublicPage({
   params,
 }: StorePublicPageProps) {
-  const supabase = await createServerClient();
-  const sellerId = params.sellerId;
+  const { sellerId } = await params;
+  const supabase = await createClient();
 
   // Load store profile for this seller
   const { data: store, error: storeError } = await supabase
