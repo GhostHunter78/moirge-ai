@@ -1,5 +1,5 @@
 "use client";
-import { HandIcon, LogOut, User, Bug } from "lucide-react";
+import { HandIcon, LogOut, User, Bug, Store } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,6 +55,20 @@ export function ProfileDropDown({ user }: { user: Profile }) {
           </div>
         </DropdownMenuItem>
       </Link>
+      {user.role === "buyer" && (
+        <Link href="/dashboard/buyer/stores">
+          <DropdownMenuItem className="mx-1 px-3 py-3 cursor-pointer rounded-xl hover:bg-linear-to-r hover:from-teal-50 hover:to-emerald-50 transition-all duration-300 group">
+            <div className="flex items-center w-full">
+              <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center mr-3 group-hover:bg-teal-200 transition-colors">
+                <Store className="h-4 w-4 text-teal-600" />
+              </div>
+              <span className="font-medium text-sm text-gray-700 group-hover:text-teal-600 transition-colors">
+                {t("stores")}
+              </span>
+            </div>
+          </DropdownMenuItem>
+        </Link>
+      )}
       <div className="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent my-3 mx-3" />
       <Link href="/help">
         <DropdownMenuItem className="mx-1 px-3 py-3 cursor-pointer rounded-xl hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 group">

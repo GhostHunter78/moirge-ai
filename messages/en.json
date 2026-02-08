@@ -53,6 +53,7 @@
   },
   "profileDropdown": {
     "myProfile": "My Profile",
+    "stores": "Stores",
     "helpSupport": "Help & Support",
     "reportBug": "Report a Bug",
     "logout": "Logout"
@@ -187,6 +188,7 @@
       "labels": {
         "overview": "Overview",
         "myProfile": "My Profile",
+        "stores": "Stores",
         "orders": "Orders",
         "saved": "Saved",
         "messages": "Messages",

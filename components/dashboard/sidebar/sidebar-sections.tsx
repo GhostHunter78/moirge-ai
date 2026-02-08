@@ -33,6 +33,7 @@ export default function SidebarSections({
     const labelMap: Record<string, string> = {
       Overview: "overview",
       "My Profile": "myProfile",
+      Stores: "stores",
       Orders: "orders",
       Saved: "saved",
       Messages: "messages",

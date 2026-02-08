@@ -53,6 +53,7 @@
   },
   "profileDropdown": {
     "myProfile": "ჩემი პროფილი",
+    "stores": "მაღაზიები",
     "helpSupport": "დახმარება და მხარდაჭერა",
     "reportBug": "პრობლემის შეტყობინება",
     "logout": "გასვლა"
@@ -187,6 +188,7 @@
       "labels": {
         "overview": "მიმოხილვა",
         "myProfile": "ჩემი პროფილი",
+        "stores": "მაღაზიები",
         "orders": "შეკვეთები",
         "saved": "შენახული",
         "messages": "შეტყობინებები",
