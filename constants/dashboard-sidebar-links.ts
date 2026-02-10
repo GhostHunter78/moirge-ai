@@ -48,6 +48,13 @@ export const DASHBOARD_SIDEBAR_LINKS: {
           description: "Browse all stores and discover sellers on the marketplace",
         },
         {
+          label: "Products",
+          href: "/dashboard/buyer/products",
+          icon: List,
+          title: "Products",
+          description: "Browse products from all stores on the marketplace",
+        },
+        {
           label: "Orders",
           href: "/dashboard/buyer/orders",
           icon: ShoppingBag,
