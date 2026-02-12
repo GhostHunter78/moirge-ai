@@ -53,6 +53,19 @@ export async function getSellerProducts(sellerId: string) {
   return { data: (data as Product[] | null) ?? null, error };
 }
 
+export async function getPublicProducts() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("status", "active")
+    .gt("stock", 0)
+    .order("created_at", { ascending: false });
+
+  return { data: (data as Product[] | null) ?? null, error };
+}
+
 export async function createProduct(
   sellerId: string,
   payload: CreateProductPayload,
