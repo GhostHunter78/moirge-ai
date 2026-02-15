@@ -25,6 +25,7 @@ import type { ProductStatus } from "@/lib/products";
 export type CreateProductFormState = {
   title: string;
   price: string;
+  salePrice: string;
   category: string;
   stock: string;
   status: ProductStatus;
@@ -96,6 +97,22 @@ export function CreateProductDialog({
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
+                {t("salePriceLabel")}
+              </label>
+              <Input
+                type="number"
+                min={0}
+                step={0.01}
+                value={form.salePrice}
+                onChange={(e) => onFormChange("salePrice", e.target.value)}
+                placeholder={t("salePricePlaceholder")}
+                className="h-9 text-xs"
+              />
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-700">
                 {t("stockLabel")}
               </label>
               <Input
@@ -108,6 +125,7 @@ export function CreateProductDialog({
                 className="h-9 text-xs"
               />
             </div>
+            <div className="hidden sm:block" />
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">

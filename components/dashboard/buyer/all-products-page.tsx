@@ -81,12 +81,14 @@ export default function AllProductsPage() {
       result = result.filter((p) => p.category === category);
     }
 
+    const displayPrice = (p: Product) =>
+      p.sale_price != null ? Number(p.sale_price) : Number(p.price);
     switch (sortBy) {
       case "price_low_high":
-        result.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => displayPrice(a) - displayPrice(b));
         break;
       case "price_high_low":
-        result.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => displayPrice(b) - displayPrice(a));
         break;
       case "rating_high_low":
         result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
@@ -271,9 +273,23 @@ export default function AllProductsPage() {
 
                   <div className="mt-auto flex items-end justify-between gap-2 pt-1">
                     <div className="space-y-0.5">
-                      <p className="text-sm font-semibold text-slate-900">
-                        {product.currency} {product.price.toFixed(2)}
-                      </p>
+                      {product.sale_price != null ? (
+                        <>
+                          <p className="text-xs font-medium text-slate-500 line-through">
+                            {product.currency}{" "}
+                            {Number(product.price).toFixed(2)}
+                          </p>
+                          <p className="text-sm font-semibold text-emerald-700">
+                            {product.currency}{" "}
+                            {Number(product.sale_price).toFixed(2)}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-sm font-semibold text-slate-900">
+                          {product.currency}{" "}
+                          {Number(product.price).toFixed(2)}
+                        </p>
+                      )}
                       {product.rating_count > 0 && (
                         <p className="text-[11px] text-slate-500">
                           {product.rating.toFixed(1)} ·{" "}

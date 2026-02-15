@@ -97,6 +97,7 @@ export default function SellerProductDetailMain() {
   const tEdit = useTranslations("dashboard.sellerProducts.editDialog");
   const tErrors = useTranslations("dashboard.sellerProducts.errors");
   const tToast = useTranslations("dashboard.sellerProducts.toast");
+  const tStatus = useTranslations("dashboard.sellerProducts.status");
 
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -110,6 +111,7 @@ export default function SellerProductDetailMain() {
   const [formThumbnailUrl, setFormThumbnailUrl] = useState<string | null>(null);
   const [formTitle, setFormTitle] = useState("");
   const [formPrice, setFormPrice] = useState("");
+  const [formSalePrice, setFormSalePrice] = useState("");
   const [formCategory, setFormCategory] = useState("");
   const [formStock, setFormStock] = useState("");
   const [formStatus, setFormStatus] = useState<ProductStatus>("draft");
@@ -168,6 +170,9 @@ export default function SellerProductDetailMain() {
     if (!product) return;
     setFormTitle(product.title);
     setFormPrice(product.price.toString());
+    setFormSalePrice(
+      product.sale_price != null ? String(product.sale_price) : "",
+    );
     setFormImageUrls(product.image_urls ?? []);
     setFormThumbnailUrl(product.thumbnail_url);
     setFormCategory(product.category ?? "");
@@ -236,6 +241,17 @@ export default function SellerProductDetailMain() {
       toast.error(tErrors("invalidStock"));
       return;
     }
+    const salePriceTrimmed = formSalePrice.trim();
+    const numericSalePrice = salePriceTrimmed.length
+      ? Number(salePriceTrimmed)
+      : null;
+    if (
+      salePriceTrimmed.length > 0 &&
+      (Number.isNaN(numericSalePrice) || numericSalePrice! < 0)
+    ) {
+      toast.error(tErrors("invalidPrice"));
+      return;
+    }
 
     setIsSaving(true);
 
@@ -283,6 +299,10 @@ export default function SellerProductDetailMain() {
         title: formTitle.trim(),
         description: formDescription.trim() || undefined,
         price: numericPrice,
+        sale_price:
+          numericSalePrice !== null && numericSalePrice >= 0
+            ? numericSalePrice
+            : null,
         category: formCategory.trim() || undefined,
         stock: numericStock,
         status: formStatus,
@@ -439,9 +459,20 @@ export default function SellerProductDetailMain() {
                         {tDetail("priceLabel")}
                       </p>
                     </div>
-                    <p className="mt-2 text-2xl font-bold text-slate-900">
-                      {product.currency} {product.price.toFixed(2)}
-                    </p>
+                    {product.sale_price != null ? (
+                      <div className="mt-2 space-y-0.5">
+                        <p className="text-lg font-medium text-slate-500 line-through">
+                          {product.currency} {Number(product.price).toFixed(2)}
+                        </p>
+                        <p className="text-2xl font-bold text-emerald-700">
+                          {product.currency} {Number(product.sale_price).toFixed(2)}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="mt-2 text-2xl font-bold text-slate-900">
+                        {product.currency} {Number(product.price).toFixed(2)}
+                      </p>
+                    )}
                   </div>
 
                   <div className="rounded-xl border border-slate-200 bg-linear-to-br from-indigo-50 to-indigo-100/50 p-4">
@@ -637,6 +668,22 @@ export default function SellerProductDetailMain() {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
+                      {tEdit("salePriceLabel")}
+                    </label>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formSalePrice}
+                      onChange={(e) => setFormSalePrice(e.target.value)}
+                      placeholder={tEdit("salePricePlaceholder")}
+                      className="h-9 text-xs"
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-700">
                       {tEdit("stockLabel")}
                     </label>
                     <Input
@@ -649,9 +696,6 @@ export default function SellerProductDetailMain() {
                       className="h-9 text-xs"
                     />
                   </div>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
                       {tEdit("categoryLabel")}
@@ -663,6 +707,8 @@ export default function SellerProductDetailMain() {
                       className="h-9 text-xs"
                     />
                   </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
                       {tEdit("statusLabel")}
@@ -675,15 +721,18 @@ export default function SellerProductDetailMain() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="draft">{tStatus("draft")}</SelectItem>
+                        <SelectItem value="active">{tStatus("active")}</SelectItem>
                         <SelectItem value="out_of_stock">
-                          Out of stock
+                          {tStatus("outOfStock")}
                         </SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
+                        <SelectItem value="archived">
+                          {tStatus("archived")}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="hidden sm:block" />
                 </div>
 
                 <div className="space-y-1.5">

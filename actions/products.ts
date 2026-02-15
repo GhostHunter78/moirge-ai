@@ -27,6 +27,7 @@ export async function createProductAction(payload: CreateProductPayload) {
       title: payload.title,
       description: payload.description ?? null,
       price: payload.price,
+      sale_price: payload.sale_price ?? null,
       currency: payload.currency ?? "USD",
       sku: payload.sku ?? null,
       category: payload.category ?? null,
@@ -84,6 +85,8 @@ export async function updateProductAction(
   if (payload.description !== undefined)
     updateData.description = payload.description ?? null;
   if (payload.price !== undefined) updateData.price = payload.price;
+  if (payload.sale_price !== undefined)
+    updateData.sale_price = payload.sale_price ?? null;
   if (payload.currency !== undefined) updateData.currency = payload.currency;
   if (payload.sku !== undefined) updateData.sku = payload.sku ?? null;
   if (payload.category !== undefined)

@@ -43,9 +43,20 @@ export function SellerProductsFeaturedCard({ product }: { product: Product }) {
           <div className="grid grid-cols-3 gap-2 text-[11px] text-slate-200/80">
             <div>
               <p className="text-slate-400">{t("price")}</p>
-              <p className="font-medium">
-                {product.currency} {product.price}
-              </p>
+              {product.sale_price != null ? (
+                <>
+                  <p className="text-xs text-slate-500 line-through">
+                    {product.currency} {Number(product.price)}
+                  </p>
+                  <p className="font-medium text-emerald-700">
+                    {product.currency} {Number(product.sale_price)}
+                  </p>
+                </>
+              ) : (
+                <p className="font-medium">
+                  {product.currency} {Number(product.price)}
+                </p>
+              )}
             </div>
             <div>
               <p className="text-slate-400">{t("sold")}</p>

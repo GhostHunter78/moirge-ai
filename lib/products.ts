@@ -8,6 +8,8 @@ export interface Product {
   title: string;
   description: string | null;
   price: number;
+  /** When set, shown to buyers as the discounted price; original price is shown crossed out. */
+  sale_price?: number | null;
   currency: string;
   sku: string | null;
   category: string | null;
@@ -27,6 +29,8 @@ export interface CreateProductPayload {
   title: string;
   description?: string;
   price: number;
+  /** Optional sale price; when set, buyers see original price crossed out and this as current price. */
+  sale_price?: number | null;
   currency?: string;
   sku?: string;
   category?: string;
@@ -79,6 +83,7 @@ export async function createProduct(
       title: payload.title,
       description: payload.description ?? null,
       price: payload.price,
+      sale_price: payload.sale_price ?? null,
       currency: payload.currency ?? "USD",
       sku: payload.sku ?? null,
       category: payload.category ?? null,

@@ -24,6 +24,7 @@ import {
 const initialFormState: CreateProductFormState = {
   title: "",
   price: "",
+  salePrice: "",
   category: "",
   stock: "",
   status: "draft",
@@ -144,6 +145,17 @@ export default function SellerProductsMain() {
       toast.error(tErrors("invalidStock"));
       return;
     }
+    const salePriceTrimmed = form.salePrice.trim();
+    const numericSalePrice = salePriceTrimmed.length
+      ? Number(salePriceTrimmed)
+      : null;
+    if (
+      salePriceTrimmed.length > 0 &&
+      (Number.isNaN(numericSalePrice) || numericSalePrice! < 0)
+    ) {
+      toast.error(tErrors("invalidPrice"));
+      return;
+    }
 
     setIsSaving(true);
     try {
@@ -174,6 +186,10 @@ export default function SellerProductsMain() {
         title: form.title.trim(),
         description: form.description.trim() || undefined,
         price: numericPrice,
+        sale_price:
+          numericSalePrice !== null && numericSalePrice >= 0
+            ? numericSalePrice
+            : null,
         category: form.category.trim() || undefined,
         stock: numericStock,
         status: form.status,

@@ -155,7 +155,20 @@ export function SellerProductsTable({
                   </td>
 
                   <td className="px-3 py-2.5 align-middle text-right text-[11px] font-medium text-slate-900">
-                    {product.currency} {product.price}
+                    {product.sale_price != null ? (
+                      <span className="text-slate-500 line-through">
+                        {product.currency} {Number(product.price)}
+                      </span>
+                    ) : null}
+                    {product.sale_price != null ? (
+                      <span className="ml-1 text-emerald-700">
+                        {product.currency} {Number(product.sale_price)}
+                      </span>
+                    ) : (
+                      <span>
+                        {product.currency} {Number(product.price)}
+                      </span>
+                    )}
                   </td>
 
                   <td className="px-2 py-2.5 align-middle">
