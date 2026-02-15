@@ -42,6 +42,7 @@ export function CreateProductDialog({
   isSaving,
   onSubmit,
   onCancel,
+  fieldErrors = {},
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -55,6 +56,7 @@ export function CreateProductDialog({
   isSaving: boolean;
   onSubmit: () => void;
   onCancel: () => void;
+  fieldErrors?: Record<string, string>;
 }) {
   const t = useTranslations("dashboard.sellerProducts.createDialog");
   const tStatus = useTranslations("dashboard.sellerProducts.status");
@@ -70,20 +72,24 @@ export function CreateProductDialog({
         <div className="space-y-4 py-2">
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-slate-700">
-              {t("titleLabel")}
+              {t("titleLabel")} <span className="text-rose-500">*</span>
             </label>
             <Input
               value={form.title}
               onChange={(e) => onFormChange("title", e.target.value)}
               placeholder={t("titlePlaceholder")}
               className="h-9 text-xs"
+              aria-invalid={!!fieldErrors.title}
             />
+            {fieldErrors.title && (
+              <p className="text-[11px] text-rose-600">{fieldErrors.title}</p>
+            )}
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
-                {t("priceLabel")}
+                {t("priceLabel")} <span className="text-rose-500">*</span>
               </label>
               <Input
                 type="number"
@@ -93,7 +99,11 @@ export function CreateProductDialog({
                 onChange={(e) => onFormChange("price", e.target.value)}
                 placeholder={t("pricePlaceholder")}
                 className="h-9 text-xs"
+                aria-invalid={!!fieldErrors.price}
               />
+              {fieldErrors.price && (
+                <p className="text-[11px] text-rose-600">{fieldErrors.price}</p>
+              )}
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
@@ -169,7 +179,7 @@ export function CreateProductDialog({
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-slate-700">
-              {t("photosLabel")}
+              {t("photosLabel")} <span className="text-rose-500">*</span>
             </label>
             <Input
               type="file"
@@ -177,7 +187,11 @@ export function CreateProductDialog({
               multiple
               className="h-9 text-xs cursor-pointer"
               onChange={onImageChange}
+              aria-invalid={!!fieldErrors.image}
             />
+            {fieldErrors.image && (
+              <p className="text-[11px] text-rose-600">{fieldErrors.image}</p>
+            )}
             {imagePreviews.length > 0 && (
               <div className="mt-2 space-y-2">
                 <div className="flex flex-wrap gap-2">
@@ -202,14 +216,20 @@ export function CreateProductDialog({
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-slate-700">
-              {t("descriptionLabel")}
+              {t("descriptionLabel")} <span className="text-rose-500">*</span>
             </label>
             <Textarea
               value={form.description}
               onChange={(e) => onFormChange("description", e.target.value)}
               placeholder={t("descriptionPlaceholder")}
               className="min-h-[80px] text-xs"
+              aria-invalid={!!fieldErrors.description}
             />
+            {fieldErrors.description && (
+              <p className="text-[11px] text-rose-600">
+                {fieldErrors.description}
+              </p>
+            )}
           </div>
         </div>
 

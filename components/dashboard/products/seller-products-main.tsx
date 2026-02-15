@@ -20,6 +20,10 @@ import {
   CreateProductDialog,
   type CreateProductFormState,
 } from "./create-product-dialog";
+import {
+  createProductSchema,
+  flattenProductErrors,
+} from "@/lib/validation/product";
 
 const initialFormState: CreateProductFormState = {
   title: "",
@@ -49,6 +53,7 @@ export default function SellerProductsMain() {
   const [form, setForm] = useState<CreateProductFormState>(initialFormState);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -104,6 +109,17 @@ export default function SellerProductsMain() {
     value: CreateProductFormState[K],
   ) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    if (
+      field === "title" ||
+      field === "price" ||
+      field === "description"
+    ) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,19 +127,24 @@ export default function SellerProductsMain() {
     if (!files.length) {
       setImageFiles([]);
       setImagePreviews([]);
-      return;
+    } else {
+      setImageFiles(files);
+      Promise.all(
+        files.map(
+          (file) =>
+            new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(file);
+            }),
+        ),
+      ).then(setImagePreviews);
     }
-    setImageFiles(files);
-    Promise.all(
-      files.map(
-        (file) =>
-          new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(file);
-          }),
-      ),
-    ).then(setImagePreviews);
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next.image;
+      return next;
+    });
   };
 
   const handleCreateProduct = async () => {
@@ -131,15 +152,28 @@ export default function SellerProductsMain() {
       toast.error(tErrors("signInRequired"));
       return;
     }
-    if (!form.title.trim()) {
-      toast.error(tErrors("titleRequired"));
+
+    const schema = createProductSchema(tErrors);
+    const parsed = schema.safeParse({
+      title: form.title,
+      price: form.price,
+      description: form.description,
+    });
+
+    const errors: Record<string, string> = {};
+    if (!parsed.success) {
+      Object.assign(errors, flattenProductErrors(parsed.error));
+    }
+    if (imageFiles.length === 0) {
+      errors.image = tErrors("imageRequired");
+    }
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       return;
     }
+    setFieldErrors({});
+
     const numericPrice = Number(form.price);
-    if (Number.isNaN(numericPrice) || numericPrice < 0) {
-      toast.error(tErrors("invalidPrice"));
-      return;
-    }
     const numericStock = form.stock.trim().length ? Number(form.stock) : 0;
     if (Number.isNaN(numericStock) || numericStock < 0) {
       toast.error(tErrors("invalidStock"));
@@ -212,6 +246,7 @@ export default function SellerProductsMain() {
       setForm(initialFormState);
       setImageFiles([]);
       setImagePreviews([]);
+      setFieldErrors({});
     } finally {
       setIsSaving(false);
     }
@@ -251,14 +286,21 @@ export default function SellerProductsMain() {
 
       <CreateProductDialog
         open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) setFieldErrors({});
+        }}
         form={form}
         onFormChange={onFormChange}
         imagePreviews={imagePreviews}
         onImageChange={handleImageChange}
         isSaving={isSaving}
         onSubmit={handleCreateProduct}
-        onCancel={() => setIsDialogOpen(false)}
+        onCancel={() => {
+          setIsDialogOpen(false);
+          setFieldErrors({});
+        }}
+        fieldErrors={fieldErrors}
       />
     </div>
   );

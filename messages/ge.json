@@ -332,7 +332,7 @@
         "titlePlaceholder": "მაგ: მუქი ლურჯი ბომბერი",
         "priceLabel": "ფასი",
         "pricePlaceholder": "129.00",
-        "salePriceLabel": "ფასდაკლების ფასი (არასავალდებულო)",
+        "salePriceLabel": "ფასდაკლების ფასი",
         "salePricePlaceholder": "99.00",
         "stockLabel": "რაოდენობა",
         "stockPlaceholder": "34",
@@ -350,9 +350,12 @@
       "errors": {
         "loadFailed": "პროდუქტების ჩატვირთვა ვერ მოხერხდა. გთხოვთ, სცადოთ თავიდან.",
         "signInRequired": "პროდუქტის დასამატებლად საჭიროა გამყიდველის ავტორიზაცია.",
-        "titleRequired": "გთხოვთ, მიუთითოთ პროდუქტის დასახელება.",
+        "titleRequired": "პროდუქტის დასახელება სავალდებულოა.",
+        "priceRequired": "ფასი სავალდებულოა.",
         "invalidPrice": "გთხოვთ, მიუთითოთ ვალიდური ფასი.",
         "invalidStock": "გთხოვთ, მიუთითოთ მარაგის სწორი რაოდენობა.",
+        "descriptionMinWords": "აღწერა უნდა შეიცავდეს მინიმუმ 3 სიტყვას.",
+        "imageRequired": "საჭიროა მინიმუმ ერთი პროდუქტის სურათი.",
         "createFailed": "პროდუქტის შექმნა ვერ მოხერხდა. გთხოვთ, სცადოთ თავიდან."
       },
       "toast": {
@@ -391,7 +394,7 @@
         "titlePlaceholder": "მაგ: მუქი ლურჯი ბომბერი",
         "priceLabel": "ფასი",
         "pricePlaceholder": "129.00",
-        "salePriceLabel": "ფასდაკლების ფასი (არასავალდებულო)",
+        "salePriceLabel": "ფასდაკლების ფასი",
         "salePricePlaceholder": "99.00",
         "stockLabel": "რაოდენობა",
         "stockPlaceholder": "34",

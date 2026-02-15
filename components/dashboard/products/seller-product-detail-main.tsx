@@ -39,6 +39,10 @@ import { createClient } from "@/lib/supabaseClient";
 import { updateProductAction } from "@/actions/products";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import {
+  editProductSchema,
+  flattenProductErrors,
+} from "@/lib/validation/product";
 
 function StatusBadge({ status }: { status: Product["status"] }) {
   const tStatus = useTranslations("dashboard.sellerProducts.status");
@@ -120,6 +124,7 @@ export default function SellerProductDetailMain() {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!productId) return;
@@ -182,6 +187,7 @@ export default function SellerProductDetailMain() {
     setFormFeatured(product.featured);
     setImagePreview(product.thumbnail_url);
     setImageFiles([]);
+    setFieldErrors({});
     setIsEditDialogOpen(true);
   };
 
@@ -200,6 +206,11 @@ export default function SellerProductDetailMain() {
       setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(first);
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next.image;
+      return next;
+    });
   };
 
   const handleRemoveExistingImage = (urlToRemove: string) => {
@@ -216,6 +227,11 @@ export default function SellerProductDetailMain() {
 
       return next;
     });
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next.image;
+      return next;
+    });
   };
 
   const handleSetAsThumbnail = (url: string) => {
@@ -225,17 +241,28 @@ export default function SellerProductDetailMain() {
   const handleUpdateProduct = async () => {
     if (!product) return;
 
-    if (!formTitle.trim()) {
-      toast.error(tErrors("titleRequired"));
+    const schema = editProductSchema(tErrors);
+    const parsed = schema.safeParse({
+      title: formTitle,
+      price: formPrice,
+      description: formDescription,
+    });
+
+    const errors: Record<string, string> = {};
+    if (!parsed.success) {
+      Object.assign(errors, flattenProductErrors(parsed.error));
+    }
+    const hasImages = formImageUrls.length > 0 || imageFiles.length > 0;
+    if (!hasImages) {
+      errors.image = tErrors("imageRequired");
+    }
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       return;
     }
+    setFieldErrors({});
 
     const numericPrice = Number(formPrice);
-    if (Number.isNaN(numericPrice) || numericPrice < 0) {
-      toast.error(tErrors("invalidPrice"));
-      return;
-    }
-
     const numericStock = formStock.trim().length ? Number(formStock) : 0;
     if (Number.isNaN(numericStock) || numericStock < 0) {
       toast.error(tErrors("invalidStock"));
@@ -631,7 +658,13 @@ export default function SellerProductDetailMain() {
           )}
 
           {/* Edit Product Dialog */}
-          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <Dialog
+            open={isEditDialogOpen}
+            onOpenChange={(open) => {
+              setIsEditDialogOpen(open);
+              if (!open) setFieldErrors({});
+            }}
+          >
             <DialogContent className="w-[95vw] max-w-lg max-h-[90vh] overflow-y-auto sm:w-full">
               <DialogHeader>
                 <DialogTitle>{tEdit("title")}</DialogTitle>
@@ -641,30 +674,58 @@ export default function SellerProductDetailMain() {
               <div className="space-y-4 py-2">
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-slate-700">
-                    {tEdit("titleLabel")}
+                    {tEdit("titleLabel")}{" "}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <Input
                     value={formTitle}
-                    onChange={(e) => setFormTitle(e.target.value)}
+                    onChange={(e) => {
+                      setFormTitle(e.target.value);
+                      setFieldErrors((prev) => {
+                        const next = { ...prev };
+                        delete next.title;
+                        return next;
+                      });
+                    }}
                     placeholder={tEdit("titlePlaceholder")}
                     className="h-9 text-xs"
+                    aria-invalid={!!fieldErrors.title}
                   />
+                  {fieldErrors.title && (
+                    <p className="text-[11px] text-rose-600">
+                      {fieldErrors.title}
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      {tEdit("priceLabel")}
+                      {tEdit("priceLabel")}{" "}
+                      <span className="text-rose-500">*</span>
                     </label>
                     <Input
                       type="number"
                       min="0"
                       step="0.01"
                       value={formPrice}
-                      onChange={(e) => setFormPrice(e.target.value)}
+                      onChange={(e) => {
+                        setFormPrice(e.target.value);
+                        setFieldErrors((prev) => {
+                          const next = { ...prev };
+                          delete next.price;
+                          return next;
+                        });
+                      }}
                       placeholder={tEdit("pricePlaceholder")}
                       className="h-9 text-xs"
+                      aria-invalid={!!fieldErrors.price}
                     />
+                    {fieldErrors.price && (
+                      <p className="text-[11px] text-rose-600">
+                        {fieldErrors.price}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
@@ -737,7 +798,8 @@ export default function SellerProductDetailMain() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-slate-700">
-                    {tEdit("photosLabel")}
+                    {tEdit("photosLabel")}{" "}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <Input
                     type="file"
@@ -745,7 +807,13 @@ export default function SellerProductDetailMain() {
                     multiple
                     className="h-9 text-xs cursor-pointer"
                     onChange={handleImageChange}
+                    aria-invalid={!!fieldErrors.image}
                   />
+                  {fieldErrors.image && (
+                    <p className="text-[11px] text-rose-600">
+                      {fieldErrors.image}
+                    </p>
+                  )}
                   {imagePreview && (
                     <div className="mt-2 flex items-center gap-2">
                       <div className="relative h-14 w-14 overflow-hidden rounded-md border border-slate-200 bg-slate-50">
@@ -808,14 +876,28 @@ export default function SellerProductDetailMain() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-slate-700">
-                    {tEdit("descriptionLabel")}
+                    {tEdit("descriptionLabel")}{" "}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <Textarea
                     value={formDescription}
-                    onChange={(e) => setFormDescription(e.target.value)}
+                    onChange={(e) => {
+                      setFormDescription(e.target.value);
+                      setFieldErrors((prev) => {
+                        const next = { ...prev };
+                        delete next.description;
+                        return next;
+                      });
+                    }}
                     placeholder={tEdit("descriptionPlaceholder")}
                     className="min-h-[80px] text-xs"
+                    aria-invalid={!!fieldErrors.description}
                   />
+                  {fieldErrors.description && (
+                    <p className="text-[11px] text-rose-600">
+                      {fieldErrors.description}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">

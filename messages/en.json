@@ -332,7 +332,7 @@
         "titlePlaceholder": "Midnight Nylon Bomber Jacket",
         "priceLabel": "Price",
         "pricePlaceholder": "129.00",
-        "salePriceLabel": "Sale price (optional)",
+        "salePriceLabel": "Sale price",
         "salePricePlaceholder": "99.00",
         "stockLabel": "Stock",
         "stockPlaceholder": "34",
@@ -350,9 +350,12 @@
       "errors": {
         "loadFailed": "Failed to load products. Please try again.",
         "signInRequired": "You need to be signed in as a seller to add products.",
-        "titleRequired": "Please add a product title.",
+        "titleRequired": "Product name is required.",
+        "priceRequired": "Price is required.",
         "invalidPrice": "Please provide a valid price.",
         "invalidStock": "Please provide a valid stock number.",
+        "descriptionMinWords": "Description must be at least 3 words.",
+        "imageRequired": "At least one product image is required.",
         "createFailed": "Could not create product. Please try again."
       },
       "toast": {
@@ -391,7 +394,7 @@
         "titlePlaceholder": "Midnight Nylon Bomber Jacket",
         "priceLabel": "Price",
         "pricePlaceholder": "129.00",
-        "salePriceLabel": "Sale price (optional)",
+        "salePriceLabel": "Sale price",
         "salePricePlaceholder": "99.00",
         "stockLabel": "Stock",
         "stockPlaceholder": "34",
