@@ -339,6 +339,7 @@
         "categoryLabel": "კატეგორია",
         "categoryPlaceholder": "ზედა ტანსაცმელი, ფეხსაცმელი, აქსესუარები...",
         "statusLabel": "სტატუსი",
+        "statusPlaceholder": "აირჩიეთ სტატუსი",
         "photosLabel": "პროდუქტის ფოტოები",
         "photosHint": "პირველი სურათი გამოჩნდება კატალოგის მთავარ ფოტოდ.",
         "descriptionLabel": "აღწერა",
@@ -356,6 +357,9 @@
         "invalidStock": "გთხოვთ, მიუთითოთ მარაგის სწორი რაოდენობა.",
         "descriptionMinWords": "აღწერა უნდა შეიცავდეს მინიმუმ 3 სიტყვას.",
         "imageRequired": "საჭიროა მინიმუმ ერთი პროდუქტის სურათი.",
+        "categoryRequired": "კატეგორია სავალდებულოა.",
+        "stockRequired": "მარაგის რაოდენობა სავალდებულოა.",
+        "statusRequired": "გთხოვთ, აირჩიოთ სტატუსი.",
         "createFailed": "პროდუქტის შექმნა ვერ მოხერხდა. გთხოვთ, სცადოთ თავიდან."
       },
       "toast": {
@@ -401,6 +405,7 @@
         "categoryLabel": "კატეგორია",
         "categoryPlaceholder": "ზედა ტანსაცმელი, ფეხსაცმელი, აქსესუარები...",
         "statusLabel": "სტატუსი",
+        "statusPlaceholder": "აირჩიეთ სტატუსი",
         "photosLabel": "პროდუქტის ფოტოები",
         "descriptionLabel": "აღწერა",
         "descriptionPlaceholder": "მოუყევით მომხმარებელს ამ ნივთის შესახებ — მასალა, ზომა, სტილის რჩევები...",

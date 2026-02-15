@@ -246,6 +246,9 @@ export default function SellerProductDetailMain() {
       title: formTitle,
       price: formPrice,
       description: formDescription,
+      category: formCategory,
+      stock: formStock,
+      status: formStatus,
     });
 
     const errors: Record<string, string> = {};
@@ -263,11 +266,7 @@ export default function SellerProductDetailMain() {
     setFieldErrors({});
 
     const numericPrice = Number(formPrice);
-    const numericStock = formStock.trim().length ? Number(formStock) : 0;
-    if (Number.isNaN(numericStock) || numericStock < 0) {
-      toast.error(tErrors("invalidStock"));
-      return;
-    }
+    const numericStock = Number(formStock);
     const salePriceTrimmed = formSalePrice.trim();
     const numericSalePrice = salePriceTrimmed.length
       ? Number(salePriceTrimmed)
@@ -745,41 +744,77 @@ export default function SellerProductDetailMain() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      {tEdit("stockLabel")}
+                      {tEdit("stockLabel")}{" "}
+                      <span className="text-rose-500">*</span>
                     </label>
                     <Input
                       type="number"
                       min="0"
                       step="1"
                       value={formStock}
-                      onChange={(e) => setFormStock(e.target.value)}
+                      onChange={(e) => {
+                        setFormStock(e.target.value);
+                        setFieldErrors((prev) => {
+                          const next = { ...prev };
+                          delete next.stock;
+                          return next;
+                        });
+                      }}
                       placeholder={tEdit("stockPlaceholder")}
                       className="h-9 text-xs"
+                      aria-invalid={!!fieldErrors.stock}
                     />
+                    {fieldErrors.stock && (
+                      <p className="text-[11px] text-rose-600">
+                        {fieldErrors.stock}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      {tEdit("categoryLabel")}
+                      {tEdit("categoryLabel")}{" "}
+                      <span className="text-rose-500">*</span>
                     </label>
                     <Input
                       value={formCategory}
-                      onChange={(e) => setFormCategory(e.target.value)}
+                      onChange={(e) => {
+                        setFormCategory(e.target.value);
+                        setFieldErrors((prev) => {
+                          const next = { ...prev };
+                          delete next.category;
+                          return next;
+                        });
+                      }}
                       placeholder={tEdit("categoryPlaceholder")}
                       className="h-9 text-xs"
+                      aria-invalid={!!fieldErrors.category}
                     />
+                    {fieldErrors.category && (
+                      <p className="text-[11px] text-rose-600">
+                        {fieldErrors.category}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-700">
-                      {tEdit("statusLabel")}
+                      {tEdit("statusLabel")}{" "}
+                      <span className="text-rose-500">*</span>
                     </label>
                     <Select
                       value={formStatus}
-                      onValueChange={(v) => setFormStatus(v as ProductStatus)}
+                      onValueChange={(v) => {
+                        setFormStatus(v as ProductStatus);
+                        setFieldErrors((prev) => {
+                          const next = { ...prev };
+                          delete next.status;
+                          return next;
+                        });
+                      }}
                     >
                       <SelectTrigger className="h-9 text-xs">
-                        <SelectValue />
+                        <SelectValue placeholder={tEdit("statusPlaceholder")} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="draft">{tStatus("draft")}</SelectItem>
@@ -792,6 +827,11 @@ export default function SellerProductDetailMain() {
                         </SelectItem>
                       </SelectContent>
                     </Select>
+                    {fieldErrors.status && (
+                      <p className="text-[11px] text-rose-600">
+                        {fieldErrors.status}
+                      </p>
+                    )}
                   </div>
                   <div className="hidden sm:block" />
                 </div>

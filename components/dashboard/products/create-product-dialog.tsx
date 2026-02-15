@@ -123,7 +123,7 @@ export function CreateProductDialog({
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
-                {t("stockLabel")}
+                {t("stockLabel")} <span className="text-rose-500">*</span>
               </label>
               <Input
                 type="number"
@@ -133,7 +133,11 @@ export function CreateProductDialog({
                 onChange={(e) => onFormChange("stock", e.target.value)}
                 placeholder={t("stockPlaceholder")}
                 className="h-9 text-xs"
+                aria-invalid={!!fieldErrors.stock}
               />
+              {fieldErrors.stock && (
+                <p className="text-[11px] text-rose-600">{fieldErrors.stock}</p>
+              )}
             </div>
             <div className="hidden sm:block" />
           </div>
@@ -141,18 +145,24 @@ export function CreateProductDialog({
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
-                {t("categoryLabel")}
+                {t("categoryLabel")} <span className="text-rose-500">*</span>
               </label>
               <Input
                 value={form.category}
                 onChange={(e) => onFormChange("category", e.target.value)}
                 placeholder={t("categoryPlaceholder")}
                 className="h-9 text-xs"
+                aria-invalid={!!fieldErrors.category}
               />
+              {fieldErrors.category && (
+                <p className="text-[11px] text-rose-600">
+                  {fieldErrors.category}
+                </p>
+              )}
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
-                {t("statusLabel")}
+                {t("statusLabel")} <span className="text-rose-500">*</span>
               </label>
               <Select
                 value={form.status}
@@ -161,7 +171,7 @@ export function CreateProductDialog({
                 }
               >
                 <SelectTrigger className="h-9 text-xs">
-                  <SelectValue />
+                  <SelectValue placeholder={t("statusPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="draft">{tStatus("draft")}</SelectItem>
@@ -174,6 +184,11 @@ export function CreateProductDialog({
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {fieldErrors.status && (
+                <p className="text-[11px] text-rose-600">
+                  {fieldErrors.status}
+                </p>
+              )}
             </div>
           </div>
 

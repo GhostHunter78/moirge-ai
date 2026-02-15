@@ -9,31 +9,53 @@ function wordCount(str: string): number {
     .filter(Boolean).length;
 }
 
-/** Schema for create product form (title, price, description). Image count validated separately. */
+const STATUS_VALUES = ["active", "draft", "out_of_stock", "archived"] as const;
+
+/** Schema for create product form. All fields required except sale price. Image validated separately. */
 export function createProductSchema(t: TranslationFunction) {
-  return z
-    .object({
-      title: z
-        .string()
-        .trim()
-        .min(1, t("titleRequired")),
-      price: z
-        .string()
-        .min(1, t("priceRequired"))
-        .refine(
-          (v) => {
-            const n = Number(v);
-            return !Number.isNaN(n) && n >= 0;
-          },
-          { message: t("invalidPrice") },
-        ),
-      description: z
-        .string()
-        .refine(
-          (v) => wordCount(v) >= 3,
-          { message: t("descriptionMinWords") },
-        ),
-    });
+  return z.object({
+    title: z
+      .string()
+      .trim()
+      .min(1, t("titleRequired")),
+    price: z
+      .string()
+      .min(1, t("priceRequired"))
+      .refine(
+        (v) => {
+          const n = Number(v);
+          return !Number.isNaN(n) && n >= 0;
+        },
+        { message: t("invalidPrice") },
+      ),
+    description: z
+      .string()
+      .refine(
+        (v) => wordCount(v) >= 3,
+        { message: t("descriptionMinWords") },
+      ),
+    category: z
+      .string()
+      .trim()
+      .min(1, t("categoryRequired")),
+    stock: z
+      .string()
+      .min(1, t("stockRequired"))
+      .refine(
+        (v) => {
+          const n = Number(v);
+          return !Number.isNaN(n) && n >= 0;
+        },
+        { message: t("invalidStock") },
+      ),
+    status: z
+      .string()
+      .min(1, t("statusRequired"))
+      .refine(
+        (v) => STATUS_VALUES.includes(v as (typeof STATUS_VALUES)[number]),
+        { message: t("statusRequired") },
+      ),
+  });
 }
 
 export type CreateProductSchemaInput = z.infer<
@@ -62,6 +84,27 @@ export function editProductSchema(t: TranslationFunction) {
       .refine(
         (v) => wordCount(v) >= 3,
         { message: t("descriptionMinWords") },
+      ),
+    category: z
+      .string()
+      .trim()
+      .min(1, t("categoryRequired")),
+    stock: z
+      .string()
+      .min(1, t("stockRequired"))
+      .refine(
+        (v) => {
+          const n = Number(v);
+          return !Number.isNaN(n) && n >= 0;
+        },
+        { message: t("invalidStock") },
+      ),
+    status: z
+      .string()
+      .min(1, t("statusRequired"))
+      .refine(
+        (v) => STATUS_VALUES.includes(v as (typeof STATUS_VALUES)[number]),
+        { message: t("statusRequired") },
       ),
   });
 }

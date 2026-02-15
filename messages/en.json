@@ -339,6 +339,7 @@
         "categoryLabel": "Category",
         "categoryPlaceholder": "Outerwear, Footwear, Accessories...",
         "statusLabel": "Status",
+        "statusPlaceholder": "Choose status",
         "photosLabel": "Product photos",
         "photosHint": "The first image will be used as the thumbnail in your catalog.",
         "descriptionLabel": "Description",
@@ -356,6 +357,9 @@
         "invalidStock": "Please provide a valid stock number.",
         "descriptionMinWords": "Description must be at least 3 words.",
         "imageRequired": "At least one product image is required.",
+        "categoryRequired": "Category is required.",
+        "stockRequired": "Stock is required.",
+        "statusRequired": "Please choose a status.",
         "createFailed": "Could not create product. Please try again."
       },
       "toast": {
@@ -401,6 +405,7 @@
         "categoryLabel": "Category",
         "categoryPlaceholder": "Outerwear, Footwear, Accessories...",
         "statusLabel": "Status",
+        "statusPlaceholder": "Choose status",
         "photosLabel": "Product photos",
         "descriptionLabel": "Description",
         "descriptionPlaceholder": "Tell the story of this piece—materials, fit, styling suggestions...",

@@ -31,7 +31,7 @@ const initialFormState: CreateProductFormState = {
   salePrice: "",
   category: "",
   stock: "",
-  status: "draft",
+  status: "active",
   description: "",
 };
 
@@ -112,7 +112,10 @@ export default function SellerProductsMain() {
     if (
       field === "title" ||
       field === "price" ||
-      field === "description"
+      field === "description" ||
+      field === "category" ||
+      field === "stock" ||
+      field === "status"
     ) {
       setFieldErrors((prev) => {
         const next = { ...prev };
@@ -158,6 +161,9 @@ export default function SellerProductsMain() {
       title: form.title,
       price: form.price,
       description: form.description,
+      category: form.category,
+      stock: form.stock,
+      status: form.status,
     });
 
     const errors: Record<string, string> = {};
@@ -174,11 +180,7 @@ export default function SellerProductsMain() {
     setFieldErrors({});
 
     const numericPrice = Number(form.price);
-    const numericStock = form.stock.trim().length ? Number(form.stock) : 0;
-    if (Number.isNaN(numericStock) || numericStock < 0) {
-      toast.error(tErrors("invalidStock"));
-      return;
-    }
+    const numericStock = Number(form.stock);
     const salePriceTrimmed = form.salePrice.trim();
     const numericSalePrice = salePriceTrimmed.length
       ? Number(salePriceTrimmed)
