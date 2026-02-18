@@ -626,6 +626,37 @@
       "messages": {
         "saveSuccess": "Profile updated successfully!"
       }
+    },
+    "publicStorePage": {
+      "preview": {
+        "title": "Your public store page is not ready yet",
+        "description": "Complete your store profile to generate a beautiful public page that buyers can see when they visit your store.",
+        "cta": "Go to Store Profile"
+      },
+      "notFound": {
+        "title": "Store profile not found",
+        "description": "This seller has not set up their public store page yet."
+      },
+      "about": {
+        "title": "About this store",
+        "emptyDescription": "The seller hasn't added a description for this store yet."
+      },
+      "policies": {
+        "title": "Store policies",
+        "return": "Return policy",
+        "shipping": "Shipping policy",
+        "privacy": "Privacy policy"
+      },
+      "contact": {
+        "title": "Contact & location",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "website": "Website"
+      },
+      "social": {
+        "title": "Social profiles"
+      }
     }
   },
   "homePage": {

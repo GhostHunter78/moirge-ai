@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { StoreProfile } from "@/types/dashboard";
@@ -30,22 +31,23 @@ export default function StorePublicProfileView({
   owner,
   mode = "public",
 }: StorePublicProfileViewProps) {
+  const t = useTranslations("dashboard.publicStorePage");
+
   if (!store) {
     if (mode === "preview") {
       return (
         <Card className="p-8 border-dashed border-slate-300 bg-slate-50">
           <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            Your public store page is not ready yet
+            {t("preview.title")}
           </h2>
           <p className="text-sm text-slate-600 mb-4">
-            Complete your store profile to generate a beautiful public page that
-            buyers can see when they visit your store.
+            {t("preview.description")}
           </p>
           <Link
             href="/dashboard/seller/store-profile"
             className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors"
           >
-            Go to Store Profile
+            {t("preview.cta")}
           </Link>
         </Card>
       );
@@ -55,10 +57,10 @@ export default function StorePublicProfileView({
     return (
       <Card className="p-8 text-center">
         <h2 className="text-xl font-semibold text-slate-900 mb-2">
-          Store profile not found
+          {t("notFound.title")}
         </h2>
         <p className="text-sm text-slate-600">
-          This seller has not set up their public store page yet.
+          {t("notFound.description")}
         </p>
       </Card>
     );
@@ -153,7 +155,7 @@ export default function StorePublicProfileView({
         <div className="space-y-6">
           <Card className="p-5 sm:p-6 border-slate-200 bg-white/90">
             <h2 className="text-sm font-semibold text-slate-900 mb-3">
-              About this store
+              {t("about.title")}
             </h2>
             {description ? (
               <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
@@ -161,7 +163,7 @@ export default function StorePublicProfileView({
               </p>
             ) : (
               <p className="text-sm text-slate-500">
-                The seller hasn&apos;t added a description for this store yet.
+                {t("about.emptyDescription")}
               </p>
             )}
           </Card>
@@ -171,7 +173,7 @@ export default function StorePublicProfileView({
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-slate-700" />
                 <h2 className="text-sm font-semibold text-slate-900">
-                  Store policies
+                  {t("policies.title")}
                 </h2>
               </div>
               <Separator />
@@ -181,7 +183,7 @@ export default function StorePublicProfileView({
                     <div className="flex items-center gap-2 mb-1.5">
                       <FileText className="h-4 w-4 text-slate-600" />
                       <h3 className="font-medium text-slate-900">
-                        Return policy
+                        {t("policies.return")}
                       </h3>
                     </div>
                     <p className="text-slate-700 whitespace-pre-line">
@@ -195,7 +197,7 @@ export default function StorePublicProfileView({
                     <div className="flex items-center gap-2 mb-1.5">
                       <Truck className="h-4 w-4 text-slate-600" />
                       <h3 className="font-medium text-slate-900">
-                        Shipping policy
+                        {t("policies.shipping")}
                       </h3>
                     </div>
                     <p className="text-slate-700 whitespace-pre-line">
@@ -209,7 +211,7 @@ export default function StorePublicProfileView({
                     <div className="flex items-center gap-2 mb-1.5">
                       <Shield className="h-4 w-4 text-slate-600" />
                       <h3 className="font-medium text-slate-900">
-                        Privacy policy
+                        {t("policies.privacy")}
                       </h3>
                     </div>
                     <p className="text-slate-700 whitespace-pre-line">
@@ -226,7 +228,7 @@ export default function StorePublicProfileView({
         <div className="space-y-4">
           <Card className="p-5 sm:p-6 border-slate-200 bg-white/90 space-y-4">
             <h2 className="text-sm font-semibold text-slate-900">
-              Contact & location
+              {t("contact.title")}
             </h2>
             <Separator />
 
@@ -235,7 +237,9 @@ export default function StorePublicProfileView({
                 <div className="flex items-start gap-2">
                   <Mail className="mt-[2px] h-4 w-4 text-slate-500" />
                   <div>
-                    <p className="text-xs font-medium text-slate-500">Email</p>
+                    <p className="text-xs font-medium text-slate-500">
+                      {t("contact.email")}
+                    </p>
                     <a
                       href={`mailto:${store.email}`}
                       className="text-slate-800 hover:underline break-all"
@@ -250,7 +254,9 @@ export default function StorePublicProfileView({
                 <div className="flex items-start gap-2">
                   <Phone className="mt-[2px] h-4 w-4 text-slate-500" />
                   <div>
-                    <p className="text-xs font-medium text-slate-500">Phone</p>
+                    <p className="text-xs font-medium text-slate-500">
+                      {t("contact.phone")}
+                    </p>
                     <a
                       href={`tel:${store.phone}`}
                       className="text-slate-800 hover:underline"
@@ -266,7 +272,7 @@ export default function StorePublicProfileView({
                   <MapPin className="mt-[2px] h-4 w-4 text-slate-500" />
                   <div>
                     <p className="text-xs font-medium text-slate-500">
-                      Address
+                      {t("contact.address")}
                     </p>
                     <p className="text-slate-800 whitespace-pre-line">
                       {fullAddress}
@@ -280,7 +286,7 @@ export default function StorePublicProfileView({
                   <Globe className="mt-[2px] h-4 w-4 text-slate-500" />
                   <div>
                     <p className="text-xs font-medium text-slate-500">
-                      Website
+                      {t("contact.website")}
                     </p>
                     <a
                       href={store.website}
@@ -301,7 +307,7 @@ export default function StorePublicProfileView({
               <div className="flex items-center gap-2">
                 <Music2 className="h-4 w-4 text-slate-700" />
                 <h2 className="text-sm font-semibold text-slate-900">
-                  Social profiles
+                  {t("social.title")}
                 </h2>
               </div>
               <Separator />
