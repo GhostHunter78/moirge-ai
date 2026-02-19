@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,12 @@ import {
 } from "@/components/ui/sheet";
 import type { Product } from "@/lib/products";
 import { getPublicProducts } from "@/lib/products";
+import {
+  addToCartAction,
+  clearCartAction,
+  getCartAction,
+  updateCartItemQuantityAction,
+} from "@/actions/cart";
 
 type SortOption =
   | "relevance"
@@ -42,6 +48,8 @@ type SortOption =
 type CartItem = {
   product: Product;
   quantity: number;
+  unitPrice: number;
+  currency: string;
 };
 
 const displayPrice = (p: Product) =>
@@ -58,6 +66,8 @@ export default function AllProductsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isCartLoading, setIsCartLoading] = useState(false);
+  const [isCartPending, startCartTransition] = useTransition();
 
   useEffect(() => {
     let isCancelled = false;
@@ -89,6 +99,34 @@ export default function AllProductsPage() {
     };
 
     void load();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadCart = async () => {
+      setIsCartLoading(true);
+      const { cart } = await getCartAction();
+      if (!isCancelled && cart?.items) {
+        setCartItems(
+          cart.items.map((item) => ({
+            product: item.product,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            currency: item.currency,
+          })),
+        );
+      }
+      if (!isCancelled) {
+        setIsCartLoading(false);
+      }
+    };
+
+    void loadCart();
 
     return () => {
       isCancelled = true;
@@ -147,55 +185,81 @@ export default function AllProductsPage() {
   const cartSubtotal = useMemo(
     () =>
       cartItems.reduce(
-        (total, item) => total + displayPrice(item.product) * item.quantity,
+        (total, item) => total + item.unitPrice * item.quantity,
         0
       ),
     [cartItems]
   );
 
-  const cartCurrency = cartItems[0]?.product.currency ?? "USD";
+  const cartCurrency = cartItems[0]?.currency ?? "USD";
+
+  const syncCartFromResponse = (cart: {
+    items: { product: Product; quantity: number; unitPrice: number; currency: string }[];
+  }) => {
+    setCartItems(
+      cart.items.map((item) => ({
+        product: item.product,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        currency: item.currency,
+      })),
+    );
+  };
 
   const addToCart = (product: Product) => {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+    startCartTransition(async () => {
+      const { cart } = await addToCartAction(product.id);
+      if (cart) {
+        syncCartFromResponse(cart);
       }
-      return [...prev, { product, quantity: 1 }];
     });
   };
 
   const incrementItem = (productId: string) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    );
+    const existing = cartItems.find((item) => item.product.id === productId);
+    if (!existing) return;
+
+    startCartTransition(async () => {
+      const { cart } = await updateCartItemQuantityAction(
+        productId,
+        existing.quantity + 1,
+      );
+      if (cart) {
+        syncCartFromResponse(cart);
+      }
+    });
   };
 
   const decrementItem = (productId: string) => {
-    setCartItems((prev) =>
-      prev
-        .map((item) =>
-          item.product.id === productId
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
+    const existing = cartItems.find((item) => item.product.id === productId);
+    if (!existing) return;
+    const nextQty = existing.quantity - 1;
+
+    startCartTransition(async () => {
+      const { cart } = await updateCartItemQuantityAction(productId, nextQty);
+      if (cart) {
+        syncCartFromResponse(cart);
+      }
+    });
   };
 
   const removeItem = (productId: string) => {
-    setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
+    startCartTransition(async () => {
+      const { cart } = await updateCartItemQuantityAction(productId, 0);
+      if (cart) {
+        syncCartFromResponse(cart);
+      }
+    });
   };
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = () => {
+    startCartTransition(async () => {
+      const { cart } = await clearCartAction();
+      if (cart) {
+        syncCartFromResponse(cart);
+      }
+    });
+  };
 
   return (
     <div className="w-full space-y-6">
@@ -295,17 +359,9 @@ export default function AllProductsPage() {
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
             <span>
-              {t.rich("resultsSummary", {
-                count: () => (
-                  <span className="font-medium text-slate-900">
-                    {filteredProducts.length}
-                  </span>
-                ),
-                sellers: () => (
-                  <span className="font-medium text-slate-900">
-                    {new Set(products.map((p) => p.seller_id)).size}
-                  </span>
-                ),
+              {t("resultsSummary", {
+                count: filteredProducts.length,
+                sellers: new Set(products.map((p) => p.seller_id)).size,
               })}
             </span>
           </div>
@@ -322,7 +378,7 @@ export default function AllProductsPage() {
                 {t("loadError")}
               </p>
               <p className="text-xs text-amber-800/80">
-                Please refresh the page or try again in a moment.
+                {t("loadErrorHelp")}
               </p>
             </Card>
           )}
@@ -333,7 +389,7 @@ export default function AllProductsPage() {
                 key={product.id}
                 className="group relative flex flex-col overflow-hidden border-slate-200 bg-white/90 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-100">
                   <img
                     src={
                       product.thumbnail_url ??
@@ -343,7 +399,7 @@ export default function AllProductsPage() {
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
 
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/25 via-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                   <div className="absolute left-2 top-2 flex flex-col gap-1">
                     {product.featured && (
@@ -460,7 +516,8 @@ export default function AllProductsPage() {
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-medium text-slate-50 shadow-lg shadow-slate-900/40 ring-1 ring-slate-700 hover:bg-slate-800"
+                className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-medium text-slate-50 shadow-lg shadow-slate-900/40 ring-1 ring-slate-700 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+                disabled={isCartPending && cartItems.length === 0}
               >
                 <div className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-emerald-950">
                   <ShoppingCart className="h-4 w-4" />
@@ -473,7 +530,9 @@ export default function AllProductsPage() {
                 <div className="flex flex-col items-start leading-tight">
                   <span>{tCart("trigger.label")}</span>
                   <span className="text-[11px] text-slate-300">
-                    {cartCurrency} {cartSubtotal.toFixed(2)}
+                    {isCartPending
+                      ? tCart("updating")
+                      : `${cartCurrency} ${cartSubtotal.toFixed(2)}`}
                   </span>
                 </div>
               </button>
@@ -580,14 +639,14 @@ export default function AllProductsPage() {
                       type="button"
                       variant="outline"
                       onClick={clearCart}
-                      className="h-9 flex-1 rounded-full border-slate-200 bg-transparent text-[12px] text-slate-700 hover:bg-slate-50"
-                      disabled={cartItems.length === 0}
+                      className="h-9 flex-1 rounded-full border-slate-200 bg-transparent text-[12px] text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed"
+                      disabled={cartItems.length === 0 || isCartPending}
                     >
                       {tCart("actions.clear")}
                     </Button>
                     <Button
                       type="button"
-                      disabled={cartItems.length === 0}
+                      disabled={cartItems.length === 0 || isCartPending}
                       className="h-9 flex-[1.4] rounded-full bg-emerald-500 text-[13px] font-semibold text-emerald-950 hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500"
                     >
                       {tCart("actions.checkout")}

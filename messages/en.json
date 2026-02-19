@@ -678,6 +678,7 @@
         "resultsSummary": "Showing {count} products from {sellers} sellers",
         "loading": "Loading products from all sellers...",
         "loadError": "Failed to load products. Please try again.",
+        "loadErrorHelp": "Please refresh the page or try again in a moment.",
         "emptyState": {
           "title": "No products match your filters",
           "description": "Try adjusting your search or clearing some filters to see more products from all sellers.",
@@ -685,6 +686,7 @@
         }
       },
       "cart": {
+        "updating": "Updating cart...",
         "trigger": {
           "label": "View cart"
         },
