@@ -657,6 +657,53 @@
       "social": {
         "title": "Social profiles"
       }
+    },
+    "buyerProducts": {
+      "allProducts": {
+        "title": "Discover products",
+        "description": "Browse products from every registered seller on the marketplace. Use the filters to quickly find exactly what you are looking for.",
+        "filters": {
+          "searchAndFilters": "Search & filters",
+          "searchLabel": "Search products",
+          "searchPlaceholder": "Search by name, category or seller",
+          "categoryLabel": "Category",
+          "allCategories": "All categories",
+          "sortByLabel": "Sort by",
+          "relevance": "Relevance",
+          "priceLowHigh": "Price: Low to High",
+          "priceHighLow": "Price: High to Low",
+          "ratingHighLow": "Rating: High to Low",
+          "clear": "Clear filters"
+        },
+        "resultsSummary": "Showing {count} products from {sellers} sellers",
+        "loading": "Loading products from all sellers...",
+        "loadError": "Failed to load products. Please try again.",
+        "emptyState": {
+          "title": "No products match your filters",
+          "description": "Try adjusting your search or clearing some filters to see more products from all sellers.",
+          "reset": "Reset filters"
+        }
+      },
+      "cart": {
+        "trigger": {
+          "label": "View cart"
+        },
+        "title": "Your cart",
+        "summary": "{count, plural, one {# item selected} other {# items selected}}",
+        "empty": {
+          "title": "Your cart is empty",
+          "description": "Explore the products and tap \"Add to cart\" to start building your order."
+        },
+        "subtotal": {
+          "label": "Subtotal",
+          "help": "Taxes and fees are calculated at checkout. You'll confirm everything before paying."
+        },
+        "actions": {
+          "clear": "Clear",
+          "checkout": "Continue to checkout"
+        },
+        "remove": "Remove"
+      }
     }
   },
   "homePage": {
